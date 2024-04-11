@@ -1,0 +1,56 @@
+.documents{
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    width: 1000px;
+}
+
+.document{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: solid 1px rgb(186,171,150);
+}
+
+a{
+    text-decoration: none;
+    color:rgb(80,92,90);
+}
+
+.document-page{
+    /* background-color: gray; */
+    width: 150px;
+    height: 200px;
+}
+
+.document-info{
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.document-heading{
+    font-size: 26px;
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: rgb(7,37,52);
+    font-family: 'stengazeta';
+}
+
+.document-info-addition{
+    display: flex;
+    flex-direction: row;
+}
+
+.document-info-addition p{
+    margin-right: 10px;
+    padding-left: 10px;
+    border-left: solid 2px rgb(186,171,150);
+}
+
+.document-info-addition p:first-child {
+    border-left: none;
+    padding-left: 0;
+}

@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'stengazeta';
+    src: url('./fonts/Stengazeta-Regular_5.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'finlandica';
+    src: url('./fonts/Finlandica-Regular.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'Gentium Book Plus';
+    src: url('./fonts/GentiumBookPlus-Regular.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'Gentium Book Plus bold';
+    src: url('./fonts/GentiumBookPlus-Bold.ttf') format('truetype');
+  }
+  
+  body {
+    font-family: 'finlandica';
+    background-image: linear-gradient(to right, rgb(208, 196, 182), rgb(236, 225, 207), rgb(208, 196, 182));
+    background-image: linear-gradient(to right, 
+        rgb(208, 196, 182), 
+        rgb(232,220,204), /* Промежуточный цвет между крайним левым и серединой */
+        rgb(236, 225, 207), 
+        rgb(232,220,204), /* Промежуточный цвет между серединой и крайним правым */
+        rgb(208, 196, 182));
+  
+    margin: 0;
+    padding: 0;
+  }
+  
+  main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

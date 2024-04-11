@@ -1,0 +1,108 @@
+
+/* explanation-project-content */
+
+.explanation-project-content{
+    display: flex;
+    flex-direction: column;
+    width: 1300px;
+    margin-top: 30px;
+}
+
+.explanation-project-name{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.explanation-project-name img{
+    width: 100px;
+}
+
+.explanation-project-name p{
+    font-size: 65px;
+    font-family: 'Gentium Book Plus bold';
+    color: rgb(7,37,52);
+    margin: 0;
+}
+
+.explanation-project-text{
+    margin-top: 5px;
+}
+
+.explanation-project-text p{
+    font-size: 20px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+
+/* choose-doc-collectiont */
+
+.choose-doc-collection{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(to bottom, rgb(81, 112, 109), rgb(33, 64, 67));
+    margin-top: 20px;
+    padding-bottom: 40px;
+}
+
+.choose-doc-collection-text p{
+    font-family: 'stengazeta';
+    text-align: center;
+    color: white;
+    font-size: 40px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.choose-doc-collection-list-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.choose-doc-collection-list{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.choose-doc-collection-list a img{
+    box-shadow: 
+        0 -8px 6px -6px rgba(93, 113, 112, 0.5), /* Тень сверху */
+        0 8px 6px -6px rgba(11, 21, 13, 0.5); /* Тень снизу */
+}
+
+.choose-doc-collection-list a{
+    margin-top: 5px;
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.choose-doc-collection-list a:hover{
+    color:rgb(0, 140, 255);
+}
+
+
+.exhibitions{
+    width: 100%;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 30px;
+}
+
+.exhibitions-text{
+    font-family: 'stengazeta';
+    text-align: center;
+    color: rgb(7,37,52);
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+

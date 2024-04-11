@@ -1,0 +1,245 @@
+.admin-container{
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 90%;
+}
+
+.admin-navbar{
+    display: flex;
+    flex-direction: column;
+    font-family: 'stengazeta';
+    width: 200px;    
+}
+
+.admin-navbar-element{
+    font-size: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: rgb(7,37,52);
+    text-decoration: none;
+    transition: font-size 0.2s ease, color 0.2s ease;
+}
+
+.admin-navbar-element:hover{
+    font-size: 36px;
+    color: black;
+}
+
+.admin-navbar-element-active{
+    font-size: 36px;
+    color: rgb(236, 225, 207);
+    background-color: rgb(7,37,52);
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    text-decoration: none;
+}
+
+.admin-section{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 50px;
+}
+
+.admin-greeting-text{
+    text-align: center;
+    font-size: 30px;
+}
+
+.create-delete-buttons-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.create-button{
+    background-color: #4CAF50;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer; 
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.create-button:hover {
+    background-color: #45A049;
+}
+
+.delete-button{
+    background-color: #d32f2f;
+    border: 0;
+    border-radius: 10px;
+    color: rgb(212, 212, 212);
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: default; 
+    margin-right: 50px;
+}
+
+.delete-button-active{
+    background-color: #f44336;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer; 
+    transition: background-color 0.3s;
+    margin-right: 50px;
+}
+
+.delete-button-active:hover{
+    background-color: #d32f2f;
+}
+
+.admin-fields-list{
+    background-color: rgb(202, 192, 177);
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    width: 100%;
+    font-size: 20px;
+    padding-left: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.admin-fields-list p{
+    text-align: left;
+}
+
+.admin-list{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.admin-list-a{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-size: 20px;
+    padding-left: 10px;
+    min-height: 80px;
+    max-height: 120px; /* Фиксированная высота */
+    overflow: hidden; /* Скрытие содержимого, выходящего за пределы */
+}
+
+.admin-list-a p, .admin-list-a a {
+    /* margin: 0; */
+    overflow: hidden; /* Скрытие содержимого, выходящего за пределы */
+    text-overflow: ellipsis; /* Добавление многоточия в конце */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Количество строк после которых появится многоточие */
+    -webkit-box-orient: vertical;
+    word-break: break-word; /* Перенос слов по слогам */
+
+}
+
+.admin-list-a:nth-child(even) {
+    background-color: rgb(202, 192, 177);
+}
+
+.admin-list-a a{
+    margin-top: 20px;
+    color: #0000EE;
+}
+
+.admin-list-a a:hover{
+    color: #0000FF;
+    text-decoration: underline; 
+}
+
+.admin-list-delete-button{
+    height: 30px;
+    color: white;
+    background-color: #f44336;
+    border: 0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.admin-list-delete-button:hover{
+    background-color: #d32f2f;
+}
+
+.admin-title-text {
+    font-size: 36px;
+    font-family: 'stengazeta';
+    color: rgb(7,37,52); 
+    margin-bottom: 20px; 
+    margin-top: 0;
+}
+
+.admin-section-create-form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border: solid 1px #3f3f3f;
+    padding: 20px; 
+    border-radius: 15px; 
+}
+
+.admin-section-form-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-section-form-inputs label {
+    margin-top: 30px;
+    font-weight: bold; 
+}
+
+.admin-form-input, .admin-form-input textarea {
+    margin-top: 5px;
+    padding: 8px 12px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    font-size: 18px;
+}
+
+.admin-form-input:focus, .admin-form-input textarea:focus {
+    border-color: #0056b3; 
+    outline: none; 
+}
+
+.admin-section-form-button {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.admin-form-input-l-i{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.admin-form-input-group{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
