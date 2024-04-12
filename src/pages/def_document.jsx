@@ -6,6 +6,7 @@ import Footer from "../components/footer"
 import api from "../api";
 // import MyPdfViewer from "../components/pdfViewer";
 import PDFViewer from "../components/pdfViewer";
+import NotFoundPage from "../components/404_not_found";
 
 import "../style/partials/def_document.css"
 
@@ -20,8 +21,7 @@ export default function DefDocument(){
                 const response = await api.get(`/document/${documentId}`);
                 setDocument(response.data);
             } catch (error){
-                console.log(111)
-                console.log(error)
+                return (<NotFoundPage/>)
             }
         }
 
