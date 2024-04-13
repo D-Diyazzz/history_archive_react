@@ -20,6 +20,19 @@ export default function AdminDocumentCreate(){
     });
     const [file, setFile] = useState(null);
     const [fileError, setFileError] = useState(false);
+    const [errors, setErrors] = useState({
+        title: false,
+        heading: false,
+        author: false,
+        description_content: false,
+        legends: false,
+        dating: false,
+        format_doc: false,
+        color_palette: false,
+        resolution: false,
+        compression: false,
+        scanner_model: false
+    });
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]); 
@@ -42,10 +55,32 @@ export default function AdminDocumentCreate(){
             ...prevState,
             [name]: value
         }));
+        setErrors(prev => ({...prev, [name]: !value}))
+    }
+
+    const validateForm = () => {
+        const newErrors = {};
+        Object.keys(formDataState).forEach(key => {
+            if(!formDataState[key]){
+                newErrors[key] = true
+            }
+        });
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()){
+            alert('Заполните все поля!')
+            return;
+        }
+        if (file === null){
+            alert('Файл не выбран или выбран файл неправильного формата')
+            setFileError(true);
+            return
+        }
 
         const formData = new FormData();
         const requestaData = new FormData();
@@ -62,7 +97,7 @@ export default function AdminDocumentCreate(){
 
             // navigate(`/admin/docs/${response.id}`)
         } catch (error){
-            console.log("error", error.message);
+            console.log("error", error);
         }
     }
 
@@ -81,59 +116,59 @@ export default function AdminDocumentCreate(){
                     )}
 
                     <label htmlFor="title">Название: </label>
-                    <input className="admin-form-input" type="text" name="title" id="title" onChange={handleChange} value={formDataState.title}/>
+                    <input className={errors.title ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="title" id="title" onChange={handleChange} value={formDataState.title}/>
 
                     <div className="admin-form-input-group">
                         <div className="admin-form-input-l-i" style={{"margin-right":"10px"}}>
                             <label htmlFor="heading">Заголовок: </label>
-                            <input className="admin-form-input" type="text" name="heading" id="heading" onChange={handleChange} value={formDataState.heading}/>
+                            <input className={errors.heading ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="heading" id="heading" onChange={handleChange} value={formDataState.heading}/>
                         </div>
 
                         <div className="admin-form-input-l-i">
                             <label htmlFor="author">Автор: </label>
-                            <input className="admin-form-input" type="text" name="author" id="author" onChange={handleChange} value={formDataState.author}/>
+                            <input className={errors.author ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="author" id="author" onChange={handleChange} value={formDataState.author}/>
                         </div>
                     </div>
 
                     <div className="admin-form-input-group">
                         <div className="admin-form-input-l-i" style={{"margin-right":"10px"}}>
                             <label htmlFor="dating">Датировка: </label>
-                            <input className="admin-form-input" type="text" name="dating" id="dating" onChange={handleChange} value={formDataState.dating}/>
+                            <input className={errors.dating ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="dating" id="dating" onChange={handleChange} value={formDataState.dating}/>
                         </div>
 
                         <div className="admin-form-input-l-i" style={{"margin-right":"10px"}}>
                             <label htmlFor="format_doc">Формат документа: </label>
-                            <input className="admin-form-input" type="text" name="format_doc" id="format_doc" onChange={handleChange} value={formDataState.format_doc}/>
+                            <input className={errors.format_doc ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="format_doc" id="format_doc" onChange={handleChange} value={formDataState.format_doc}/>
                         </div>
 
                         <div className="admin-form-input-l-i">
                             <label htmlFor="color_palette">Цветовая палитра: </label>
-                            <input className="admin-form-input" type="text" name="color_palette" id="color_palette" onChange={handleChange} value={formDataState.color_palette}/>
+                            <input className={errors.color_palette ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="color_palette" id="color_palette" onChange={handleChange} value={formDataState.color_palette}/>
                         </div>
                     </div>
 
                     <div className="admin-form-input-group">
                         <div className="admin-form-input-l-i" style={{"margin-right":"10px"}}>
                             <label htmlFor="resolution">Разрешение: </label>
-                            <input className="admin-form-input" type="text" name="resolution" id="resolution" onChange={handleChange} value={formDataState.resolution}/>
+                            <input className={errors.resolution ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="resolution" id="resolution" onChange={handleChange} value={formDataState.resolution}/>
                         </div>
 
                         <div className="admin-form-input-l-i" style={{"margin-right":"10px"}}>
                             <label htmlFor="compression">Сжатие: </label>
-                            <input className="admin-form-input" type="text" name="compression" id="compression" onChange={handleChange} value={formDataState.compression}/>
+                            <input className={errors.compression ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="compression" id="compression" onChange={handleChange} value={formDataState.compression}/>
                         </div>
 
                         <div className="admin-form-input-l-i">
                             <label htmlFor="scanner_model">Модель сканера: </label>
-                            <input className="admin-form-input" type="text" name="scanner_model" id="scanner_model" onChange={handleChange} value={formDataState.scanner_model}/>
+                            <input className={errors.scanner_model ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="scanner_model" id="scanner_model" onChange={handleChange} value={formDataState.scanner_model}/>
                         </div>
                     </div>
 
                     <label htmlFor="description_content">Описание содержания: </label>
-                    <textarea className="admin-form-input" name="description_content" id="description_content" rows="4" onChange={handleChange} value={formDataState.description_content}></textarea>
+                    <textarea className={errors.description_content ? 'admin-form-input input-error' : 'admin-form-input'} name="description_content" id="description_content" rows="4" onChange={handleChange} value={formDataState.description_content}></textarea>
 
                     <label htmlFor="legends">Легенды: </label>
-                    <textarea className="admin-form-input" name="legends" id="legends" rows="4" onChange={handleChange} value={formDataState.legends}></textarea>
+                    <textarea className={errors.legends ? 'admin-form-input input-error' : 'admin-form-input'} name="legends" id="legends" rows="4" onChange={handleChange} value={formDataState.legends}></textarea>
                 </div>
 
                 <div className="admin-section-form-button">
