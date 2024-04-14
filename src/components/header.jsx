@@ -4,7 +4,8 @@ import user_icon from '../style/images/user_icon.png'
 import '../style/partials/header.css'
 
 export default function Header({active}) {
-    var name = localStorage.getItem('user_name');
+    const name = localStorage.getItem('user_name');
+    const user_role = localStorage.getItem('user_role')
 
     if (name && name.length > 5) {
         name = name.slice(0, 5) + "..."; 
@@ -32,6 +33,12 @@ export default function Header({active}) {
                     <div className="nav-bar-right">
                         <a href="/" className='nav-bar-menu'>Главная</a>
                         <a href="#" className='nav-bar-menu'>Уведомления</a>
+                        {user_role === 'AdminUser' || user_role === 'RedactorUser' ? (
+                            <a href="/admin" className='nav-bar-menu'>Админ</a>
+                        ) : (
+                            <>
+                            </>
+                        )}
                     </div>
                 </div>  
 

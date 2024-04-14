@@ -37,3 +37,21 @@
     flex-direction: column;
     align-items: center;
 }
+
+
+.not-found{
+  width: 1000px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30%;
+  text-align: center;
+}
+
+.not-found h1{
+  font-size: 68px;
+}
+
+.not-found p{
+  font-size: 34px;
+}

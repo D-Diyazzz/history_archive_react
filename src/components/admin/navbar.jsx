@@ -1,15 +1,15 @@
 export default function AdminNavbar({active}){
 
     const navItems = [
-        { name: "Документы", id: "docs" },
-        { name: "Сборники", id: "collections" },
+        { name: "Документы", id: "document" },
+        { name: "Сборники", id: "collection" },
         { name: "Выставки", id: "exhibitions" },
-        { name: "Пользователи", id: "users" },
-        { name: "Комментарии", id: "comments" },
-        { name: "Виды сборника", id: "classes-coll" },
-        { name: "Типы сборника", id: "types-coll" },
-        { name: "Формат сборника", id: "format-coll" },
-        { name: "Способ издания", id: "method-coll" },
+        { name: "Пользователи", id: "user" },
+        { name: "Комментарии", id: "comment" },
+        { name: "Виды сборника", id: "class-collection" },
+        { name: "Типы сборника", id: "type-collection" },
+        { name: "Формат сборника", id: "format-collection" },
+        { name: "Способ издания", id: "method-collection" },
     ];
 
     return (

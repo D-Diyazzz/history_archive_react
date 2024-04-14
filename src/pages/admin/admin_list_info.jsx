@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
-import NotFoundPage from '../../components/404_not_found';
+import NotFoundPage from '../404_not_found';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import AdminNavbar from '../../components/admin/navbar';
@@ -30,20 +30,19 @@ export default function AdminPanelListInfo() {
 
     const renderList = () => {
         switch(table) {
-            case "docs":
+            case "document":
                 return <AdminDocumentList />;
-            case "classes-coll":
+            case "class-collection":
                 return <AdminClassCollList />;
-            case "format-coll":
+            case "format-collection":
                 return <AdminFormatCollList/>;
-            case "method-coll":
+            case "method-collection":
                 return <AdminMethodCollList/>;
             default:
                 return null;
         }
     };
 
-    console.log(renderList())
     if(renderList() == null){
         return(
             <NotFoundPage/>

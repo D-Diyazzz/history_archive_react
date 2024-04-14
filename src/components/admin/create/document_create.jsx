@@ -94,8 +94,7 @@ export default function AdminDocumentCreate(){
         console.log(requestaData)
         try{
             const response = await api.post("/document", requestaData);
-
-            // navigate(`/admin/docs/${response.id}`)
+            navigate(`/admin/document/${response.data.id}`)
         } catch (error){
             console.log("error", error);
         }

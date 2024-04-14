@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
-import NotFoundPage from '../../components/404_not_found';
+import NotFoundPage from '../404_not_found';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import AdminNavbar from '../../components/admin/navbar';

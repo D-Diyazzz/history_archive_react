@@ -1,17 +1,19 @@
-import { Navigate, Outlet, useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useParams, Navigate } from "react-router-dom";
 
-import NotFoundPage from '../404_not_found';
-import Header from '../../components/header';
-import Footer from '../../components/footer';
-import AdminNavbar from '../../components/admin/navbar';
-import CDButtons from '../../components/admin/cd_buttons';
-import AdminDocumentCreate from '../../components/admin/create/document_create';
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import CDButtons from "../../components/admin/cd_buttons";
+import NotFoundPage from "../404_not_found";
+import AdminNavbar from "../../components/admin/navbar";
+import DefDocumentComponent from "../../components/def_components/def_document_component";
+import api from "../../api";
 
-import "../../style/partials/admin.css"
 
-export default function AdminPanelCreate() {
-    const {table} = useParams();
+export default function AdminPanleDefInfo(){
+    const {table, id} = useParams();
     const role = localStorage.getItem("user_role");
+    const [data, setData] = useState(null);
 
     if(role === null){
         return(
@@ -25,27 +27,26 @@ export default function AdminPanelCreate() {
     }
 
     const renderList = () => {
+        
         switch(table) {
             case "document":
-                return <AdminDocumentCreate />;
+                return <DefDocumentComponent documentId={id}/>
             default:
                 return null;
         }
-    };
+    }    
 
     if(renderList() == null){
         return(
             <NotFoundPage/>
         )
     }
-
-    return(
+    return (
         <>
         
         <Header active={"Админ панель"}/>
-
+        
         <main>
-
             <div className='admin-container'>
 
 
@@ -54,16 +55,17 @@ export default function AdminPanelCreate() {
                 </div>
 
                 <div className='admin-section'>
-                   
+
+                    <CDButtons link={`/admin/${table}/create`}/>
+
                     {renderList()} 
 
                 </div>
             </div>
-
         </main>
 
         <Footer/>
-        
         </>
     )
+
 }

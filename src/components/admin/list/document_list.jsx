@@ -60,7 +60,7 @@ export default function AdminDocumentList(){
                         return (
                           <>
                             <div className="admin-list-a">
-                              <a href="#" style={{"width":"30%"}}>{doc.heading}</a>
+                              <a href={`/admin/document/${doc.id}`} style={{"width":"30%"}}>{doc.heading}</a>
                               <p style={{"width":"15%"}}>{doc.author}</p>
                               <p style={{"width":"10%"}}>{doc.dating}</p>
                               <p style={{"width":"10%"}}>Документ</p>
