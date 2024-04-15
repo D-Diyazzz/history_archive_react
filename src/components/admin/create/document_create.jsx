@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-
 import api from "../../../api";
 
 export default function AdminDocumentCreate(){
@@ -23,8 +22,8 @@ export default function AdminDocumentCreate(){
         scanner_model: ""
     });
 
-    const [file, setFile] = useState(null);
-    const [fileError, setFileError] = useState(false);
+    const [file, setFile] = useState([]);
+    const [fileError, setFileError] = useState();
     const [errors, setErrors] = useState({
         title: false,
         heading: false,
@@ -39,19 +38,41 @@ export default function AdminDocumentCreate(){
         scanner_model: false
     });
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]); 
+    const handleFileChange = (e, index) => {
+        const files = [...file];
+        const target_file = e.target.files[0];
+        const fileLabels = document.querySelectorAll('.file-upload-label');
+        const fileWrappers = document.querySelectorAll('.file-upload-wrapper');
+        const fileLabel = fileLabels[index]
+        const fileWrapper = fileWrappers[index]
+
+        if(target_file){
+            fileLabel.textContent = `Выбран файл: ${target_file.name}`;
+            fileLabel.style.color = "black";
+            fileWrapper.style.border = "2px dashed #333";
+            files[index] = target_file;
+            setFile(files);
+        } else{
+            fileLabel.textContent = "Загрузить файл:";
+            // setFile(null);
+        }
     }
 
     useEffect(() => {
-        if (file) {
-            if (file.type !== "application/pdf") {
-                setFileError(true); 
-                setFile(null)
-            } else {
-                setFileError(false);
+        const fileLabels = document.querySelectorAll('.file-upload-label');
+        const fileWrappers = document.querySelectorAll('.file-upload-wrapper');
+        const newFileErrors = file.map((singleFile, index) => {
+            if (singleFile && singleFile.type !== "application/pdf") {
+                const fileLabel = fileLabels[index]
+                const fileWrapper = fileWrappers[index]
+                fileLabel.textContent = "PDF, PNG, DOCS";
+                fileLabel.style.color = "red";
+                fileWrapper.style.border = "2px dashed red";
+                return true; 
             }
-        }
+            return false; // Нет ошибки
+        });
+        setFileError(newFileErrors.some(error => error === true));
     }, [file]);
 
     const handleCKEditorChange = (name, data) => {
@@ -89,10 +110,11 @@ export default function AdminDocumentCreate(){
             alert('Заполните все поля!')
             return;
         }
-        if (file === null){
-            alert('Файл не выбран или выбран файл неправильного формата')
-            setFileError(true);
-            return
+
+        if (!file.length || fileError === true) {
+            alert('Файл не выбран или выбран файл неправильного формата');
+            // setFileError(file.map(f => f === null || f.type !== "application/pdf")); 
+            return;
         }
 
         const formData = new FormData();
@@ -113,19 +135,40 @@ export default function AdminDocumentCreate(){
         }
     }
 
+    const addFileInput = () => {
+        setFile([...file, null])
+    };
+
+    const removeFileInput = (index) => {
+        const newFiles = [...file];
+        newFiles.splice(index, 1);
+        setFile(newFiles);
+
+    }
+
     return(
         // <div className="admin-section-create">
         <>
             <p className="admin-title-text">Загрузить документ</p>
             <form className="admin-section-create-form" onSubmit={handleSubmit}>
                 <div className="admin-section-form-inputs">
-                    <label htmlFor="file">Загрузить файл:</label>
-                    <input type="file" id="file" name="file" onChange={handleFileChange} />
-                    {fileError ? (
-                        <p style={{"color": "red", "fontSize": "16px", "marginBottom": "0", "marginTop": "5px"}}>PDF, PNG, DOCS</p>
-                    ) : (
-                        <></>
-                    )}
+                    <div className="admin-file-upload">
+                        {
+                            file.map((file, index) => (
+                                <div className="file-upload-wrapper2">
+                                    <div class="file-upload-wrapper" key={index}>
+                                        <label htmlFor={`file-${index}`} class="file-upload-label">Загрузить файл:</label>
+                                        <input type="file" id={`file-${index}`} name={`file-${index}`} class="file-upload-input" onChange={(e) => handleFileChange(e, index)} />
+                                    </div>
+
+                                    <button type="button" onClick={() => removeFileInput(index)} className="remove-file-button">Del</button>
+                                </div>
+                            ))
+                        }
+
+                        <button type="button" onClick={addFileInput} className="add-file-button">+</button>
+                    </div>
+                   
 
                     <label htmlFor="title">Название: </label>
                     <input className={errors.title ? 'admin-form-input input-error' : 'admin-form-input'} type="text" name="title" id="title" onChange={handleChange} value={formDataState.title}/>

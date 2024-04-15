@@ -247,3 +247,78 @@
 .input-error{
     border: 1px solid red;
 }
+
+.file-upload-wrapper {
+    position: relative;
+    width: 300px; /* Ширина контейнера */
+    height: 40px; /* Высота контейнера */
+    line-height: 40px; /* Высота текста внутри label */
+    background-color: rgb(236, 225, 207);
+    border: 2px dashed #333;
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+
+  .file-upload-wrapper:hover{
+    border: 2px solid #333;
+  }
+  
+  .file-upload-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .file-upload-label {
+    width: 100%;
+    height: 100%;
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .add-file-button{
+    background-color: rgb(236, 225, 207);
+    border: 2px dashed #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 25px;
+    padding-bottom: 5px;
+  }
+
+  .add-file-button:hover{
+    background-color: rgb(194, 184, 169);
+    border: 2px solid #333;
+    font-size: 30px;
+  }
+
+  .remove-file-button {
+    background-color: #ff6868;
+    color: white;
+    border: none; 
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  .remove-file-button:hover{
+    background-color: #ff4c4c;
+  }
+  
+  .file-upload-wrapper2{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
