@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+
 import api from "../../../api";
 
 export default function AdminDocumentCreate(){
@@ -18,6 +22,7 @@ export default function AdminDocumentCreate(){
         compression: "",
         scanner_model: ""
     });
+
     const [file, setFile] = useState(null);
     const [fileError, setFileError] = useState(false);
     const [errors, setErrors] = useState({
@@ -48,6 +53,14 @@ export default function AdminDocumentCreate(){
             }
         }
     }, [file]);
+
+    const handleCKEditorChange = (name, data) => {
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: data
+        }));
+        setErrors(prev => ({...prev, [name]: !data}))
+    }
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -163,11 +176,37 @@ export default function AdminDocumentCreate(){
                         </div>
                     </div>
 
-                    <label htmlFor="description_content">Описание содержания: </label>
-                    <textarea className={errors.description_content ? 'admin-form-input input-error' : 'admin-form-input'} name="description_content" id="description_content" rows="4" onChange={handleChange} value={formDataState.description_content}></textarea>
-
                     <label htmlFor="legends">Легенды: </label>
-                    <textarea className={errors.legends ? 'admin-form-input input-error' : 'admin-form-input'} name="legends" id="legends" rows="4" onChange={handleChange} value={formDataState.legends}></textarea>
+                    <div className={errors.legends ? "input-error" : ""}>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={formDataState.legends}
+                            onReady={ editor => {
+                                console.log("Editory is ready to use!", editor);
+                            }}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                handleCKEditorChange("legends", data);
+                            }}
+                            name="legends"
+                        />
+                    </div>
+
+                    <label htmlFor="description_content">Описание содержания: </label>
+                    <div className={errors.legends ? "input-error" : ""}>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            // config={{
+                            // }}
+                            data={formDataState.description_content}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                handleCKEditorChange("description_content", data);
+                            }}
+                            name="description_content"
+                        />
+                    </div>
+
                 </div>
 
                 <div className="admin-section-form-button">

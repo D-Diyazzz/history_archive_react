@@ -4,7 +4,7 @@ import user_icon from '../style/images/user_icon.png'
 import '../style/partials/header.css'
 
 export default function Header({active}) {
-    const name = localStorage.getItem('user_name');
+    var name = localStorage.getItem('user_name');
     const user_role = localStorage.getItem('user_role')
 
     if (name && name.length > 5) {

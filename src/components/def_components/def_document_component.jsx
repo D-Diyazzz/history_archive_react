@@ -41,7 +41,10 @@ export default function DefDocumentComponent({documentId}){
                     <p className="document-heading">{documentelem.heading}</p>
                     <p className="document-author">Автор: {documentelem.author}</p>
                     <p className="document-dating">Дата: {documentelem.dating}</p>
-                    <p className="document-legends">Легенды: {documentelem.legends}</p>
+                    
+                    <p className="document-legends">Легенды:</p>
+                    <p className="document-legends" dangerouslySetInnerHTML={{ __html: documentelem.legends }}></p>
+                    
                     <p className="document-format">Формат: {documentelem.format_doc}</p>
                     <p className="document-color-palette">Цветовая-палитра(оцифровка): {documentelem.color_palette}</p>
                     <p className="document-resolution">Разрешение: {documentelem.resolution}</p>
