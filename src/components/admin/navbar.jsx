@@ -6,10 +6,6 @@ export default function AdminNavbar({active}){
         { name: "Выставки", id: "exhibitions" },
         { name: "Пользователи", id: "user" },
         { name: "Комментарии", id: "comment" },
-        { name: "Виды сборника", id: "class-collection" },
-        { name: "Типы сборника", id: "type-collection" },
-        { name: "Формат сборника", id: "format-collection" },
-        { name: "Способ издания", id: "method-collection" },
     ];
 
     return (
