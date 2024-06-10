@@ -39,17 +39,18 @@ export default function Documents(){
                         <a href={`/document/${doc.id}`}>
                         <div className="document" key={doc.id}>
                             <div className="document-page">
-                                <FirstPage pdfUrl={doc.file_url}/>
+                                <FirstPage pdfUrl={doc.file_urls[0]}/>
                             </div>
                             <div className="document-info">
-                                <p className="document-heading">{doc.heading}</p>
-                                <p className="document-description">{doc.description_content.length > 300
-                                                                    ? `${doc.description_content.slice(0, 300)}...`
-                                                                    : doc.description_content}</p>
+                                <p className="document-heading">{doc.variety}</p>
+                        	{doc.brief_content > 300 
+					? <p className="document-description" dangerouslySetInnerHTML={{__html: doc.brief_content.slice(0, 300)}}></p>
+					: <p className="document-description" dangerouslySetInnerHTML={{__html: doc.brief_content}}></p>
+				}
                                 <div className="document-info-addition">
                                     <p className="document-year">Дата: {doc.dating}</p>
                                     <p className="document-author">Автор:  {doc.author}</p>
-                                    <p className="document-format">Формат: {doc.format_doc}</p>
+                                    <p className="document-format">Разновидность: {doc.variety}</p>
                                 </div>
                         </div>
                         </div>

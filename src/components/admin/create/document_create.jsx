@@ -229,14 +229,10 @@ export default function AdminDocumentCreate(){
 	// Append the data object as a JSON string to requestaData under the key 'data'
 	requestaData.append("data", JSON.stringify(dataObject));
 
-	console.log(requestaData);
-
 	try{
             const response = await api.post("/document", requestaData);
-            console.log(response)
-	    navigate(`/admin/document/${response.data.id}`) 
+            navigate(`/admin/document/${response.data.id}`) 
         } catch (error){
-	    console.log(error)
             console.log("error", error);
         }
     }
