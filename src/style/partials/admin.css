@@ -333,6 +333,11 @@
     margin-right: 10px;
 }
 
+.admin-form-column{
+	display: flex;
+	flex-direction: column;
+}
+
 .admin-form-row{
     width: 100%;
     display: flex;
