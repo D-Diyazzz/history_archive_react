@@ -71,31 +71,53 @@
 
 .pdf-redactor-page-section{
 	width: 850px;
-	height: 1170px;
+	height: 1300px;
 	background-color: #edf2fa;
 	border: solid 1px #c7c7c7;
 	border-radius: 20px;
 	/* text-align: center; */
 	/* align-items: center; */
-	align-content: center; 
+	/* align-content: center; */
+	overflow-y: auto;
+	
 }
 
 .pdf-redactor-page{
 	width: 794px;
 	height: 1123px;
 	background-color: white;
-	margin: auto;
-	margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 40px;
 	border: 1px solid #c7c7c7;
 	outline: none;
 	word-wrap: break-word;
 	padding: 93px;
 	box-sizing: border-box;
+}
+
+
+.pdf-redactor-page-edit{
+	width: 100%;
+	outline: none;
+	word-wrap: break-word;
+	word-break: break-word;
+	box-sizing: border-box;
+	
 	font-family: 'Times New Roman', Times, serif;
 }
 
-.pdf-redactor-page:focus{
-	border: 1px solid #c7c7c7;
+.pdf-redactor-page-edit p{
+	caret-color: black;
+}
+
+.pdf-redactor-page-edit p span{
+	caret-color: black;
+}
+
+.pdf-redactor-page-edit:focus{
+	border: 0;
+	caret-color: black;
 }
 
 input[type="number"] {

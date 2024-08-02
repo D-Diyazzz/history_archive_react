@@ -6,6 +6,7 @@ export default function AdminCollectionCreate() {
 	const [currentTextPosition, setTextPosition] = useState("left-text-position");
     const inputRef = useRef(null);
     const spanRef = useRef(null);
+	const [inputRefCurrent, setInputRefCurrent] = useState(null)
 	
 
 	const [textFormatDict, setTextFormatDict] = useState({
@@ -41,12 +42,8 @@ export default function AdminCollectionCreate() {
 		console.log(textFormatDict)
 	}
 
-    const handleMouseUp = () => {
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-
-		if(range.startContainer.nodeName === "#text"){
-        	const currentNode = range.startContainer
+	const setTextAttributesToVariables = (range) => {
+		const currentNode = range.startContainer
 			const currentStartOffset = range.startOffset
 			const parentNode = range.startContainer.parentNode
 			
@@ -68,14 +65,155 @@ export default function AdminCollectionCreate() {
 			const ParrentFontSize = parentNode.style["font-size"].replace("px", "")
 			if(ParrentFontSize != currentFontSize){
 				setCurrentFontSize(parseInt(ParrentFontSize))
+			}else if(ParrentFontSize == NaN){
+				setCurrentFontSize(12)
 			}
 			
 			setTextPosition(parentNode.parentNode.className)
 
+	}
+
+    const handleMouseUp = () => {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+
+		let divNode = range.startContainer;
+
+		while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
+			divNode = divNode.parentNode
+		}
+
+		if(divNode !== inputRef.current){
+			inputRef.current = divNode
+			setInputRefCurrent(divNode)
+			console.log('!==')
+		}
+
+		if(range.startContainer.nodeName === "#text"){
+        	setTextAttributesToVariables(range)
+			range.setStart(range.startContainer, range.startOffset)
+			range.setEnd(range.startContainer, range.endOffset)
+		}else if(range.startContainer.nodeName === "P"){
+			const spanNode = range.startContainer.firstChild;
+			const textNode = spanNode.firstChild
+			range.setStart(textNode, 0)
+			range.setEnd(textNode, 0)
+
+			setTextAttributesToVariables(range)
+			range.setStart(spanNode, 0)
+			range.setEnd(spanNode, 0)
 		}
     };
 
+	const cloneEmptySpan = (span) => {
+		const newSpan = document.createElement("span")
+		newSpan.className =  span.className
+		newSpan.style.fontSize = span.style["font-size"]
+		newSpan.style.height = span.style["font-size"]
+		newSpan.style.display = 'inline-block'
 
+		return newSpan;
+	}
+	
+	const checkAndGetAllParrentNodes = (span) => {
+		let parElements = []
+		let parElem = span
+		let parparElem = parElem.parentNode
+		while (parElem.nodeName !== "DIV" && parElem.className !== "pdf-redactor-page"){
+			const parELemClone = parElem.cloneNode(false);
+			parElements.push(parELemClone)
+			parparElem = parElem.parentNode
+			if(parElem.textContent.length === 0){
+				console.log(parElem)
+				parElem.remove()
+			}
+			parElem = parparElem
+		}
+		console.log(parElements)
+		return parElements;
+	}
+
+	const checkOverFlow = (e) => {
+		const selection = window.getSelection();
+		const range = selection.getRangeAt(0);
+
+		let divNode = range.startContainer;
+
+		while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
+			divNode = divNode.parentNode
+		}
+
+
+		const parrentDiv = divNode.parentNode;
+		const originNode = parrentDiv.parentNode;
+		const style = getComputedStyle(parrentDiv);
+		const paddingTop = parseFloat(style.paddingTop);
+		const paddingBottom = parseFloat(style.paddingBottom);
+		const contentHeight = parrentDiv.clientHeight - paddingTop - paddingBottom
+		
+		const cursorPos = range.startOffset;
+		if(divNode.scrollHeight >= contentHeight){
+			
+			
+			if(originNode.lastChild === parrentDiv){
+				console.log(123)
+				const newDiv = document.createElement("div");
+				newDiv.contentEditable = "true"
+				newDiv.className = "pdf-redactor-page-edit"
+				newDiv.setAttribute("id", "textField");
+				newDiv.addEventListener('mouseup', handleMouseUp);
+				newDiv.addEventListener('keyup', handleMouseUp);
+				newDiv.addEventListener('keyup', checkOverFlow);
+
+				const newParrentDiv = document.createElement("div")
+				newParrentDiv.className = "pdf-redactor-page"
+				newParrentDiv.appendChild(newDiv)
+
+				originNode.appendChild(newParrentDiv)
+
+				let lastSpan = divNode.lastChild
+				while(lastSpan.nodeName !== "SPAN"){
+					lastSpan = lastSpan.lastChild
+				}
+
+				const words = lastSpan.textContent.split(" ")
+				const textToTranspose = words.pop()
+				const textToLeave = words.join(" ")
+				lastSpan.textContent = textToLeave
+				
+				const newSpan = cloneEmptySpan(lastSpan)
+				let newCursorPos = 0
+				if(textToTranspose){
+					newSpan.textContent = textToTranspose
+					newCursorPos = textToTranspose.length
+				}else{
+					newSpan.textContent = " "
+				}
+				
+				const newParagraph = document.createElement('p');
+				newParagraph.className = `${currentTextPosition}`
+
+				newParagraph.appendChild(newSpan);
+
+				newDiv.appendChild(newParagraph);
+
+				let currentSpanNode = range.startContainer
+
+				if(range.startContainer.nodeName === "#text"){
+					currentSpanNode = range.startContainer.parrentNode
+				}
+				if(currentSpanNode === lastSpan && cursorPos >= textToLeave.length){
+					range.setStart(newSpan.firstChild, newCursorPos)
+					range.setEnd(newSpan.firstChild, newCursorPos)
+					inputRef.current = newDiv
+				}
+				checkAndGetAllParrentNodes(lastSpan)
+ 
+			}
+		}else{
+			return
+		}
+	}
 	
 	
  const handleInput = (e) => {
@@ -84,31 +222,49 @@ export default function AdminCollectionCreate() {
     const contentEditableDiv = inputRef.current;
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
-	const divRange = selection.getRangeAt(0);
-	let divOriginNode = divRange.startContainer;
+	let divOriginNode = range.startContainer;
     const text = e.data;
 
-	console.log(range.getBoundingClientRect())
-	while(divOriginNode.className !== "pdf-redactor-page" && divOriginNode.nodeName !== "DIV"){
+	while(divOriginNode.className !== "pdf-redactor-page-edit" && divOriginNode.nodeName !== "DIV"){
 		divOriginNode = divOriginNode.parentNode
 	}
-	console.log(e)
-	
 
 	if(e.inputType === "insertParagraph"){
-		let paragraphNode = range.startContainer;
 		const currentSpanCursorePos = range.startOffset
+		
+		if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page-edit"){
+			const newParagraph = document.createElement('p');
+			newParagraph.className = `${currentTextPosition}`;
+
+			const newSpan = document.createElement('span')
+			newSpan.className = `size-${currentFontSize}`
+			newSpan.style.fontSize = `${currentFontSize}px`;
+			newSpan.style.height = `${currentFontSize}px`
+			newSpan.style.display = 'inline-block';
+			const textNode = document.createTextNode("");
+			newSpan.appendChild(textNode);
+
+			newParagraph.appendChild(newSpan);
+
+			range.insertNode(newParagraph);
+
+			range.setStart(newSpan, 0)
+			range.setEnd(newSpan, 0)
+
+		}
+		let paragraphNode = range.startContainer;
+
+
 		while (paragraphNode.nodeName !== "P"){
 			paragraphNode = paragraphNode.parentNode
 		}
-		console.log(paragraphNode)
 
 		let spanNode = range.startContainer
 
 		if(range.startContainer.nodeName === "#text"){
 			spanNode = range.startContainer.parentNode
 		}
-	
+
 		const textBefore = spanNode.textContent.slice(0, currentSpanCursorePos);
 		const textAfter = spanNode.textContent.slice(currentSpanCursorePos);
 		const spanNodes = Array.from(paragraphNode.childNodes);
@@ -129,7 +285,7 @@ export default function AdminCollectionCreate() {
 
 			Object.keys(textFormatDict).forEach(key => {
 				if (textFormatDict[key]){
-					newSpanClass +=  `${key}`
+					newSpanClass +=  ` ${key}`
 				}
 			})
 
@@ -182,8 +338,6 @@ export default function AdminCollectionCreate() {
 			spanAfter.style.height = spanNode.style["font-size"]
 			spanAfter.style.display = 'inline-block';
 			spanAfter.textContent = textAfter
-
-			console.log(spanNodes)
 
 			let spanNodesAfter = spanNodes.slice(paragraphCursorPos, paragraphNode.childElementCount)
 			
@@ -277,9 +431,7 @@ export default function AdminCollectionCreate() {
 						}
 						
 						spanNodesArray.forEach(node => nextP.appendChild(node))
-						console.log(nextCursorPos)
-						console.log(nextP.childNodes[currentNextParNodesCount].textContent)
-
+						
 						range.setStart(nextP.childNodes[currentNextParNodesCount].firstChild, nextCursorPos)
 						range.setEnd(nextP.childNodes[currentNextParNodesCount].firstChild, nextCursorPos)
 
@@ -308,7 +460,7 @@ export default function AdminCollectionCreate() {
 	}
 
 	
-	if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page"){
+	if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page-edit"){
 		const newParagraph = document.createElement('p');
 		newParagraph.className = `${currentTextPosition}`;
 
@@ -318,7 +470,7 @@ export default function AdminCollectionCreate() {
 
 		Object.keys(textFormatDict).forEach(key => {
 			if (textFormatDict[key]){
-				newSpanClass += `${key}`
+				newSpanClass += ` ${key}`
 			}
 		})
 
@@ -366,7 +518,7 @@ export default function AdminCollectionCreate() {
 
 			Object.keys(textFormatDict).forEach(key => {
 				if (textFormatDict[key]){
-					newSpanClass +=  `${key}`
+					newSpanClass +=  ` ${key}`
 				}
 			})
 
@@ -382,7 +534,6 @@ export default function AdminCollectionCreate() {
 								
 				range.setStartAfter(parentNode)
 				range.setEndAfter(parentNode)
-				console.log(range.startOffset)
 
 				range.insertNode(newSpan)
 
@@ -446,7 +597,6 @@ export default function AdminCollectionCreate() {
 	else{
 		const currentNode = range.startContainer
 		const currentStartOffset = range.startOffset
-		console.log(currentNode)
 
 		let someChanges = false
 		
@@ -470,7 +620,7 @@ export default function AdminCollectionCreate() {
 
 			Object.keys(textFormatDict).forEach(key => {
 				if (textFormatDict[key]){
-					newSpanClass += `${key}`
+					newSpanClass += ` ${key}`
 				}
 			})
 
@@ -521,63 +671,78 @@ export default function AdminCollectionCreate() {
 
 	useEffect(() => {
 		const contentEditableDiv = inputRef.current;
+
 		if (!contentEditableDiv) return;
 		contentEditableDiv.addEventListener('beforeinput', handleInput);
 
-		// Clean up the event listener
+	// Clean up the event listener
 		return () => {
 			contentEditableDiv.removeEventListener('beforeinput', handleInput);
 		};
 	}, [handleChangeTextSettings]);
 
-	
-document.addEventListener('DOMContentLoaded', () => {
-  const textField = document.getElementById('textField');
-  let savedRange;
+	useEffect(() => {
+		console.log(inputRef.current)
+		console.log('useEff')
+        const contentEditableDiv = inputRef.current;
+        if (!contentEditableDiv) return;
 
-  // Сохранить текущий диапазон при изменении выделения
-  textField.addEventListener('mouseup', () => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      savedRange = selection.getRangeAt(0);
-    }
-  });
+        let savedRange;
 
-  textField.addEventListener('keyup', () => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      savedRange = selection.getRangeAt(0);
-    }
-  });
+        const saveRangeMouseUp = () => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                savedRange = selection.getRangeAt(0);
+            }
+        };
 
-  // Восстановить диапазон при фокусировке на текстовом поле
-  textField.addEventListener('focus', () => {
-    if (savedRange) {
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(savedRange);
-    }
-  });
+        const handleKeyUp = () => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                savedRange = selection.getRangeAt(0);
+            }
+        };
 
-  // Снять фокус с текстового поля при клике за его пределами и восстановить курсор
-  document.addEventListener('mousedown', (event) => {
-    if (!textField.contains(event.target)) {
-      textField.blur();
-    }
-  });
+        // const handleFocus = () => {
+        //     if (savedRange) {
+        //         const selection = window.getSelection();
+        //         selection.removeAllRanges();
+        //         selection.addRange(savedRange);
+        //     }
+        // };
 
-  document.addEventListener('mouseup', (event) => {
-    if (!textField.contains(event.target) && event.target !== document.activeElement) {
-      textField.focus();
-      if (savedRange) {
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(savedRange);
-      }
-    }
-  });
-});
+        const handleBlur = (event) => {
+            if (!contentEditableDiv.contains(event.target)) {
+                contentEditableDiv.blur();
+            }
+        };
 
+        const handleDocumentMouseUp = (event) => {
+            if (!contentEditableDiv.contains(event.target) && event.target !== document.activeElement) {
+                contentEditableDiv.focus();
+                if (savedRange) {
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(savedRange);
+                }
+            }
+        };
+
+        contentEditableDiv.addEventListener('mouseup', saveRangeMouseUp);
+        contentEditableDiv.addEventListener('keyup', handleKeyUp);
+        // contentEditableDiv.addEventListener('focus', handleFocus);
+        document.addEventListener('mousedown', handleBlur);
+        document.addEventListener('mouseup', handleDocumentMouseUp);
+
+        // Clean up the event listeners
+        return () => {
+            contentEditableDiv.removeEventListener('mouseup', saveRangeMouseUp);
+            contentEditableDiv.removeEventListener('keyup', handleKeyUp);
+            // contentEditableDiv.removeEventListener('focus', handleFocus);
+            document.removeEventListener('mousedown', handleBlur);
+            document.removeEventListener('mouseup', handleDocumentMouseUp);
+        };
+    }, [inputRef.current]);
 
 	function changeParagraphStyle(className){
 		const selection = window.getSelection();
@@ -650,14 +815,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             <div className="pdf-redactor-page-section">
                                 <div
-                                    className="pdf-redactor-page"
-                                    contentEditable="true"
-                                    ref={inputRef}
-                                    onMouseUp={handleMouseUp}
-
-                                    onKeyUp={handleMouseUp} 
-									id="textField"
-                                >
+                                    className="pdf-redactor-page" 
+	                            >
+									<div
+										className="pdf-redactor-page-edit"
+										contentEditable="true"
+										ref={inputRef}
+										onMouseUp={handleMouseUp}
+										onKeyUp={(event) => {
+											handleMouseUp(event);
+											checkOverFlow(event);
+										}}
+										id="textField"
+									>
+									</div>
                                 </div>
                             </div>
                         </div>
