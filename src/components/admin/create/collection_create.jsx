@@ -114,7 +114,20 @@ export default function AdminCollectionCreate() {
 
 		return newSpan;
 	}
-	
+
+	const cloneFullP = (p) => {
+		const newP = document.createElement("p")
+		newP.className = p.className
+		console.log(p)
+		p.childNodes.forEach((child) => {
+			const node = cloneEmptySpan(child)
+			node.textNode = child.textNode
+			newP.appendChild(node)
+		})
+		// newP.appendChild(childElements)
+		return newP
+	}
+
 	const checkAndGetAllParrentNodes = (span) => {
 		let parElements = []
 		let parElem = span
@@ -133,14 +146,19 @@ export default function AdminCollectionCreate() {
 		return parElements;
 	}
 
-	const checkOverFlow = (e) => {
+	const checkOverFlow = (PurposeDiv) => {
 		const selection = window.getSelection();
 		const range = selection.getRangeAt(0);
 
 		let divNode = range.startContainer;
 
-		while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
-			divNode = divNode.parentNode
+		if(PurposeDiv != null){
+			divNode = PurposeDiv
+		}else{
+
+			while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
+				divNode = divNode.parentNode
+			}
 		}
 
 
@@ -154,6 +172,15 @@ export default function AdminCollectionCreate() {
 		const cursorPos = range.startOffset;
 		if(divNode.scrollHeight >= contentHeight){
 			
+
+			let lastP = divNode.lastChild
+			while(lastP.nodeName !== "P"){
+				lastP = lastP.lastChild
+			}
+			console.log(lastP)
+
+			const pToTranspose = lastP.cloneNode(true)
+			console.log(pToTranspose)
 			
 			if(originNode.lastChild === parrentDiv){
 				console.log(123)
@@ -170,45 +197,38 @@ export default function AdminCollectionCreate() {
 				newParrentDiv.appendChild(newDiv)
 
 				originNode.appendChild(newParrentDiv)
+			
+				newDiv.appendChild(pToTranspose);
 
-				let lastSpan = divNode.lastChild
-				while(lastSpan.nodeName !== "SPAN"){
-					lastSpan = lastSpan.lastChild
+				let currentPNode = range.startContainer.parentNode
+
+				if(range.startContainer.nodeName === "SPAN"){
+					currentPNode = currentPNode.parentNode
 				}
-
-				const words = lastSpan.textContent.split(" ")
-				const textToTranspose = words.pop()
-				const textToLeave = words.join(" ")
-				lastSpan.textContent = textToLeave
-				
-				const newSpan = cloneEmptySpan(lastSpan)
-				let newCursorPos = 0
-				if(textToTranspose){
-					newSpan.textContent = textToTranspose
-					newCursorPos = textToTranspose.length
-				}else{
-					newSpan.textContent = " "
-				}
-				
-				const newParagraph = document.createElement('p');
-				newParagraph.className = `${currentTextPosition}`
-
-				newParagraph.appendChild(newSpan);
-
-				newDiv.appendChild(newParagraph);
-
-				let currentSpanNode = range.startContainer
-
-				if(range.startContainer.nodeName === "#text"){
-					currentSpanNode = range.startContainer.parrentNode
-				}
-				if(currentSpanNode === lastSpan && cursorPos >= textToLeave.length){
-					range.setStart(newSpan.firstChild, newCursorPos)
-					range.setEnd(newSpan.firstChild, newCursorPos)
-					inputRef.current = newDiv
-				}
-				checkAndGetAllParrentNodes(lastSpan)
+				// if(currentPNode === lastP){
+				// 	range.setStart(currentSpanNode.firstChild, cursorPos)
+				// 	range.setEnd(currentSpanNode.firstChild, cursorPos)
+				// }
+				lastP.remove()
  
+			} else{
+				let nextDiv = 0;
+				
+				while(originNode.childNodes[nextDiv].firstChild !== divNode){
+					nextDiv += 1;
+					console.log(nextDiv)
+				}
+				nextDiv += 1;
+				nextDiv = originNode.childNodes[nextDiv].firstChild
+				
+				nextDiv.insertBefore(pToTranspose, nextDiv.firstChild)
+				console.log("remove")
+
+				lastP.remove()
+
+
+				checkOverFlow(divNode)
+				checkOverFlow(nextDiv)
 			}
 		}else{
 			return
@@ -824,7 +844,7 @@ export default function AdminCollectionCreate() {
 										onMouseUp={handleMouseUp}
 										onKeyUp={(event) => {
 											handleMouseUp(event);
-											checkOverFlow(event);
+											checkOverFlow(null);
 										}}
 										id="textField"
 									>
