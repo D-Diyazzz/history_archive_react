@@ -9,5 +9,8 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  optimizeDeps: {
+    include: ['pdfjs-dist/build/pdf.worker.js'],
+  },
 });
 

@@ -4,7 +4,7 @@ import { GlobalWorkerOptions } from 'pdfjs-dist';
 
 import "../style/partials/buttons.css"
 
-GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
 export default function PDFViewer({ pdfUrl }) {
   const canvasRef = useRef(null);

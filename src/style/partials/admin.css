@@ -48,6 +48,11 @@
     padding-left: 50px;
 }
 
+.admin-section-row{
+	display: flex;
+	flex-direction: row;
+}
+
 .admin-greeting-text{
     text-align: center;
     font-size: 30px;
@@ -486,3 +491,176 @@
     margin: 0 10px;
 }
 
+.admin-section-add-docs{
+	display:flex;
+	flex-direction: column;
+	align-items: center
+}
+
+.add-docs-p{
+	font-size: 28px;	
+}
+
+.add-docs-button{
+	display: flex;
+	margin-top: 30px;
+	height: 40px;
+	width: 300px;
+	border: 1px solid black;
+	border-radius: 20px;
+	color: white;
+	font-size: 18px;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	background-color: #4CAF50;
+	cursor: pointer;
+}
+
+.add-docs-button:hover{
+	background-color: #45a049;
+}
+
+.admin-section-document-mini {
+    display: flex; /* Изначально скрываем блок */
+    position: fixed; /* Фиксированное позиционирование для центрирования */
+    top: 50%; /* Центрирование по вертикали */
+    left: 50%; /* Центрирование по горизонтали */
+    transform: translate(-50%, -50%); /* Корректировка позиционирования для абсолютного центра */
+    width: 1500px;
+    height: 700px;
+    background-color: #ffffff; /* Белый фон для блока */
+    z-index: 1000; /* Поверх всех элементов */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для блока */
+    padding: 20px; /* Отступы внутри блока */
+    border-radius: 15px; /* Скругленные углы */
+	flex-direction: column;
+	background-color: rgb(236, 225, 207);
+}
+
+.admin-section-document-mini-overlay {
+    display: block; /* Изначально скрываем фон */
+    position: fixed; /* Фиксированное позиционирование */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный темный фон */
+    z-index: 999; /* Подложка под блоком */
+}
+
+.document-mini-buttons{
+	display: flex;
+	justify-content: right;
+	width: 100%;
+}
+
+.document-mini-close-button{
+	cursor: pointer;
+	color: white;
+	background-color: #F44336;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content:center;
+	align-items:center;
+	text-align: center;
+	border-radius: 6px;
+
+}
+
+.document-mini-section{
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.document-mini-section-navbar{
+	display: flex;
+	flex-direction: column;
+	width: 8%;
+	margin-right: 15px;
+	padding-right: 10px;
+	border-right: 1px solid black;
+}
+
+.doc-mini-navbar-elem{
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgb(7,37,52);
+    text-decoration: none;
+    transition: font-size 0.2s ease, color 0.2s ease;
+}
+
+.doc-mini-navbar-elem:hover{
+    font-size: 17px;
+    color: black;
+}
+
+.doc-mini-navbar-elem-active{
+    font-size: 17px;
+    color: rgb(236, 225, 207);
+    background-color: rgb(7,37,52);
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-decoration: none;
+}
+
+.document-mini-content{
+	width: 90%;
+}
+
+.admin-selected-doc{
+	width: 300px;
+	border: 1px solid black;
+	border-radius: 20px;
+	padding: 5px;
+	margin-top: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.document-selected{
+	display: flex;
+	flex-direction: row;
+}
+
+.document-selected-file{
+	max-width: 140px;
+	border-radius: 10px;
+}
+
+.document-selected-file canvas{
+	max-width: 140px;
+	border-radius: 15px;
+}
+
+.document-selected-info{
+	width: 140px;
+	margin-left: 5px;
+	white-space: nowrap; /* Текст в одну строку, без переноса */
+    overflow: hidden; /* Скрыть текст, выходящий за пределы */
+    text-overflow: ellipsis;
+}
+
+.doc-selected-del-btn{
+	width: 100px;
+	background-color: #F44336;
+	height: 30px;
+	padding: 5px;
+	border: 0;
+	border-radius: 5px;
+	color: white;
+}
+
+.admin-list-choise:hover{
+	background-color: rgb(162, 153, 142);
+}

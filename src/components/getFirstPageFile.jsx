@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { getDocument } from 'pdfjs-dist';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 // import 'pdfjs-dist/es5/build/pdf.worker.entry';
-GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
 export default function FirstPage({ pdfUrl, width, height }) {
   const canvasRef = useRef(null);

@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, Children } from 'react';
 import { Page } from 'react-pdf';
+import DocumentMiniPanelCreate from './document_mini_panel_create';
+import FirstPage from '../../getFirstPageFile';
 
 export default function AdminCollectionCreate() {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -129,7 +131,7 @@ export default function AdminCollectionCreate() {
 	}
 
 	const checkAndGetAllParrentNodes = (span) => {
-		let parElements = []
+		let parElements =[]
 		let parElem = span
 		let parparElem = parElem.parentNode
 		while (parElem.nodeName !== "DIV" && parElem.className !== "pdf-redactor-page"){
@@ -779,13 +781,147 @@ export default function AdminCollectionCreate() {
 
 	}
 
+	
+	const [showPanel, setShowPanel] = useState(false);
+
+	const handleButtonAddDocClick = () => {
+		setShowPanel(true);
+	}
+	
+	const handleCloseOverlay = () => {
+		setShowPanel(false);
+	}
+
+	const [errors, setErrors] = useState({
+		name: false,
+		type: false,
+	})
+	
+	const [formDataState, setFormData] = useState({
+		name: "",
+		type: ""
+	})
+	
+	const handleChange = (e, setTarget, setTargetErrors) => {
+		const {name, value} = e.target;
+		setTarget(prevState => ({
+			...prevState,
+			[name]: value
+		}))
+		setTargetErrors(prev => ({...prev, [name]: !value}))
+	}
+
+ 	const [colectionType, setColectionType] = useState('');
+    const [customType, setCustomType] = useState('');
+
+    const colectionOptions = [
+        "",
+        "Научный","Научно-популярный", "Учебный", "Другое"
+    ];
+
+    const handleChangeColType = (event) => {
+        const { value } = event.target;
+        if(value === 'Другое'){
+            setColectionType("Другое")
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                type: ""
+            }));
+        }else{
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                type: value  
+            }));
+            setColectionType(value)
+        }
+
+        setErrors(prev => ({...prev, ["type"]: !value}))
+    };
+
+	const [selectedDocuments, setSelectedDocuments] = useState([]);
+
+	const getFirstFile = (file) => {
+		const type = file.split(".")[1]
+		switch (type){
+			case 'pdf':
+				return <FirstPage pdfUrl={file} /> 
+		}
+	}
+
+	const handleRemoveDocument = (idToRemove) => {
+        setSelectedDocuments(prevDocuments =>
+            prevDocuments.filter(doc => doc.file.id !== idToRemove)
+        );
+    };
+	
+	const renderDocument = (obj, index) => {
+		switch (obj.type){
+			case "document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-file">
+								{getFirstFile(obj.file.file_urls[0])}	
+							</div>
+							<div className="document-selected-info">
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автора: {obj.file.author}</p>
+								
+							</div>
+							
+						</div>
+
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj.file.id)}>Удалить</button>
+					</div>
+				)
+		}
+	}
+
+
     return (
         <>
             <p className="admin-title-text">Создание Сборника</p>
 
             <div className="admin-section">
+				<div className="admin-section-row">
                 <form className="admin-section-create-form" onSubmin={(e) => {e.preventDefault()}}>
                     <div className="admin-form-column">
+			
+						<div className="admin-section-form-inputs">	
+							<div className="admin-form-row">
+								<div className="admin-form-row-label">
+									<label htmlFor="name">Название: </label>
+								</div>
+								<input 
+									className={errors.name ? 'admin-form-input input-error' : 'admin-form-input'} 
+									type="text" name="name" id="name" 
+									onChange={(e) => handleChange(e, setFormData, setErrors)} value={formDataState.name}
+								/>
+							</div>
+
+							<div className="admin-form-row">
+								<div className="admin-form-row-label">
+									<label htmlFor="variety">Тип сборника: </label>
+								</div>
+								<select value={colectionType} onChange={handleChangeColType} className={errors.type ? 'admin-form-input input-error' : "admin-form-select"}>
+									{colectionOptions.map(option => (
+										<option key={option} value={option}>{option}</option>
+									))}
+								</select>
+								{colectionType === 'Другое' && (
+									<input
+										className={errors.type ? 'admin-form-input input-error' : 'admin-form-input'}
+										type="text"
+										name="type"
+										// placeholder="Введите название документа"
+										value={formDataState.type}
+										onChange={(e) => handleChange(e, setFormData, setErrors)}
+									/>
+								)}
+							</div>
+
+						</div>
+			
                         <div className="admin-form-row-label">
                             <label>Test pdf creator</label>
                         </div>
@@ -856,8 +992,28 @@ export default function AdminCollectionCreate() {
                 </form>
 
                 <div className="admin-section-add-docs">
+					<p className="add-docs-p"><strong>Документы:</strong></p>
+					{
+						selectedDocuments.map((doc, index) => {
+							return renderDocument(doc, index)
+						})
+					}	
+					<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+						+ Добавить документ
+					</div>
                 </div>
+				</div>
             </div>
+
+			{showPanel && (
+				<>
+					<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
+					<DocumentMiniPanelCreate 
+						handleCloseOverlay={handleCloseOverlay}
+						setSelectedDocuments={setSelectedDocuments}
+					/>
+				</>
+			)}
         </>
     );
 }
