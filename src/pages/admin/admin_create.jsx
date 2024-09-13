@@ -20,7 +20,7 @@ export default function AdminPanelCreate() {
             <Navigate to="/login" />
         )
     }
-    if(role === "BasicUser"){
+    if(role === "BasicUser" || role === "ScientificCouncil"){
         return(
             <NotFoundPage/>
         )

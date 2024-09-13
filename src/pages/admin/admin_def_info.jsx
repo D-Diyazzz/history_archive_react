@@ -8,6 +8,8 @@ import NotFoundPage from "../404_not_found";
 import AdminNavbar from "../../components/admin/navbar";
 import DefDocumentComponent from "../../components/def_components/def_document_component";
 import api from "../../api";
+import DefCollectionComponent from "../../components/def_components/def_collection_component";
+import CreateCollectionButtons from "../../components/admin/create_collection_button";
 
 
 export default function AdminPanleDefInfo(){
@@ -31,10 +33,21 @@ export default function AdminPanleDefInfo(){
         switch(table) {
             case "document":
                 return <DefDocumentComponent documentId={id}/>
+			case "collection":
+				return <DefCollectionComponent collectionId={id}/>
             default:
                 return null;
         }
     }    
+
+	const renderButtonCreate = () => {
+		switch(table) {
+			case "collection":
+				return <CreateCollectionButtons/>
+			default:
+				return <CDButtons link={`/admin/${table}/create`}/>
+		}
+	}
 
     if(renderList() == null){
         return(
@@ -56,7 +69,7 @@ export default function AdminPanleDefInfo(){
 
                 <div className='admin-section'>
 
-                    <CDButtons link={`/admin/${table}/create`}/>
+					{renderButtonCreate()}
 
                     {renderList()} 
 

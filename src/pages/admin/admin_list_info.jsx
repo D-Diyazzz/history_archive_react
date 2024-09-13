@@ -7,11 +7,12 @@ import AdminNavbar from '../../components/admin/navbar';
 import CDButtons from '../../components/admin/cd_buttons';
 
 import AdminDocumentList from '../../components/admin/list/document_list';
-import AdminClassCollList from '../../components/admin/list/class_coll_list';
-import AdminFormatCollList from '../../components/admin/list/format_coll_list';
-import AdminMethodCollList from '../../components/admin/list/method_coll_list';
+
 
 import "../../style/partials/admin.css"
+import { Page } from 'react-pdf';
+import AdminCollectionList from '../../components/admin/list/collection_list';
+import CreateCollectionButtons from '../../components/admin/create_collection_button';
 
 export default function AdminPanelListInfo() {
     const {table} = useParams();
@@ -28,16 +29,21 @@ export default function AdminPanelListInfo() {
         )
     }
 
+	const renderButtonCreate = () => {
+		switch(table) {
+			case "collection":
+				return <CreateCollectionButtons />;
+			default:
+				return <CDButtons link={`/admin/${table}/create`}/>
+		}
+	}
+
     const renderList = () => {
         switch(table) {
             case "document":
                 return <AdminDocumentList />;
-            case "class-collection":
-                return <AdminClassCollList />;
-            case "format-collection":
-                return <AdminFormatCollList/>;
-            case "method-collection":
-                return <AdminMethodCollList/>;
+			case "collection":
+				return <AdminCollectionList/>;
             default:
                 return null;
         }
@@ -65,8 +71,7 @@ export default function AdminPanelListInfo() {
 
                 <div className='admin-section'>
                     
-                    <CDButtons link={`/admin/${table}/create`}/>
-
+					{renderButtonCreate()}
                     {renderList()} 
 
                 </div>

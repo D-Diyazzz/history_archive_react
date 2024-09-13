@@ -2,13 +2,53 @@ import React, { useState, useRef, useEffect, useCallback, Children } from 'react
 import { Page } from 'react-pdf';
 import DocumentMiniPanelCreate from './document_mini_panel_create';
 import FirstPage from '../../getFirstPageFile';
+import api from '../../../api';
 
-export default function AdminCollectionCreate() {
+export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
 	const [currentTextPosition, setTextPosition] = useState("left-text-position");
     const inputRef = useRef(null);
     const spanRef = useRef(null);
 	const [inputRefCurrent, setInputRefCurrent] = useState(null)
+
+	const [formDataState, setFormData] = useState({
+		title: "",
+		theme: "",
+		is_approved: false
+	})
+
+
+	useEffect(() => {
+		const getCollection = async() => {
+			try{
+				const response = await api.get(`/collection/${id}/admin`);
+				setFormData({
+					title: response.data.title,
+					theme: response.data.theme,
+					is_approved: response.data.is_approved
+				})
+				setColectionType(response.data.theme)
+				
+				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
+				const file_text = await file.text()
+				const regex = /<\/head>([\s\S]*)<\/html>/;
+				const match = file_text.match(regex);
+				
+
+				const contentDiv = document.getElementById("pdf-redactor-page-section");
+
+				if(match && match[1].trim()){
+					contentDiv.innerHTML = match[1];
+				}
+
+			}catch(error){
+				console.log(error)
+			}
+		}
+		if(id){
+			getCollection();
+		}
+	}, [id])
 	
 
 	const [textFormatDict, setTextFormatDict] = useState({
@@ -793,13 +833,9 @@ export default function AdminCollectionCreate() {
 	}
 
 	const [errors, setErrors] = useState({
-		name: false,
-		type: false,
-	})
-	
-	const [formDataState, setFormData] = useState({
-		name: "",
-		type: ""
+		title: false,
+		theme: false,
+		is_approved: false
 	})
 	
 	const handleChange = (e, setTarget, setTargetErrors) => {
@@ -815,7 +851,6 @@ export default function AdminCollectionCreate() {
     const [customType, setCustomType] = useState('');
 
     const colectionOptions = [
-        "",
         "Научный","Научно-популярный", "Учебный", "Другое"
     ];
 
@@ -825,17 +860,17 @@ export default function AdminCollectionCreate() {
             setColectionType("Другое")
             setFormData(prevFormData => ({
                 ...prevFormData,
-                type: ""
+                theme: ""
             }));
         }else{
             setFormData(prevFormData => ({
                 ...prevFormData,
-                type: value  
+                theme: value  
             }));
             setColectionType(value)
         }
 
-        setErrors(prev => ({...prev, ["type"]: !value}))
+        setErrors(prev => ({...prev, ["theme"]: !value}))
     };
 
 	const [selectedDocuments, setSelectedDocuments] = useState([]);
@@ -853,6 +888,26 @@ export default function AdminCollectionCreate() {
             prevDocuments.filter(doc => doc.file.id !== idToRemove)
         );
     };
+
+	useEffect(() => {
+		const updateCollectionData = async () => {
+			const contentDiv = document.getElementById("pdf-redactor-page-section");
+			const dataToSend = {
+				theme: formDataState.theme,
+				title: formDataState.title,
+				html_data: contentDiv.innerHTML
+			}
+			try{
+				const response = await api.patch(`/collection/${id}`,dataToSend)
+
+			}catch(error){
+
+			}
+		}
+
+		const intervalId = setInterval(updateCollectionData, 30000);
+		return () => clearInterval(intervalId)
+	}, []);
 	
 	const renderDocument = (obj, index) => {
 		switch (obj.type){
@@ -890,31 +945,31 @@ export default function AdminCollectionCreate() {
 						<div className="admin-section-form-inputs">	
 							<div className="admin-form-row">
 								<div className="admin-form-row-label">
-									<label htmlFor="name">Название: </label>
+									<label htmlFor="title">Название: </label>
 								</div>
 								<input 
-									className={errors.name ? 'admin-form-input input-error' : 'admin-form-input'} 
-									type="text" name="name" id="name" 
-									onChange={(e) => handleChange(e, setFormData, setErrors)} value={formDataState.name}
+									className={errors.title ? 'admin-form-input input-error' : 'admin-form-input'} 
+									type="text" name="title" id="theme" 
+									onChange={(e) => handleChange(e, setFormData, setErrors)} value={formDataState.title}
 								/>
 							</div>
 
 							<div className="admin-form-row">
 								<div className="admin-form-row-label">
-									<label htmlFor="variety">Тип сборника: </label>
+									<label htmlFor="theme">Тип сборника: </label>
 								</div>
-								<select value={colectionType} onChange={handleChangeColType} className={errors.type ? 'admin-form-input input-error' : "admin-form-select"}>
+								<select value={colectionType} onChange={handleChangeColType} className={errors.theme ? 'admin-form-input input-error' : "admin-form-select"}>
 									{colectionOptions.map(option => (
 										<option key={option} value={option}>{option}</option>
 									))}
 								</select>
 								{colectionType === 'Другое' && (
 									<input
-										className={errors.type ? 'admin-form-input input-error' : 'admin-form-input'}
+										className={errors.theme ? 'admin-form-input input-error' : 'admin-form-input'}
 										type="text"
-										name="type"
+										name="theme"
 										// placeholder="Введите название документа"
-										value={formDataState.type}
+										value={formDataState.theme}
 										onChange={(e) => handleChange(e, setFormData, setErrors)}
 									/>
 								)}
@@ -969,7 +1024,7 @@ export default function AdminCollectionCreate() {
                                 </div>
                             </div>
 
-                            <div className="pdf-redactor-page-section">
+                            <div className="pdf-redactor-page-section" id="pdf-redactor-page-section">
                                 <div
                                     className="pdf-redactor-page" 
 	                            >

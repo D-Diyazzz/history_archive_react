@@ -8,6 +8,7 @@ import CDButtons from '../../components/admin/cd_buttons';
 import AdminDocumentUpdateComponent from '../../components/admin/update/document_update';
 
 import "../../style/partials/admin.css"
+import AdminCollectionCreate from '../../components/admin/create/collection_create';
 
 
 export default function AdminPanelUpdate() {
@@ -29,6 +30,8 @@ export default function AdminPanelUpdate() {
         switch(table) {
             case "document":
                 return <AdminDocumentUpdateComponent id={id} />;
+			case "collection":
+				return <AdminCollectionCreate id={id} />;
             default:
                 return null;
         }

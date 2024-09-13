@@ -33,8 +33,10 @@ export default function Login(){
             };
 
             const response = await axios.post("http://localhost:8000/v1/login", dataToSend);
+			console.log(response)
             const access_token = response.data["access_token"];
             const refresh_token = response.data["refresh_token"];
+			localStorage.setItem('user_id', response.data["id"])
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token)
             localStorage.setItem('user_name', response.data['user_name']);
