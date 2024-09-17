@@ -836,6 +836,10 @@ export default function AdminCollectionCreate({id}) {
 		setShowPanel(false);
 	}
 
+	const openPanel = (panelType) => {
+
+	}
+
 	const [errors, setErrors] = useState({
 		title: false,
 		theme: false,
@@ -887,10 +891,25 @@ export default function AdminCollectionCreate({id}) {
 		}
 	}
 
-	const handleRemoveDocument = (idToRemove) => {
-        setSelectedDocuments(prevDocuments =>
-            prevDocuments.filter(doc => doc.id !== idToRemove)
-        );
+	const handleRemoveDocument = async (obj) => {
+		try{
+			
+			const response = await api.delete(`/collection/${formDataState.id}/document`, {
+			  data: {
+				doc_id: obj.id,
+				doc_type: obj.type
+			  }
+			});
+
+			if(response.status == 200){
+				setSelectedDocuments(prevDocuments =>
+            		prevDocuments.filter(doc => doc.id !== obj.id)
+        		);
+			}
+		}
+		catch(error){
+			console.log(error)
+		}
     };
 
 	useEffect(() => {
@@ -930,7 +949,7 @@ export default function AdminCollectionCreate({id}) {
 							
 						</div>
 
-					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj.id)}>Удалить</button>
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj)}>Удалить</button>
 					</div>
 				)
 		}
