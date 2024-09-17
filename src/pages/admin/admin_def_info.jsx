@@ -10,6 +10,7 @@ import DefDocumentComponent from "../../components/def_components/def_document_c
 import api from "../../api";
 import DefCollectionComponent from "../../components/def_components/def_collection_component";
 import CreateCollectionButtons from "../../components/admin/create_collection_button";
+import AdminDefCollectionComponent from "../../components/admin/def_components/def_admin_collection_component";
 
 
 export default function AdminPanleDefInfo(){
@@ -34,7 +35,7 @@ export default function AdminPanleDefInfo(){
             case "document":
                 return <DefDocumentComponent documentId={id}/>
 			case "collection":
-				return <DefCollectionComponent collectionId={id}/>
+				return <AdminDefCollectionComponent collectionId={id}/>
             default:
                 return null;
         }

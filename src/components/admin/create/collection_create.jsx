@@ -12,6 +12,7 @@ export default function AdminCollectionCreate({id}) {
 	const [inputRefCurrent, setInputRefCurrent] = useState(null)
 
 	const [formDataState, setFormData] = useState({
+		id: "",
 		title: "",
 		theme: "",
 		is_approved: false
@@ -23,11 +24,14 @@ export default function AdminCollectionCreate({id}) {
 			try{
 				const response = await api.get(`/collection/${id}/admin`);
 				setFormData({
+					id: response.data.id,
 					title: response.data.title,
 					theme: response.data.theme,
 					is_approved: response.data.is_approved
 				})
 				setColectionType(response.data.theme)
+				setSelectedDocuments(response.data.documents)
+				console.log(selectedDocuments)
 				
 				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
 				const file_text = await file.text()
@@ -885,7 +889,7 @@ export default function AdminCollectionCreate({id}) {
 
 	const handleRemoveDocument = (idToRemove) => {
         setSelectedDocuments(prevDocuments =>
-            prevDocuments.filter(doc => doc.file.id !== idToRemove)
+            prevDocuments.filter(doc => doc.id !== idToRemove)
         );
     };
 
@@ -916,17 +920,17 @@ export default function AdminCollectionCreate({id}) {
 					<div className="admin-selected-doc">
 						<div className="document-selected">
 							<div className="document-selected-file">
-								{getFirstFile(obj.file.file_urls[0])}	
+								{getFirstFile(obj.file_urls[0])}	
 							</div>
 							<div className="document-selected-info">
 								<p className="doc-selected-info-p">Номер: {index+1}</p>
-								<p className="doc-selected-info-p">Автора: {obj.file.author}</p>
+								<p className="doc-selected-info-p">Автора: {obj.author}</p>
 								
 							</div>
 							
 						</div>
 
-					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj.file.id)}>Удалить</button>
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj.id)}>Удалить</button>
 					</div>
 				)
 		}
@@ -1046,16 +1050,35 @@ export default function AdminCollectionCreate({id}) {
                     </div>
                 </form>
 
-                <div className="admin-section-add-docs">
-					<p className="add-docs-p"><strong>Документы:</strong></p>
-					{
-						selectedDocuments.map((doc, index) => {
-							return renderDocument(doc, index)
-						})
-					}	
-					<div className="add-docs-button" onClick={handleButtonAddDocClick}>
-						+ Добавить документ
+                <div className="admin-section-add">
+					<div className="admin-section-add-docs"> 
+						<p className="add-docs-p"><strong>Документы:</strong></p>
+						{
+							selectedDocuments.map((doc, index) => {
+								return renderDocument(doc, index)
+							})
+						}	
+						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+							+ Добавить документ
+						</div>
 					</div>
+
+					<div className="admin-section-add-docs"> 
+						<p className="add-docs-p"><strong>Научный совет:</strong></p>
+					
+						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+							+ Добавить 
+						</div>
+					</div>
+					
+					<div className="admin-section-add-docs"> 
+						<p className="add-docs-p"><strong>Редакторы:</strong></p>
+					
+						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+							+ Добавить
+						</div>
+					</div>
+
                 </div>
 				</div>
             </div>
@@ -1066,6 +1089,8 @@ export default function AdminCollectionCreate({id}) {
 					<DocumentMiniPanelCreate 
 						handleCloseOverlay={handleCloseOverlay}
 						setSelectedDocuments={setSelectedDocuments}
+						selectedDocuments={selectedDocuments}
+						collectionId={formDataState.id}
 					/>
 				</>
 			)}
