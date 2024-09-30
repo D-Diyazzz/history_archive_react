@@ -3,6 +3,7 @@ import { Page } from 'react-pdf';
 import DocumentMiniPanelCreate from './document_mini_panel_create';
 import FirstPage from '../../getFirstPageFile';
 import api from '../../../api';
+import AdminMiniAdminUserList from '../mini_components/list_admin_users';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -31,7 +32,8 @@ export default function AdminCollectionCreate({id}) {
 				})
 				setColectionType(response.data.theme)
 				setSelectedDocuments(response.data.documents)
-				console.log(selectedDocuments)
+				setSelectedSciUsers(response.data.scientific_council_group)
+				console.log(selectedSciUsers)
 				
 				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
 				const file_text = await file.text()
@@ -826,18 +828,45 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	
-	const [showPanel, setShowPanel] = useState(false);
+	const [showPanel, setShowPanel] = useState(null);
 
 	const handleButtonAddDocClick = () => {
 		setShowPanel(true);
 	}
 	
 	const handleCloseOverlay = () => {
-		setShowPanel(false);
+		setShowPanel(null);
 	}
 
 	const openPanel = (panelType) => {
+		if(panelType === "document"){
+			setShowPanel(
+					<>
+						<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
+					<DocumentMiniPanelCreate 
+						handleCloseOverlay={handleCloseOverlay}
+						setSelectedDocuments={setSelectedDocuments}
+						selectedDocuments={selectedDocuments}
+						collectionId={formDataState.id}
+					/>
 
+					</>
+				)
+
+		}else if(panelType === "scientific_council_group"){
+			setShowPanel(
+					<>
+						<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
+						<AdminMiniAdminUserList
+							handleCloseOverlay={handleCloseOverlay}
+							setSelectedSciUsers={setSelectedSciUsers}
+							selectedSciUsers={selectedSciUsers}
+							collectionId={formDataState.id}
+						/>
+					</>
+				)
+
+		}
 	}
 
 	const [errors, setErrors] = useState({
@@ -912,6 +941,31 @@ export default function AdminCollectionCreate({id}) {
 		}
     };
 
+	const [selectedSciUsers, setSelectedSciUsers] = useState([]);
+	
+	const handleRemoveSciUser = async(user) => {
+		try{
+			const response = await api.delete(`/collection/${formDataState.id}/user_group?user_id=${user.id}`);
+
+			if(response.status == 200){
+				setSelectedSciUsers(prevUser => prevUser.filter(u => u.id !== user.id))
+			}
+		}catch(error){
+			console.log(error)
+		}
+	}
+
+	// const handleRemoveRedactorUser = async(user) => {
+	// 	try{
+	// 		const response = await api.delete(`/collection/${formDataState.id}/user_group?user_id=${user.id}`);
+	// 		if(response.status == 200){
+	// 			setSelectedRedactorUsers(prevUser => prevUser.filter(u => u.id !== user.id))
+	// 		}
+	// 	} catch(error){
+	// 		console.log(error)
+	// 	}
+	// }
+
 	useEffect(() => {
 		const updateCollectionData = async () => {
 			const contentDiv = document.getElementById("pdf-redactor-page-section");
@@ -953,6 +1007,28 @@ export default function AdminCollectionCreate({id}) {
 					</div>
 				)
 		}
+	}
+
+	const renderSciUser = (obj) => {
+		return (
+			<div className="admin-selected-u">
+				<div className="user-selected">
+					<div className="user-selected-photo">
+					</div>
+
+					<div className="user-selected-info">
+						<p className="user-selected-name">{obj.firstname} {obj.lastname}</p>
+						<p className="user-selected-email">{obj.email}</p>
+					</div>
+					
+					<div className="user-selected-approved">
+						<div className={obj.is_approved ? 'user-selected-approved-t' : 'user-selected-approved-f'}>
+						</div>
+					</div>
+				</div>
+				<div className="user-selected-del-btn" onClick={() => handleRemoveSciUser(obj)}>X</div>
+			</div>
+		)
 	}
 
 
@@ -1077,15 +1153,20 @@ export default function AdminCollectionCreate({id}) {
 								return renderDocument(doc, index)
 							})
 						}	
-						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+						<div className="add-docs-button" onClick={() => openPanel("document")}>
 							+ Добавить документ
 						</div>
 					</div>
 
 					<div className="admin-section-add-docs"> 
 						<p className="add-docs-p"><strong>Научный совет:</strong></p>
+						{
+							selectedSciUsers.map((user) => {
+								return renderSciUser(user)
+							})
+						}
 					
-						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+						<div className="add-docs-button" onClick={() => openPanel("scientific_council_group")}>
 							+ Добавить 
 						</div>
 					</div>
@@ -1093,7 +1174,7 @@ export default function AdminCollectionCreate({id}) {
 					<div className="admin-section-add-docs"> 
 						<p className="add-docs-p"><strong>Редакторы:</strong></p>
 					
-						<div className="add-docs-button" onClick={handleButtonAddDocClick}>
+						<div className="add-docs-button" onClick={() => openPanel("redactor_group")}>
 							+ Добавить
 						</div>
 					</div>
@@ -1102,17 +1183,7 @@ export default function AdminCollectionCreate({id}) {
 				</div>
             </div>
 
-			{showPanel && (
-				<>
-					<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
-					<DocumentMiniPanelCreate 
-						handleCloseOverlay={handleCloseOverlay}
-						setSelectedDocuments={setSelectedDocuments}
-						selectedDocuments={selectedDocuments}
-						collectionId={formDataState.id}
-					/>
-				</>
-			)}
+			{showPanel}
         </>
     );
 }

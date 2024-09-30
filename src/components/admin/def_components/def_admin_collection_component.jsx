@@ -11,6 +11,8 @@ import FirstPage from "../../getFirstPageFile";
 export default function AdminDefCollectionComponent({collectionId}){
 	const [collectionElem, setCollectionElem] = useState({});
 	const [documents, setDocuments] = useState([])
+	const [sciUsers, setSciUsers] = useState([])
+	const [redactorUsers, setRedactorUsers] = useState([])
 	const [error, setError] = useState(false)
 	const navigate = useNavigate();
 
@@ -21,6 +23,8 @@ export default function AdminDefCollectionComponent({collectionId}){
 				/* const response = await api.get(`collection/%7Bid%7D/admin?document_id=${collectionId}`) */
 				setCollectionElem(response.data);
 				setDocuments(response.data.documents)
+				setSciUsers(response.data.scientific_council_group)
+				setRedactorUsers(response.data.redactor_group)
 			}catch (error) {
 				setError(true);
 			}
@@ -38,17 +42,6 @@ export default function AdminDefCollectionComponent({collectionId}){
 		return <NotFoundComponent />;
 	}
 
-	const renderFiles = () => {
-
-	}
-
-	const renderSiCouncilGroup = () => {
-
-	}
-
-const renderRedactorGroup = () => {
-
-	}
 
 	const openSessionToEdit = async() => {
 		try{
@@ -90,6 +83,45 @@ const renderRedactorGroup = () => {
 				)
 		}
 	}
+
+	const renderSciUser = (obj) => {
+		return (
+			<div className="admin-selected-u">
+				<div className="user-selected">
+					<div className="user-selected-photo">
+					</div>
+
+					<div className="user-selected-info">
+						<p className="user-selected-name">{obj.firstname} {obj.lastname}</p>
+						<p className="user-selected-email">{obj.email}</p>
+					</div>
+					
+					<div className="user-selected-approved">
+						<div className={obj.is_approved ? 'user-selected-approved-t' : 'user-selected-approved-f'}>
+						</div>
+					</div>
+				</div>
+			</div>
+		)
+	}
+
+		const renderAdminUser = (obj) => {
+		return (
+			<div className="admin-selected-u">
+				<div className="user-selected">
+					<div className="user-selected-photo">
+					</div>
+
+					<div className="user-selected-info">
+						<p className="user-selected-name">{obj.firstname} {obj.lastname}</p>
+						<p className="user-selected-email">{obj.email}</p>
+					</div>
+				</div>
+			</div>
+		)
+	}
+
+
 
 	return (
 		<>
@@ -137,10 +169,21 @@ const renderRedactorGroup = () => {
 						
 						<div className="admin-section-add-docs">
 							<p className="add-docs-p"><strong>Научный совет:</strong></p>
+							{
+								sciUsers.map((user) => {
+									return renderSciUser(user)
+								})
+							}
 						</div>
 
 						<div className="admin-section-add-docs">
 							<p className="add-docs-p"><strong>Редакторы:</strong></p>
+
+							{
+								redactorUsers.map((user) => {
+									return renderAdminUser(user)
+								})
+							}
 						</div>
 					</div>
 				</div>
