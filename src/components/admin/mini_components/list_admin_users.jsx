@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import api from "../../../api";
 
-export default function AdminMiniAdminUserList({handleCloseOverlay, setSelectedSciUsers, selectedSciUsers, collectionId}){
+export default function AdminMiniAdminUserList({handleCloseOverlay, setSelectedUsers, selectedUsers, collectionId, typeUser}){
 
 	const [users, setUsers] = useState([]);
 
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try{
-				const response = await api.get("/user/sci")
-				setUsers(response.data)
+				if(typeUser === "SciUser"){
+					const response = await api.get("/user/sci")
+					setUsers(response.data)
+				}else{
+					const response = await api.get("/user/redactor")
+					setUsers(response.data)
+				}
 			}catch (error){
 
 			}
@@ -19,7 +24,7 @@ export default function AdminMiniAdminUserList({handleCloseOverlay, setSelectedS
 	}, [])
 
 	const isUserSelected = (userId) => {
-		return selectedSciUsers.some((selectedU) => selectedU.id === userId)
+		return selectedUsers.some((selectedU) => selectedU.id === userId)
 	}
 
 	const handleSelectUser = async (user) => {
@@ -27,7 +32,7 @@ export default function AdminMiniAdminUserList({handleCloseOverlay, setSelectedS
 			const response = await api.post(`/collection/${collectionId}/user_group?user_id=${user.id}`)
 
 			if(response.status == 200){
-				setSelectedSciUsers(prevUsers => [...prevUsers, user]);
+				setSelectedUsers(prevUsers => [...prevUsers, user]);
 				handleCloseOverlay();
 			}
 		}catch(error){

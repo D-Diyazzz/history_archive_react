@@ -33,6 +33,7 @@ export default function AdminCollectionCreate({id}) {
 				setColectionType(response.data.theme)
 				setSelectedDocuments(response.data.documents)
 				setSelectedSciUsers(response.data.scientific_council_group)
+				setSelectedRedactorUsers(response.data.redactor_group)
 				console.log(selectedSciUsers)
 				
 				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
@@ -859,13 +860,26 @@ export default function AdminCollectionCreate({id}) {
 						<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
 						<AdminMiniAdminUserList
 							handleCloseOverlay={handleCloseOverlay}
-							setSelectedSciUsers={setSelectedSciUsers}
-							selectedSciUsers={selectedSciUsers}
+							setSelectedUsers={setSelectedSciUsers}
+							selectedUsers={selectedSciUsers}
 							collectionId={formDataState.id}
+							typeUser={"SciUser"}
 						/>
 					</>
 				)
-
+		}else if(panelType === "redactor_group"){
+			setShowPanel(
+				<>
+					<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
+					<AdminMiniAdminUserList
+						handleCloseOverlay={handleCloseOverlay}
+						setSelectedUsers={setSelectedRedactorUsers}
+						selectedUsers={selectedRedactorUsers}
+						collectionId={formDataState.id}
+						typeUser={"RedactorUser"}
+					/>
+				</>
+			)
 		}
 	}
 
@@ -942,13 +956,14 @@ export default function AdminCollectionCreate({id}) {
     };
 
 	const [selectedSciUsers, setSelectedSciUsers] = useState([]);
+	const [selectedRedactorUsers, setSelectedRedactorUsers] = useState([]);
 	
-	const handleRemoveSciUser = async(user) => {
+	const handleRemoveUser = async(user, setSelectedUsers) => {
 		try{
 			const response = await api.delete(`/collection/${formDataState.id}/user_group?user_id=${user.id}`);
 
 			if(response.status == 200){
-				setSelectedSciUsers(prevUser => prevUser.filter(u => u.id !== user.id))
+				setSelectedUsers(prevUser => prevUser.filter(u => u.id !== user.id))
 			}
 		}catch(error){
 			console.log(error)
@@ -1026,7 +1041,25 @@ export default function AdminCollectionCreate({id}) {
 						</div>
 					</div>
 				</div>
-				<div className="user-selected-del-btn" onClick={() => handleRemoveSciUser(obj)}>X</div>
+				<div className="user-selected-del-btn" onClick={() => handleRemoveUser(obj, setSelectedSciUsers)}>X</div>
+			</div>
+		)
+	}
+
+	const renderRedactorUser = (obj) => {
+		return (
+			<div className="admin-selected-u">
+				<div className="user-selected">
+					<div className="user-selected-photo">
+					</div>
+
+					<div className="user-selected-info">
+						<p className="user-selected-name">{obj.firstname} {obj.lastname}</p>
+						<p className="user-selected-email">{obj.email}</p>
+					</div>
+					
+				</div>
+				<div className="user-selected-del-btn" onClick={() => handleRemoveUser(obj, setSelectedRedactorUsers)}>X</div>
 			</div>
 		)
 	}
@@ -1173,6 +1206,11 @@ export default function AdminCollectionCreate({id}) {
 					
 					<div className="admin-section-add-docs"> 
 						<p className="add-docs-p"><strong>Редакторы:</strong></p>
+						{
+							selectedRedactorUsers.map((user) => {
+								return renderRedactorUser(user)
+							})
+						}
 					
 						<div className="add-docs-button" onClick={() => openPanel("redactor_group")}>
 							+ Добавить
