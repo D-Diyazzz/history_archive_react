@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from '../api';
 import "../style/partials/auth.css"
+import {jwtDecode} from 'jwt-decode';
+
 
 export default function Login(){
     const [hasError, setHasError] = useState(true);
@@ -36,7 +38,8 @@ export default function Login(){
 			console.log(response)
             const access_token = response.data["access_token"];
             const refresh_token = response.data["refresh_token"];
-			localStorage.setItem('user_id', response.data["id"])
+			const decode = jwtDecode(access_token)
+			localStorage.setItem('user_id', decode["id"])
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token)
             localStorage.setItem('user_name', response.data['user_name']);
@@ -44,6 +47,7 @@ export default function Login(){
             navigate('/')
         } catch (error){
             setHasErrorPost(true);
+			console.log(error)
         }
     }
 

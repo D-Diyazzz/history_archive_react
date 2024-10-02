@@ -16,6 +16,8 @@ export default function AdminDefCollectionComponent({collectionId}){
 	const [error, setError] = useState(false)
 	const navigate = useNavigate();
 
+	const user_role = localStorage.getItem("user_role")
+
 	useEffect(() => {
 		const getInfo = async() => {
 			try{
@@ -25,6 +27,7 @@ export default function AdminDefCollectionComponent({collectionId}){
 				setDocuments(response.data.documents)
 				setSciUsers(response.data.scientific_council_group)
 				setRedactorUsers(response.data.redactor_group)
+				setIsApproved(response.data.is_approved)
 			}catch (error) {
 				setError(true);
 			}
@@ -46,13 +49,19 @@ export default function AdminDefCollectionComponent({collectionId}){
 	const openSessionToEdit = async() => {
 		try{
 			const response = await api.post(`collection/${collectionId}/session`)
-			navigate(`/admin/update/collection/${collectionId}`)
+			if(response.status === 200){
+				navigate(`/admin/update/collection/${collectionId}`)
+			}
 		}catch(error){
 			
 		}
 	}
 
-		const getFirstFile = (file) => {
+	const redirectToCommentPage = () => {
+		navigate(`/admin/collection/${collectionId}/comment`)
+	}	
+
+	const getFirstFile = (file) => {
 		const type = file.split(".")[1]
 		switch (type){
 			case 'pdf':
@@ -121,6 +130,8 @@ export default function AdminDefCollectionComponent({collectionId}){
 		)
 	}
 
+	const [isApproved, setIsApproved] = useState(false)
+
 
 
 	return (
@@ -147,13 +158,38 @@ export default function AdminDefCollectionComponent({collectionId}){
 								<p>{collectionElem.theme}</p>
 							</div>
 						</div>
+
+						<div className="collection-row">
+							<div className="collection-row-key">
+								<p>Одобренно:</p>
+							</div>	
+							<div className="collection-row-value">
+								<p>{isApproved ? "Да" : "Нет"}</p>
+							</div>
+						</div>
 						
 						<div className="collection-pdf-file">
 							<PDFViewer pdfUrl={`collections/${collectionElem.file_url}`}/>	
 						</div>
 
 						<div className="collection-edit-button-block">
-							<button className="create-button" onClick={openSessionToEdit}>Редактировать -></button>
+							{user_role === 'AdminUser' || user_role === 'RedactorUser' ? (
+								<button className="create-button" onClick={openSessionToEdit}>Редактировать -></button>
+							) : (
+								<>
+								</>
+							)
+
+							}
+							{user_role === 'RedactorUser' || user_role === 'ScientificCouncil' ? (
+								<button className="create-button" onClick={redirectToCommentPage}>Коментировать -></button>
+							):
+							(
+								<>
+								</>
+							)
+
+							}
 						</div>
 					</div>
 

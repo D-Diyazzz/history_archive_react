@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-alignment": "^41.3.0",
-    "@ckeditor/ckeditor5-build-classic": "^41.3.0",
+    "@ckeditor/ckeditor5-alignment": "^43.1.1",
+    "@ckeditor/ckeditor5-build-classic": "^43.1.1",
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "axios": "^1.6.8",
-    "pdfjs-dist": "^3.9.179",
+    "jwt-decode": "^4.0.0",
+    "pdfjs-dist": "^4.6.82",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-pdf": "^9.1.0",

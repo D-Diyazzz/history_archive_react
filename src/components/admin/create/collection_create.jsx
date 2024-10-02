@@ -34,7 +34,8 @@ export default function AdminCollectionCreate({id}) {
 				setSelectedDocuments(response.data.documents)
 				setSelectedSciUsers(response.data.scientific_council_group)
 				setSelectedRedactorUsers(response.data.redactor_group)
-				console.log(selectedSciUsers)
+				setIsApproved(response.data.is_approved)
+				console.log(response.data)
 				
 				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
 				const file_text = await file.text()
@@ -1064,6 +1065,31 @@ export default function AdminCollectionCreate({id}) {
 		)
 	}
 
+	const [isApproved, setIsApproved] = useState(false);
+
+	const handleApprove = async () => {
+		if(isApproved){
+			try{
+				const response = await api.patch(`/collection/${formDataState.id}/approve?approve=false`)
+				if(response.status === 200){
+					setIsApproved(false)
+				}
+			}catch(error){
+
+			}
+		}else{
+			try{
+				const allApproved = selectedSciUsers.every(user => user.is_approved === true);
+				const response = await api.patch(`/collection/${formDataState.id}/approve?approve=${allApproved}`)
+				if(response.status === 200){
+					setIsApproved(allApproved)
+				}
+			}catch(error){
+
+			}
+		}
+	}
+
 
     return (
         <>
@@ -1105,6 +1131,20 @@ export default function AdminCollectionCreate({id}) {
 										onChange={(e) => handleChange(e, setFormData, setErrors)}
 									/>
 								)}
+							</div>
+
+							<div className="admin-form-row">
+								<div className="admin-form-row-label">
+									<label htmlFor="approve">Одобренно</label>
+								</div>
+								
+								<div className="toggle-container">
+									<label class="switch">
+										<input type="checkbox" checked={isApproved} onChange={handleApprove}/>
+										<span class="slider round"></span>
+									</label>
+									<p className="toggle-p" id="toggle-state">{isApproved ? 'Да' : 'Нет'}</p>
+								</div>
 							</div>
 
 						</div>

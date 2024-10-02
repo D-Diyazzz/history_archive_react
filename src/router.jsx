@@ -13,6 +13,7 @@ import AdminPanelListInfo from "./pages/admin/admin_list_info";
 import AdminPanelCreate from "./pages/admin/admin_create";
 import AdminPanleDefInfo from "./pages/admin/admin_def_info";
 import AdminPanelUpdate from "./pages/admin/admin_update";
+import AdminPanelCommentColl from "./pages/admin/admin_comment_coll";
 
 export default function Router(){
     return(
@@ -33,6 +34,7 @@ export default function Router(){
             <Route path="/admin/:table/create" element={<AdminPanelCreate/>}/>
             <Route path="/admin/:table/:id" element={<AdminPanleDefInfo/>}/>
 	    <Route path="/admin/update/:table/:id" element={<AdminPanelUpdate/>}/>
+			<Route path="/admin/collection/:id/comment" element={<AdminPanelCommentColl/>}/>
 
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
