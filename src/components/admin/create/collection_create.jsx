@@ -1090,6 +1090,26 @@ export default function AdminCollectionCreate({id}) {
 		}
 	}
 
+	const handleFileChange = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			
+			// Читаем файл как Data URL
+			reader.onload = function(e) {
+				const parentDiv = event.target.parentNode;
+				const originDiv = parentDiv.parentNode.parentNode;
+				const pageDiv = originDiv.firstChild;
+
+				// Устанавливаем background-image как Data URL
+				pageDiv.style.backgroundImage = `url(${e.target.result})`;
+			};
+			
+			// Запускаем чтение файла
+			reader.readAsDataURL(file);
+		}
+	};
+
 
     return (
         <>
@@ -1167,6 +1187,9 @@ export default function AdminCollectionCreate({id}) {
 										className={textFormatDict["italic"] ? 'pdf-redactor-tool-selected' : ''}
 
 										><i>I</i></p>
+
+									<input type="color" id="colorPicker" />
+
                                 </div>
 
                                 <div className="pdf-redactor-alignment-tools">
@@ -1212,8 +1235,15 @@ export default function AdminCollectionCreate({id}) {
 										id="textField"
 									>
 									</div>
+									<div className="pdf-redactor-page-tools">
+									<div className="pdf-page-tool">
+										<label htmlFor="back-img">I</label>
+										<input type="file" id="back-img" onChange={handleFileChange} className="pdf-page-tool-input" accept="image/"/>
+									</div>
+									</div>
+
                                 </div>
-                            </div>
+							</div>
                         </div>
                     </div>
                 </form>

@@ -79,7 +79,43 @@
 	/* align-items: center; */
 	/* align-content: center; */
 	overflow-y: auto;
-	
+	display:flex;
+	flex-direction: row;
+}
+
+.pdf-redactor-page-tools{
+	margin-top: 45px;
+	margin-right: 3px;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+	text-align: center;
+	position:relative;
+	left: 650px;
+	top: 0px;
+}
+
+.pdf-page-tool{
+	width: 25px;
+	height: 25px;
+	background-color: #eaeaea;
+	border-radius: 5px;
+	text-align: center;
+	align-items: center;
+	align-content: center;
+	border: 1px solid #c7c7c7;
+}
+
+.pdf-page-tool:hover{
+	background-color: #cccccc;
+}
+
+.pdf-page-tool-input{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	position:absolute;
+	z-index: -1;
 }
 
 .pdf-redactor-page{
