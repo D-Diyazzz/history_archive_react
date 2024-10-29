@@ -213,7 +213,8 @@ export default function AdminCollectionCreate({id}) {
 
 
 		const parrentDiv = divNode.parentNode;
-		const originNode = parrentDiv.parentNode;
+		const parrentDivBlock = parrentDiv.parentNode
+		const originNode = parrentDiv.parentNode.parentNode;
 		const style = getComputedStyle(parrentDiv);
 		const paddingTop = parseFloat(style.paddingTop);
 		const paddingBottom = parseFloat(style.paddingBottom);
@@ -232,44 +233,58 @@ export default function AdminCollectionCreate({id}) {
 			const pToTranspose = lastP.cloneNode(true)
 			console.log(pToTranspose)
 			
-			if(originNode.lastChild === parrentDiv){
+			if(originNode.lastChild === parrentDivBlock){
 				console.log(123)
 				const newDiv = document.createElement("div");
 				newDiv.contentEditable = "true"
 				newDiv.className = "pdf-redactor-page-edit"
 				newDiv.setAttribute("id", "textField");
 				newDiv.addEventListener('mouseup', handleMouseUp);
-				newDiv.addEventListener('keyup', handleMouseUp);
-				newDiv.addEventListener('keyup', checkOverFlow);
+				newDiv.addEventListener('keyup', (event) => {
+					handleMouseUp(event);
+					checkOverFlow(null);
+				});
+
+
+				console.log(newDiv)
 
 				const newParrentDiv = document.createElement("div")
 				newParrentDiv.className = "pdf-redactor-page"
 				newParrentDiv.appendChild(newDiv)
 
-				originNode.appendChild(newParrentDiv)
+				const newParrentDivBlock = document.createElement("div")
+				newParrentDivBlock.className = "pdf-redactor-page-block"
+				const tools = parrentDivBlock.lastChild.cloneNode(true)
+				tools.addEventListener("onChange", handleFileChange)
+
+				newParrentDivBlock.appendChild(newParrentDiv)
+				newParrentDivBlock.appendChild(tools)
+
+				originNode.appendChild(newParrentDivBlock)
 			
 				newDiv.appendChild(pToTranspose);
 
 				let currentPNode = range.startContainer.parentNode
 
-				if(range.startContainer.nodeName === "SPAN"){
+				if(range.startContainer.nodeName === "P"){
 					currentPNode = currentPNode.parentNode
 				}
-				// if(currentPNode === lastP){
-				// 	range.setStart(currentSpanNode.firstChild, cursorPos)
-				// 	range.setEnd(currentSpanNode.firstChild, cursorPos)
-				// }
+				if(currentPNode === lastP){
+					console.log(range.startOffset)
+					range.setStart(pToTranspose.firstChild, range.startOffset)
+					range.setEnd(pToTranspose.firstChild, range.startOffset)
+				}
 				lastP.remove()
  
 			} else{
 				let nextDiv = 0;
 				
-				while(originNode.childNodes[nextDiv].firstChild !== divNode){
+				while(originNode.childNodes[nextDiv].firstChild !== parrentDiv){
 					nextDiv += 1;
 					console.log(nextDiv)
 				}
 				nextDiv += 1;
-				nextDiv = originNode.childNodes[nextDiv].firstChild
+				nextDiv = originNode.childNodes[nextDiv].firstChild.firstChild
 				
 				nextDiv.insertBefore(pToTranspose, nextDiv.firstChild)
 				console.log("remove")
@@ -1091,12 +1106,14 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	const handleFileChange = (event) => {
+		console.log(123)
 		const file = event.target.files[0];
 		if (file) {
 			const reader = new FileReader();
 			
 			// Читаем файл как Data URL
 			reader.onload = function(e) {
+				console.log(event.target)
 				const parentDiv = event.target.parentNode;
 				const originDiv = parentDiv.parentNode.parentNode;
 				const pageDiv = originDiv.firstChild;
@@ -1220,29 +1237,30 @@ export default function AdminCollectionCreate({id}) {
                             </div>
 
                             <div className="pdf-redactor-page-section" id="pdf-redactor-page-section">
-                                <div
-                                    className="pdf-redactor-page" 
-	                            >
+								<div className="pdf-redactor-page-block">
 									<div
-										className="pdf-redactor-page-edit"
-										contentEditable="true"
-										ref={inputRef}
-										onMouseUp={handleMouseUp}
-										onKeyUp={(event) => {
-											handleMouseUp(event);
-											checkOverFlow(null);
-										}}
-										id="textField"
+										className="pdf-redactor-page" 
 									>
+										<div
+											className="pdf-redactor-page-edit"
+											contentEditable="true"
+											ref={inputRef}
+											onMouseUp={handleMouseUp}
+											onKeyUp={(event) => {
+												handleMouseUp(event);
+												checkOverFlow(null);
+											}}
+											id="textField"
+										>
+										</div>
 									</div>
 									<div className="pdf-redactor-page-tools">
-									<div className="pdf-page-tool">
-										<label htmlFor="back-img">I</label>
-										<input type="file" id="back-img" onChange={handleFileChange} className="pdf-page-tool-input" accept="image/"/>
+										<div className="pdf-page-tool">
+											<label htmlFor="back-img">I</label>
+											<input type="file" id="back-img" onChange={handleFileChange} className="pdf-page-tool-input" accept="image/"/>
+										</div>
 									</div>
-									</div>
-
-                                </div>
+								</div>
 							</div>
                         </div>
                     </div>
