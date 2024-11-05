@@ -2,6 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	width: 880px;
+	height: 1300px;
+	overflow-y: auto;
 }
 
 .pdf-redactor-tools{
@@ -71,7 +73,7 @@
 
 .pdf-redactor-page-section{
 	width: 850px;
-	height: 1300px;
+	height: auto;
 	background-color: #edf2fa;
 	border: solid 1px #c7c7c7;
 	border-radius: 20px;
@@ -79,8 +81,19 @@
 	/* align-items: center; */
 	/* align-content: center; */
 	overflow-y: auto;
-	display:flex;
+	position: relative;	
 	flex-direction: column;
+	
+}
+
+.pdf-comment{
+	width: 852px;
+}
+
+.pdf-comment .ck-editor .ck-editor__main{
+	border-radius: 0px 0px 20px 20px;
+	overflow-y: auto;
+	max-height: 250px;
 }
 
 .pdf-redactor-page-block{

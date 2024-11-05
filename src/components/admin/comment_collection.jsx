@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import NotFoundComponent from "../404_not_found_component";
 import api from "../../api";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 
 export default function CommentCollectionComponent({collectionId}){
@@ -9,6 +11,7 @@ export default function CommentCollectionComponent({collectionId}){
 	const [isApproved, setIsApproved] = useState(false)
 
 	const user_id = localStorage.getItem("user_id");
+	const [comment, setComment] = useState("")
 
 	useEffect(() => {
 		const getInfo = async() => {
@@ -18,6 +21,23 @@ export default function CommentCollectionComponent({collectionId}){
 
 				const user = response.data.scientific_council_group.find(user => user.id === user_id);
 				setIsApproved(user.is_approved)
+
+				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
+				const file_text = await file.text()
+				const regex = /<\/head>([\s\S]*)<\/html>/;
+				const match = file_text.match(regex);
+
+
+				const contentDiv = document.getElementById("pdf-redactor-page-section");
+
+				if(match && match[1].trim()){
+					contentDiv.innerHTML = match[1];
+				}
+				document.querySelectorAll('.pdf-redactor-page-edit').forEach(element => {
+					element.contentEditable = "false";
+				});
+
+
 			}catch(error){
 				setError(true)
 				console.log(error)
@@ -51,6 +71,10 @@ export default function CommentCollectionComponent({collectionId}){
 
 			}
 		}
+	}
+
+	const handleCKEditorChange = (data) => {
+		setComment(data)
 	}
 
 
@@ -93,10 +117,39 @@ export default function CommentCollectionComponent({collectionId}){
 							</div>
 						</div>
 
+						<div className="pdf-redactor-section" style={{height: "700px"}}>
+							<div className="pdf-redactor-page-section" id="pdf-redactor-page-section" style={{height: "700px", borderRadius: "20px 20px 0px 0px"}}>
+							</div>
+						</div>
 
+						<div className="pdf-comment">
+							<CKEditor
+								editor={ClassicEditor}
+								data={comment}
+								onReady={ editor => {
+
+								}}
+								onChange={(event, editor) => {
+									const data = editor.getData();
+									handleCKEditorChange(data)
+									console.log(comment)
+								}}
+							/>
+						</div>
 				</div>
 			</div>
 		</div>
+
+		<style>
+			{`
+				.pdf-redactor-page-tools{
+					display: none;
+				}
+				.pdf-redactor-page{
+					margin-right: auto;
+				}
+			`}
+		</style>
 	</>
 	)
 }
