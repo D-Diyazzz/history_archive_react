@@ -19,6 +19,10 @@ export default function CommentCollectionComponent({collectionId}){
 				const response = await api.get(`collection/${collectionId}/admin`)
 				setCollectionElem(response.data)
 
+				const comment_response = await api.get(`collection/${collectionId}/comment`)
+				console.log(comment_response.data.text)
+				setComment(comment_response.data.text)
+
 				const user = response.data.scientific_council_group.find(user => user.id === user_id);
 				setIsApproved(user.is_approved)
 
