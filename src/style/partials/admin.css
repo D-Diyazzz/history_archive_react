@@ -761,6 +761,17 @@
 	cursor: pointer;
 }
 
+.selected-u-comment{
+	width: 40px;
+	height: 40px;
+	border-radius: 25px;
+}
+
+.selected-u-comment img{
+	width: 40px;
+	height: 40px;
+}
+
 
 .toggle-container {
     display: flex;

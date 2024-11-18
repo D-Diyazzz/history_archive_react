@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NotFoundComponent from "../404_not_found_component";
 import api from "../../api";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -12,6 +12,8 @@ export default function CommentCollectionComponent({collectionId}){
 
 	const user_id = localStorage.getItem("user_id");
 	const [comment, setComment] = useState("")
+	const commentRef = useRef("");
+	const [commentId, setCommentId] = useState();
 
 	useEffect(() => {
 		const getInfo = async() => {
@@ -20,8 +22,10 @@ export default function CommentCollectionComponent({collectionId}){
 				setCollectionElem(response.data)
 
 				const comment_response = await api.get(`collection/${collectionId}/comment`)
-				console.log(comment_response.data.text)
-				setComment(comment_response.data.text)
+				const comment_response_data = comment_response.data
+				console.log(comment_response_data)
+				setComment(comment_response_data.text)
+				setCommentId(comment_response_data.id)
 
 				const user = response.data.scientific_council_group.find(user => user.id === user_id);
 				setIsApproved(user.is_approved)
@@ -50,6 +54,23 @@ export default function CommentCollectionComponent({collectionId}){
 		getInfo();
 
 	}, [collectionId])
+
+	const editComment = async () => {
+        // Обновляем только если комментарий изменился
+        
+            const dataToSend = {
+                id: commentId,
+                text: comment
+            };
+            console.log("Sending updated comment:", dataToSend);
+            try {
+                const response = await api.patch(`/collection/${collectionId}/comment`, dataToSend);
+                console.log("Updated comment on server:", response);
+                commentRef.current = comment; // Обновляем ref после успешного обновления
+            } catch (error) {
+                console.log("Failed to update comment:", error);
+            }
+    };
 
 	if(error){
 		return <NotFoundComponent />;
@@ -135,9 +156,10 @@ export default function CommentCollectionComponent({collectionId}){
 								}}
 								onChange={(event, editor) => {
 									const data = editor.getData();
-									handleCKEditorChange(data)
-									console.log(comment)
+									setComment(data)
+									commentRef.current = data
 								}}
+								onBlur={editComment}
 							/>
 						</div>
 				</div>

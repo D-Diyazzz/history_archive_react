@@ -30,11 +30,16 @@ export default function AdminPanelListInfo() {
     }
 
 	const renderButtonCreate = () => {
-		switch(table) {
-			case "collection":
-				return <CreateCollectionButtons />;
-			default:
-				return <CDButtons link={`/admin/${table}/create`}/>
+		if(role === "AdminUser"){
+			switch(table) {
+				case "collection":
+					return <CreateCollectionButtons />;
+				default:
+					return <CDButtons link={`/admin/${table}/create`}/>
+			}
+
+		}else{
+			return(<></>)
 		}
 	}
 

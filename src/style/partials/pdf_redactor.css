@@ -221,3 +221,29 @@ p{
 	margin-top: 5px;
 	margin-bottom:0;
 }
+
+
+
+.comment-window{
+	display: flex;
+	flex-direction: column;
+	width: 350px;
+	height: 500px;
+	border: 1px solid black;
+	border-radius: 25px;
+	padding-left: 5px;
+	padding-right:5px;
+}
+
+.comment-user-info{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.comment-content{
+	max-width: 340px; /* Ограничьте ширину окна */
+    overflow-wrap: break-word; /* Разрешает перенос длинных слов */
+    word-wrap: break-word;
+    word-break: break-word;
+	overflow-y: auto;
+}

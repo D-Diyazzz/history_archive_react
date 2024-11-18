@@ -4,6 +4,9 @@ import DocumentMiniPanelCreate from './document_mini_panel_create';
 import FirstPage from '../../getFirstPageFile';
 import api from '../../../api';
 import AdminMiniAdminUserList from '../mini_components/list_admin_users';
+import CommentWindow from '../comments_window';
+
+import comment_icon from "../../../style/images/icon-comment.png"
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -1040,8 +1043,20 @@ export default function AdminCollectionCreate({id}) {
 		}
 	}
 
+	const [selectedUser, setSelectedUser] = useState(null);
+
+	// Функция для открытия окна с комментарием и передачи данных выбранного пользователя
+	const openCommentWindow = (obj) => {
+		setSelectedUser({
+			coll_id: obj.coll_id,
+			user_id: obj.id,
+			user_email: obj.email,
+		});
+	};
+
 	const renderSciUser = (obj) => {
 		return (
+			<>
 			<div className="admin-selected-u">
 				<div className="user-selected">
 					<div className="user-selected-photo">
@@ -1058,7 +1073,9 @@ export default function AdminCollectionCreate({id}) {
 					</div>
 				</div>
 				<div className="user-selected-del-btn" onClick={() => handleRemoveUser(obj, setSelectedSciUsers)}>X</div>
+				<div className="selected-u-comment" onClick={() => openCommentWindow(obj)}><img src={comment_icon}/></div>
 			</div>
+			</>
 		)
 	}
 
@@ -1076,6 +1093,8 @@ export default function AdminCollectionCreate({id}) {
 					
 				</div>
 				<div className="user-selected-del-btn" onClick={() => handleRemoveUser(obj, setSelectedRedactorUsers)}>X</div>
+				<div className="selected-u-comment" onClick={() => openCommentWindow(obj)}><img src={comment_icon}/></div>
+
 			</div>
 		)
 	}
@@ -1126,7 +1145,12 @@ export default function AdminCollectionCreate({id}) {
 			reader.readAsDataURL(file);
 		}
 	};
-
+	
+	const [isCommentWindowVisible, setCommentWindowVisible] = useState(false);
+	
+	const toggleModal = () => {
+        setCommentWindowVisible(!isCommentWindowVisible);
+    };
 
     return (
         <>
@@ -1184,6 +1208,7 @@ export default function AdminCollectionCreate({id}) {
 								</div>
 							</div>
 
+						
 						</div>
 			
                         <div className="admin-form-row-label">
@@ -1303,6 +1328,17 @@ export default function AdminCollectionCreate({id}) {
 						<div className="add-docs-button" onClick={() => openPanel("redactor_group")}>
 							+ Добавить
 						</div>
+					</div>
+
+					<div className="admin-section-add-docs">
+						{selectedUser && (
+				<CommentWindow
+					onClose={() => setSelectedUser(null)}
+					coll_id={id}
+					user_id={selectedUser.user_id}
+					user_email={selectedUser.user_email}
+				/>)}
+
 					</div>
 
                 </div>
