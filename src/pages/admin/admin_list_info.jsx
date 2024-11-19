@@ -13,6 +13,7 @@ import "../../style/partials/admin.css"
 import { Page } from 'react-pdf';
 import AdminCollectionList from '../../components/admin/list/collection_list';
 import CreateCollectionButtons from '../../components/admin/create_collection_button';
+import AdminUserList from '../../components/admin/list/user_list';
 
 export default function AdminPanelListInfo() {
     const {table} = useParams();
@@ -49,6 +50,8 @@ export default function AdminPanelListInfo() {
                 return <AdminDocumentList />;
 			case "collection":
 				return <AdminCollectionList/>;
+			case "user":
+				return <AdminUserList />;
             default:
                 return null;
         }
@@ -71,7 +74,7 @@ export default function AdminPanelListInfo() {
 
 
                 <div className='admin-navbar'>
-                    <AdminNavbar active={table}/>
+                    <AdminNavbar active={table} role={role}/>
                 </div>
 
                 <div className='admin-section'>

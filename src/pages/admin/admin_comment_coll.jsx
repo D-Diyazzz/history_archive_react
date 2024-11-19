@@ -26,7 +26,7 @@ export default function AdminPanelCommentColl(){
 			<main>
 				<div className='admin-container'>
 					<div className='admin-navbar'>
-						<AdminNavbar active={"collection"}/>
+						<AdminNavbar active={"collection"} role={role}/>
 					</div>
 
 					<div className="admin-section">

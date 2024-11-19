@@ -154,10 +154,82 @@
     width: 100%;
     font-size: 20px;
     padding-left: 10px;
+	align-items: center;
     min-height: 80px;
     max-height: 120px; /* Фиксированная высота */
     overflow: hidden; /* Скрытие содержимого, выходящего за пределы */
 }
+
+.admin-list-link{
+	 text-decoration: none; /* Убираем подчеркивание */
+    color: inherit; /* Наследуем цвет текста */
+    display: block; /* Делаем всю ссылку блочной */
+}
+
+.admin-list-link:nth-child(even) {
+	background-color: rgb(202, 192, 177);
+
+}
+
+.admin-list-a:hover {
+     background-color: rgb(172, 157, 135); /* Добавляем подсветку при наведении */
+}
+
+.admin-list-a p img{
+	width: 30px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.modal-buttons button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.modal-buttons button:hover {
+    background-color: #45a049;
+}
+
+.modal-buttons button:last-child {
+    background-color: #f44336;
+}
+
+.modal-buttons button:last-child:hover {
+    background-color: #e31b0c;
+}
+
 
 .admin-list-a p, .admin-list-a a {
     /* margin: 0; */

@@ -65,7 +65,7 @@ export default function AdminPanleDefInfo(){
 
 
                 <div className='admin-navbar'>
-                    <AdminNavbar active={table}/>
+                    <AdminNavbar active={table} role={role}/>
                 </div>
 
                 <div className='admin-section'>

@@ -33,7 +33,7 @@ export default function Header({active}) {
                     <div className="nav-bar-right">
                         <a href="/" className='nav-bar-menu'>Главная</a>
                         <a href="#" className='nav-bar-menu'>Уведомления</a>
-                        {user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' ? (
+                        {user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' || user_role === 'SuperAdminUser' ? (
                             <a href="/admin" className='nav-bar-menu'>Админ</a>
                         ) : (
                             <>

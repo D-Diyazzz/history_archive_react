@@ -1,12 +1,14 @@
-export default function AdminNavbar({active}){
+export default function AdminNavbar({active, role}){
 
     const navItems = [
         { name: "Документы", id: "document" },
         { name: "Сборники", id: "collection" },
         { name: "Выставки", id: "exhibitions" },
-        { name: "Пользователи", id: "user" },
-        { name: "Комментарии", id: "comment" },
     ];
+
+	if (role === "SuperAdminUser") {
+        navItems.push({ name: "Пользователи", id: "user" });
+    }
 
     return (
         <>

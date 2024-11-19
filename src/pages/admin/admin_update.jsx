@@ -50,7 +50,7 @@ export default function AdminPanelUpdate() {
 	    <main>
         	<div className='admin-container'>
 	    	    <div className='admin-navbar'>
-	    		<AdminNavbar active={table}/>
+	    		<AdminNavbar active={table} role={role}/>
 	            </div>
 
 	    	    <div className='admin-section'>

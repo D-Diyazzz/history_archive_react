@@ -33,7 +33,7 @@ export default function AdminPanel() {
 
 
                 <div className='admin-navbar'>
-                    <AdminNavbar/>
+                    <AdminNavbar role={role}/>
                 </div>
 
                 <div className='admin-section'>
