@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/partials/auth.css"
 import axios from "axios";
+import api from '../api';
 
 export default function Register() {
     const [hasErroremail, setHasErroremail] = useState(true);
@@ -77,7 +78,7 @@ export default function Register() {
                 password: password
             }
 
-            const response = await axios.post("http://localhost:8000/v1/register", dataToSend);
+            const response = await api.post("/register", dataToSend);
             alert('Регистрация прошла успешно!');
             navigate('/login')
         } catch (error){

@@ -34,7 +34,7 @@ export default function Login(){
                 password: password,
             };
 
-            const response = await axios.post("http://localhost:8000/v1/login", dataToSend);
+            const response = await api.post("/login", dataToSend);
 			console.log(response)
             const access_token = response.data["access_token"];
             const refresh_token = response.data["refresh_token"];
