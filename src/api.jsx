@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from './config';
 
-const API_URL = import.meta.env.VITE_BACK_URL
+
 const api = axios.create({
     withCredentials: true,
     baseURL: API_URL

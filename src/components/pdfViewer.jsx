@@ -3,6 +3,7 @@ import { getDocument } from 'pdfjs-dist';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 
 import "../style/partials/buttons.css"
+import { FILES_URL } from '../config';
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
@@ -14,7 +15,7 @@ export default function PDFViewer({ pdfUrl }) {
 
   useEffect(() => {
     const fetchPdf = async (pageNum) => {
-      const loadingTask = getDocument("http://localhost:8000/archive/files/" + pdfUrl);
+      const loadingTask = getDocument(FILES_URL + pdfUrl);
       const pdf = await loadingTask.promise;
       setNumPages(pdf.numPages);
       const page = await pdf.getPage(pageNum);

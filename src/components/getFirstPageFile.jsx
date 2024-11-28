@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getDocument } from 'pdfjs-dist';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
+import { API_URL, FILES_URL } from '../config';
 // import 'pdfjs-dist/es5/build/pdf.worker.entry';
 GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
@@ -10,8 +11,8 @@ export default function FirstPage({ pdfUrl, width, height }) {
 
   useEffect(() => {
     const fetchPdf = async () => {
-      const loadingTask = getDocument("http://localhost:8000/archive/files/" + pdfUrl);
-      const pdf = await loadingTask.promise;
+      const loadingTask = getDocument(FILES_URL + pdfUrl) 
+	  const pdf = await loadingTask.promise;
       const firstPage = await pdf.getPage(1);
       
       let viewportOriginal = firstPage.getViewport({ scale: 1.0 });
