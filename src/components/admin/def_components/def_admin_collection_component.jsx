@@ -173,7 +173,7 @@ export default function AdminDefCollectionComponent({collectionId}){
 						</div>
 
 						<div className="collection-edit-button-block">
-							{user_role === 'AdminUser' || user_role === 'RedactorUser' ? (
+							{user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'SuperAdminUser' ? (
 								<button className="create-button" onClick={openSessionToEdit}>Редактировать -></button>
 							) : (
 								<>
