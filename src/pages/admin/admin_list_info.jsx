@@ -31,7 +31,7 @@ export default function AdminPanelListInfo() {
     }
 
 	const renderButtonCreate = () => {
-		if(role === "AdminUser"){
+		if(role === "AdminUser" || role === "SuperAdminUser"){
 			switch(table) {
 				case "collection":
 					return <CreateCollectionButtons />;
