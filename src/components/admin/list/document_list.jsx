@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 import api from "../../../api";
+import FirstPage from "../../getFirstPageFile";
 
 export default function AdminDocumentList(){
 
@@ -32,6 +33,17 @@ export default function AdminDocumentList(){
           }
         }
       };
+
+	const renderFirstFile = (fileUrl, index) => {
+		const fileExtension = fileUrl.split('.').pop().toLowerCase();
+        if (fileExtension === 'pdf') {
+            return <FirstPage key={index} pdfUrl={fileUrl} />;
+        } else if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
+            return <img key={index} src={"http://localhost:8000/archive/files/" + fileUrl} alt={`Document file ${index + 1}`} />;
+        }
+        return null;
+
+	}
       
     return (
         <>
@@ -47,7 +59,7 @@ export default function AdminDocumentList(){
             <div className="admin-list">
                
                 {
-                    docuemnts.map((doc) => {
+                    docuemnts.map((doc, index) => {
                         const date = new Date(doc.created_at);
                         const formattedDate = date.toLocaleString('ru-RU', {
                           year: 'numeric',
@@ -60,7 +72,7 @@ export default function AdminDocumentList(){
                         return (
                           <>
                             <div className="admin-list-a">
-                              <a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}>{doc.heading}</a>
+                              <a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">{renderFirstFile(doc.file_urls[0], index)}</div></a>
                               <p style={{"width":"15%"}}>{doc.author}</p>
                               <p style={{"width":"10%"}}>{doc.dating}</p>
                               <p style={{"width":"20%"}}>{doc.variety}</p>

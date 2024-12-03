@@ -58,6 +58,16 @@
     font-size: 30px;
 }
 
+.first-page-file-docs-admin canvas{
+	max-width: 150px;
+	max-height: 110px;
+}
+
+.first-page-file-docs-admin img{
+	max-width: 150px;
+	max-height: 110px;
+}
+
 .create-delete-buttons-container{
     display: flex;
     flex-direction: row;
