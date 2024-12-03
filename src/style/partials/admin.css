@@ -68,6 +68,27 @@
 	max-height: 110px;
 }
 
+.admin-delete-collection{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-top: 60px;
+}
+
+.admin-delete-collection button{
+	color: white;
+	background-color: #f44336;
+	width: 100px;
+	height: 40px;
+	border: 0;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.admin-delete-collection button:hover{
+	background-color: #db392e;
+}
+
 .create-delete-buttons-container{
     display: flex;
     flex-direction: row;

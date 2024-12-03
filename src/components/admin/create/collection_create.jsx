@@ -7,6 +7,7 @@ import AdminMiniAdminUserList from '../mini_components/list_admin_users';
 import CommentWindow from '../comments_window';
 
 import comment_icon from "../../../style/images/icon-comment.png"
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -14,6 +15,8 @@ export default function AdminCollectionCreate({id}) {
     const inputRef = useRef(null);
     const spanRef = useRef(null);
 	const [inputRefCurrent, setInputRefCurrent] = useState(null)
+
+	const navigate = useNavigate();
 
 	const [formDataState, setFormData] = useState({
 		id: "",
@@ -51,6 +54,16 @@ export default function AdminCollectionCreate({id}) {
 				if(match && match[1].trim()){
 					contentDiv.innerHTML = match[1];
 				}
+
+				const pages = document.querySelectorAll('.pdf-redactor-page-edit')
+				pages.forEach((elem, index) => {
+					elem.contentEditable = "true";
+					elem.onmouseup = (event) => handleMouseUp(event)
+					elem.onkeyup = (event) => {
+						handleMouseUp(event)
+						checkOverFlow(null)
+					}
+				})
 
 			}catch(error){
 				console.log(error)
@@ -127,6 +140,7 @@ export default function AdminCollectionCreate({id}) {
 	}
 
     const handleMouseUp = () => {
+		console.log(1)
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
 
@@ -200,6 +214,7 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	const checkOverFlow = (PurposeDiv) => {
+		console.log(2)
 		const selection = window.getSelection();
 		const range = selection.getRangeAt(0);
 
@@ -305,6 +320,7 @@ export default function AdminCollectionCreate({id}) {
 	
 	
  const handleInput = (e) => {
+	console.log(3)
     e.preventDefault();
 
     const contentEditableDiv = inputRef.current;
@@ -1152,6 +1168,22 @@ export default function AdminCollectionCreate({id}) {
         setCommentWindowVisible(!isCommentWindowVisible);
     };
 
+	const handleDeleteCollection = async (id) => {
+		const isConfirmed = window.confirm("Вы уверены, что хотите удалить эту коллекцию?");
+    if (isConfirmed) {
+          try {
+            const response = await api.delete(`/collection/${id}`);
+			console.log(response)
+			if(response.status == 200){
+				navigate('/admin/collection')
+			}
+          } catch (error) {
+            console.error("Ошибка при удалении коллекции:", error);
+          }
+        }
+
+	}
+
     return (
         <>
             <p className="admin-title-text">Создание Сборника</p>
@@ -1288,6 +1320,10 @@ export default function AdminCollectionCreate({id}) {
 								</div>
 							</div>
                         </div>
+
+						<div className="admin-delete-collection">
+							<button type="button" onClick={() => handleDeleteCollection(id)}>Удалить</button>
+						</div>
                     </div>
                 </form>
 
