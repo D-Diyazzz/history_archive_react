@@ -28,7 +28,7 @@ export default function DocumentMiniPanelCreate({handleCloseOverlay, setSelected
 			const response = await api.post(`/collection/${collectionId}/document`, dataToSend)
 			console.log(response)
 			if(response.status == 200){
-				setSelectedDocuments(prevDocuments => [...prevDocuments, file]);
+				setSelectedDocuments(file);
 				handleCloseOverlay();
 			}
 		}catch(error){

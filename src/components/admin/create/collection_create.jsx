@@ -8,6 +8,7 @@ import CommentWindow from '../comments_window';
 
 import comment_icon from "../../../style/images/icon-comment.png"
 import { useNavigate } from 'react-router-dom';
+import { documentForCollectionFormat } from '../../../utils/changeHTMLFormat';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -283,7 +284,6 @@ export default function AdminCollectionCreate({id}) {
 				newDiv.appendChild(pToTranspose);
 
 				let currentPNode = range.startContainer.parentNode
-
 				if(range.startContainer.nodeName === "P"){
 					currentPNode = currentPNode.parentNode
 				}
@@ -881,7 +881,7 @@ export default function AdminCollectionCreate({id}) {
 						<div className="admin-section-document-mini-overlay" onClick={handleCloseOverlay}></div>
 					<DocumentMiniPanelCreate 
 						handleCloseOverlay={handleCloseOverlay}
-						setSelectedDocuments={setSelectedDocuments}
+						setSelectedDocuments={addDocument}
 						selectedDocuments={selectedDocuments}
 						collectionId={formDataState.id}
 					/>
@@ -969,6 +969,38 @@ export default function AdminCollectionCreate({id}) {
 		}
 	}
 
+	const addDocument = (doc) => {
+		const selection = window.getSelection();
+		const range = selection.getRangeAt(0);
+		setSelectedDocuments(prevDocuments => [...prevDocuments, doc])
+		
+		const paragraphsQueue = documentForCollectionFormat(doc)
+
+		if(range.startContainer === "pdf-redactor-page-edit"){
+			console.log('pdf-redactor-page-edit')
+			const newParagraph = document.createElement('p');
+			newParagraph.className = `${currentTextPosition}`;
+			range.insertNode(newParagraph)
+			range.setStartAfter(newParagraph)
+		}else{
+			let block = range.startContainer
+			while(block.nodeName !== 'P'){
+				block = block.parentNode
+			}
+			range.setStartAfter(block)
+			range.setEndAfter(block)
+		}
+		console.log(345)
+	
+		while(!paragraphsQueue.isEmpty()){
+			const newp = paragraphsQueue.dequeue()
+			range.insertNode(newp)
+			checkOverFlow()
+			range.setStartAfter(newp)
+			range.setEndAfter(newp)
+		}
+	}
+
 	const handleRemoveDocument = async (obj) => {
 		try{
 			
@@ -1024,6 +1056,8 @@ export default function AdminCollectionCreate({id}) {
 				title: formDataState.title,
 				html_data: contentDiv.innerHTML
 			}
+
+			console.log(dataToSend)
 			try{
 				const response = await api.patch(`/collection/${id}`,dataToSend)
 

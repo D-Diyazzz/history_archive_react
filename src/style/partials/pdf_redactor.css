@@ -207,6 +207,10 @@ input[type="number"] {
 	font-style: italic;
 }
 
+.left-text-position{
+	text-align: justify;
+}
+
 .central-text-position{
 	margin-left: auto;
 	margin-right: auto;
