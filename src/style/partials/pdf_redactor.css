@@ -1,3 +1,7 @@
+body{
+	counter-reset: page-counter;
+}
+
 .pdf-redactor-section {
 	display: flex;
 	flex-direction: column;
@@ -144,6 +148,11 @@
 	word-wrap: break-word;
 	padding: 93px;
 	box-sizing: border-box;
+	counter-increment: page-counter;
+}
+
+.pdf-redactor-page::before{
+	content: counter(page-counter);
 }
 
 
