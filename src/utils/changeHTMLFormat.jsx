@@ -1,28 +1,83 @@
 import { FIFOQueue } from "./queue";
 
 
-export const changeHTMLToPdfHtmlFormat = (text) => {
 
+
+const processNode = (node, inheritedClasses = [], fontSize=12) => {
+
+	 const tagToClassMap = {
+        strong: 'bold',
+        i: 'italica',
+    };
+        // Если это текстовый узел, возвращаем его как есть
+        if (node.nodeType === Node.TEXT_NODE) {
+            return document.createTextNode(node.nodeValue);
+        }
+
+		const computedStyle = window.getComputedStyle(node); // Получаем все примененные стили
+		const nodeFontSize = computedStyle.fontSize.replace("px", ""); // Получаем размер шрифта
+		if(nodeFontSize != ""){
+			fontSize = nodeFontSize
+		}
+	
+		const span = document.createElement('span');
+		span.className = [...inheritedClasses, `size-${fontSize}`].join(' ');
+		span.style.fontSize = `${fontSize}px`;
+
+        // Если тег есть в таблице соответствий
+        if (tagToClassMap[node.tagName?.toLowerCase()]) {
+            const className = tagToClassMap[node.tagName.toLowerCase()];
+            span.className = [...span.className.split(' ').filter(Boolean), className].join(' ');
+
+
+        }
+
+		// Обрабатываем дочерние узлы
+		node.childNodes.forEach(child => {
+			span.appendChild(processNode(child, span.className));
+		});
+
+		return span;
+
+};
+
+const processTextNode = (node, fontSize=12) => {
+	const span = document.createElement('span');
+	span.className = `size-${fontSize}`;
+	span.style.fontSize = `${fontSize}px`;
+
+	span.appendChild(node)
+
+	return span
+}
+
+const briefContentToHtmlCollectionFormat = (text, fontSize) => {
+   
+    // Создаем временный элемент для парсингаTML
     const tempElement = document.createElement('div');
     tempElement.innerHTML = text;
 
+    // Обрабатываем параграфы
     const paragraphs = tempElement.querySelectorAll('p');
-	return paragraphs
+    paragraphs.forEach(paragraph => {
+        const newContent = [];
+        paragraph.childNodes.forEach(child => {
+			if(child.nodeType === Node.TEXT_NODE){
+				console.log("node et")
+				newContent.push(processTextNode(child,fontSize))
+			}else{
+            	newContent.push(processNode(child, [],fontSize));
+			}
+        });
 
-}
+        // Заменяем содержимое параграфа
+        paragraph.innerHTML = '';
+        newContent.forEach(node => paragraph.appendChild(node));
+    });
 
-const briefContentToHtmlCollectionFormat = (text) => {
-	const tempElement = document.createElement('div');
-	tempElement.innerHTML = text;
+    return tempElement.querySelectorAll('p'); // Возвращаем преобразованный <p>
+};
 
-	const paragraph = tempElement.querySelector('p');
-	paragraph.className = 'central-text-position';
-	paragraph.style.fontSize = '16px';
-	paragraph.style.height = '16px';
-	paragraph.style.display = 'inline-block'
-
-	return paragraph
-}
 
 const metadataToHtmlCollectionFormat = (doc) => {
 	const newSpanClass = ['size-12 italic'];
@@ -75,9 +130,12 @@ const metadataToHtmlCollectionFormat = (doc) => {
 export const documentForCollectionFormat = (doc) => {
 	const queue = new FIFOQueue()
 	
-	const briefContentP = briefContentToHtmlCollectionFormat(doc.brief_content)
+	const briefContentP = briefContentToHtmlCollectionFormat(doc.brief_content, 16)
 	console.log('briefContentP')
-	queue.enqueue(briefContentP);
+	briefContentP.forEach((p) => {
+		p.className = "central-text-position"
+		queue.enqueue(p)
+	})
 	
 	const metadataPList = metadataToHtmlCollectionFormat(doc);
 
@@ -85,7 +143,7 @@ export const documentForCollectionFormat = (doc) => {
 		queue.enqueue(p)
 	})
 
-	const mainTextPList = changeHTMLToPdfHtmlFormat(doc.main_text)
+	const mainTextPList = briefContentToHtmlCollectionFormat(doc.main_text, 12)
 	
 	mainTextPList.forEach((p) => {
 		p.className = 'left-text-position'

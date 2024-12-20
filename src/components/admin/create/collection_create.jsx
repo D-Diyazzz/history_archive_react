@@ -42,7 +42,6 @@ export default function AdminCollectionCreate({id}) {
 				setSelectedSciUsers(response.data.scientific_council_group)
 				setSelectedRedactorUsers(response.data.redactor_group)
 				setIsApproved(response.data.is_approved)
-				console.log(response.data)
 				
 				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
 				const file_text = await file.text()
@@ -130,11 +129,14 @@ export default function AdminCollectionCreate({id}) {
 			})
 
 			const ParrentFontSize = parentNode.style["font-size"].replace("px", "")
-			if(ParrentFontSize != currentFontSize){
+			console.log(ParrentFontSize)
+			if(ParrentFontSize != currentFontSize && ParrentFontSize != "" && ParrentFontSize != null){
 				setCurrentFontSize(parseInt(ParrentFontSize))
-			}else if(ParrentFontSize == NaN){
+			}else if(ParrentFontSize == currentFontSize){
+			}else{
 				setCurrentFontSize(12)
 			}
+				
 			
 			setTextPosition(parentNode.parentNode.className)
 
@@ -786,8 +788,6 @@ export default function AdminCollectionCreate({id}) {
 	}, [handleChangeTextSettings]);
 
 	useEffect(() => {
-		console.log(inputRef.current)
-		console.log('useEff')
         const contentEditableDiv = inputRef.current;
         if (!contentEditableDiv) return;
 
@@ -1057,7 +1057,6 @@ export default function AdminCollectionCreate({id}) {
 				html_data: contentDiv.innerHTML
 			}
 
-			console.log(dataToSend)
 			try{
 				const response = await api.patch(`/collection/${id}`,dataToSend)
 
