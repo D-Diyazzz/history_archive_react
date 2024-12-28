@@ -149,10 +149,9 @@ body{
 	padding: 93px;
 	box-sizing: border-box;
 	counter-increment: page-counter;
-}
-
-.pdf-redactor-page::before{
-	content: counter(page-counter);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 
@@ -165,6 +164,30 @@ body{
 	box-sizing: border-box;
 	
 	font-family: 'Times New Roman', Times, serif;
+}
+
+.pdf-redactor-page-number{
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+
+	top: 45px; /* padding-bottom от исходного padding */
+}
+
+.diagonal-strike {
+  position: relative;
+}
+
+.diagonal-strike::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  left: -20%;
+  width: 170%; /* ширина чуть больше, чтобы перекрыть текст полностью */
+  height: 1px; /* ширина линии */
+  background-color: black; /* цвет линии */
+  transform: rotate(-40deg); /* угол наклона */
 }
 
 .pdf-redactor-page-edit p{
@@ -259,4 +282,45 @@ p{
     word-wrap: break-word;
     word-break: break-word;
 	overflow-y: auto;
+}
+
+.font-selector {
+  display: flex;
+  align-items: center;
+  background-color: #edf2fa;
+}
+
+.font-select, .font-size-select {
+  background-color: #edf2fa;
+  border: none;
+  padding: 5px;
+  font-size: 14px;
+  margin-right: 10px;
+  color: #202124;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.font-select:focus, .font-size-select:focus {
+  outline: none;
+}
+
+.font-select:hover{
+	background-color: #d3e3fd;
+	border-radius: 5px;
+}
+
+/* Для имитации стрелок, как в Google Docs, можно использовать псевдоэлементы */
+.font-select, .font-size-select {
+  position: relative;
+}
+
+.font-select::after{
+  content: "▼";
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  pointer-events: none;
 }

@@ -13,7 +13,6 @@ import { documentForCollectionFormat } from '../../../utils/changeHTMLFormat';
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
 	const [currentTextPosition, setTextPosition] = useState("left-text-position");
-	const [currentPStyle, setCurrentPStyle] = useState("Normal")
     const inputRef = useRef(null);
     const spanRef = useRef(null);
 	const [inputRefCurrent, setInputRefCurrent] = useState(null)
@@ -80,11 +79,6 @@ export default function AdminCollectionCreate({id}) {
 		bold: false,
 		italic: false,
 
-	})
-
-	const [paragraphFormatDict, setparagraphFormatDict] = useState({
-		position: "left-text-position",
-		type: "Normal",
 	})
 
     const wrapSelectionWith = (command) => {
@@ -321,7 +315,6 @@ export default function AdminCollectionCreate({id}) {
 				checkOverFlow(divNode)
 				checkOverFlow(nextDiv)
 			}
-			updatePageNumbers()
 		}else{
 			return
 		}
@@ -870,8 +863,6 @@ export default function AdminCollectionCreate({id}) {
 
 	}
 
-	function changeParra
-
 	
 	const [showPanel, setShowPanel] = useState(null);
 
@@ -1226,46 +1217,13 @@ export default function AdminCollectionCreate({id}) {
 
 	}
 
-	const updatePageNumbers = () => {
-		let pagesRef = Array.from(document.querySelectorAll('.pdf-redactor-page'));
-
-    	pagesRef.forEach((page, index) => {
-        	const pageNumberElement = page.querySelector('.pdf-redactor-page-number');
-        	if (pageNumberElement) {
-          		pageNumberElement.textContent = index + 1;
-        	} else {
-    	      // Если элемент с номером страницы еще не существует, создаем его
-	          const numberElement = document.createElement('div');
-        	  numberElement.className = 'pdf-redactor-page-number';
-	          numberElement.textContent = index + 1;
-    	      page.appendChild(numberElement);
-        	}
-      });
-    };
-
-	const hidePageNumber = (e) => {
-		let target = e.target;
-
-	  // Ищем ближайший элемент с классом 'pdf-redactor-page-block'
-		  while (target && !target.classList.contains('pdf-redactor-page-block')) {
-			target = target.parentNode;
-		  }
-
-		  // Если элемент найден
-		  if (target) {
-			// Находим элемент с номером страницы
-			let pageNumber = target.querySelector('.pdf-redactor-page-number');
-			if (pageNumber) {
-			  // Скрываем элемент
-			  pageNumber.style.display = "none";
-			}
-		  }
-	}
-
-	// useEffect(() => {
-	// 	console.log('use')
-	// 	updatePageNumbers()	
-	// }, [inputRef])
+	useEffect(() => {
+		const pages = containerRef.current.querySelectorAll(".page");
+		const numberedPages = Array.from(pages).map((page, index) => ({
+	  		id: index + 1, // Номер страницы
+	  	element: page, // Ссылка на DOM-элемент
+		}));
+	}, [inputRef])
     return (
         <>
             <p className="admin-title-text">Создание Сборника</p>
@@ -1363,17 +1321,6 @@ export default function AdminCollectionCreate({id}) {
 									>R</p>
                                 </div>
 
-								<div className="pdf-redacotr-alignment-tools">
-									<div class="font-selector">
-								  <select class="font-select" value={currentPStyle} onChange={(e) => {setCurrentPStyle(e.target.value)}}>
-									<option value="Normal" selected>Обычный текст</option>
-									<option value="Heading">Заголовок</option>
-									<option value="SubHeading">Подзаголовок</option>
-								  </select>
-								  
-								</div>
-								</div>
-
                                 <div className="pdf-redactor-font-size">
 									<p onClick={() => {setCurrentFontSize(currentFontSize-1)}}>-</p>
                                     <input 
@@ -1408,11 +1355,6 @@ export default function AdminCollectionCreate({id}) {
 										<div className="pdf-page-tool">
 											<label htmlFor="back-img">I</label>
 											<input type="file" id="back-img" onChange={handleFileChange} className="pdf-page-tool-input" accept="image/"/>
-										</div>
-
-										<div className="pdf-page-tool">
-											<label htmlFor="del-num"><span class="diagonal-strike">1</span></label>
-											<input type="button" id="del-num" className="pdf-page-tool-input" onClick={hidePageNumber}/>
 										</div>
 									</div>
 								</div>
