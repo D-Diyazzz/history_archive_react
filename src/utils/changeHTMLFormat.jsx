@@ -102,25 +102,25 @@ const metadataToHtmlCollectionFormat = (doc) => {
 
     // Условие для doc.author
     if (doc.author != null && doc.author !== '-') {
-        const authorP = createParagraph(doc.author, 'right-text-position');
+        const authorP = createParagraph(doc.author, 'right_parPosition');
         listP.push(authorP);
     }
 
     // Условие для doc.dating
     if (doc.dating != null && doc.dating !== '-') {
-        const datingP = createParagraph(doc.dating, 'right-text-position');
+        const datingP = createParagraph(doc.dating, 'right_parPosition');
         listP.push(datingP);
     }
 
     // Условие для doc.place_of_creating
     if (doc.place_of_creating != null && doc.place_of_creating !== '-') {
-        const placeP = createParagraph(doc.place_of_creating, 'right-text-position');
+        const placeP = createParagraph(doc.place_of_creating, 'right_parPosition');
         listP.push(placeP);
     }
 
     // Условие для doc.variety
     if (doc.variety != null && doc.variety !== '-') {
-        const varietyP = createParagraph(doc.variety, 'right-text-position');
+        const varietyP = createParagraph(doc.variety, 'right_parPosition');
         listP.push(varietyP);
     }
 
@@ -133,7 +133,7 @@ export const documentForCollectionFormat = (doc) => {
 	const briefContentP = briefContentToHtmlCollectionFormat(doc.brief_content, 16)
 	console.log('briefContentP')
 	briefContentP.forEach((p) => {
-		p.className = "central-text-position"
+		p.className = "central_parPosition heading_type"
 		queue.enqueue(p)
 	})
 	
@@ -146,7 +146,7 @@ export const documentForCollectionFormat = (doc) => {
 	const mainTextPList = briefContentToHtmlCollectionFormat(doc.main_text, 12)
 	
 	mainTextPList.forEach((p) => {
-		p.className = 'left-text-position'
+		p.className = 'left_parPosition'
 		queue.enqueue(p)
 	})
 

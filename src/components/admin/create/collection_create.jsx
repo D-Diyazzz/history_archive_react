@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, Children } from 'react';
-import { Page } from 'react-pdf';
+import React, { useState, useRef, useEffect, useCallback, Children } from 'react'; import { Page } from 'react-pdf';
 import DocumentMiniPanelCreate from './document_mini_panel_create';
 import FirstPage from '../../getFirstPageFile';
 import api from '../../../api';
@@ -9,6 +8,7 @@ import CommentWindow from '../comments_window';
 import comment_icon from "../../../style/images/icon-comment.png"
 import { useNavigate } from 'react-router-dom';
 import { documentForCollectionFormat } from '../../../utils/changeHTMLFormat';
+import { handleCreateHeadingNumerationBlock } from '../heading_num';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -83,8 +83,8 @@ export default function AdminCollectionCreate({id}) {
 	})
 
 	const [paragraphFormatDict, setparagraphFormatDict] = useState({
-		position: "left-text-position",
-		type: "Normal",
+		parPosition: "left_parPosition",
+		type: "normal_type",
 	})
 
     const wrapSelectionWith = (command) => {
@@ -112,6 +112,15 @@ export default function AdminCollectionCreate({id}) {
 			}));
 		}
 		console.log(textFormatDict)
+	}
+
+	const handleParagraphFormatClick = (parType, value) => {
+		if(paragraphFormatDict[parType] !== value){
+			setparagraphFormatDict(prevState => ({
+				...prevState,
+				[parType]: value
+			}))
+		}
 	}
 
 	const setTextAttributesToVariables = (range) => {
@@ -144,8 +153,29 @@ export default function AdminCollectionCreate({id}) {
 			}
 				
 			
-			setTextPosition(parentNode.parentNode.className)
+			setParagraphAttributesToVariable(range)
+	}
 
+	const setParagraphAttributesToVariable = (range) => {
+		console.log(range)
+		let parNode = range.startContainer;
+		console.log(parNode)
+		while(parNode.nodeName !== "P"){
+			parNode = parNode.parentNode
+		}
+
+		const classArray = parNode.className.split(" ") 
+
+
+		classArray.forEach(style => {
+			const key = style.split("_")[1]
+			if(paragraphFormatDict[key] !== style){
+				setparagraphFormatDict(prevState => ({
+					...prevState,
+					[key]: style
+				}))
+			}
+		})	
 	}
 
     const handleMouseUp = () => {
@@ -239,14 +269,14 @@ export default function AdminCollectionCreate({id}) {
 		}
 
 
-		const parrentDiv = divNode.parentNode;
-		const parrentDivBlock = parrentDiv.parentNode
-		const originNode = parrentDiv.parentNode.parentNode;
+		const parrentDiv = divNode.parentNode; //pdf-redactor-page
+		const parrentDivBlock = parrentDiv.parentNode //pdf-redactor-page-block
+		const originNode = parrentDiv.parentNode.parentNode; //pdf-redactor-page-section
 		const style = getComputedStyle(parrentDiv);
 		const paddingTop = parseFloat(style.paddingTop);
 		const paddingBottom = parseFloat(style.paddingBottom);
 		const contentHeight = parrentDiv.clientHeight - paddingTop - paddingBottom
-		
+		const allRedactorPageEdit = document.querySelectorAll('.pdf-redactor-page-edit')	
 		const cursorPos = range.startOffset;
 		if(divNode.scrollHeight >= contentHeight){
 			
@@ -260,7 +290,7 @@ export default function AdminCollectionCreate({id}) {
 			const pToTranspose = lastP.cloneNode(true)
 			console.log(pToTranspose)
 			
-			if(originNode.lastChild === parrentDivBlock){
+			if(originNode.lastChild === parrentDivBlock || Array.from(allRedactorPageEdit).indexOf(divNode) == allRedactorPageEdit.length-1){
 				console.log(123)
 				const newDiv = document.createElement("div");
 				newDiv.contentEditable = "true"
@@ -271,6 +301,7 @@ export default function AdminCollectionCreate({id}) {
 					handleMouseUp(event);
 					checkOverFlow(null);
 				});
+				newDiv.addEventListener('oninput', handleEditPage);
 
 
 				console.log(newDiv)
@@ -303,14 +334,16 @@ export default function AdminCollectionCreate({id}) {
 				lastP.remove()
  
 			} else{
-				let nextDiv = 0;
-				
-				while(originNode.childNodes[nextDiv].firstChild !== parrentDiv){
-					nextDiv += 1;
-					console.log(nextDiv)
-				}
-				nextDiv += 1;
-				nextDiv = originNode.childNodes[nextDiv].firstChild.firstChild
+				// let nextDiv = 0;
+				// 
+				// while(originNode.childNodes[nextDiv].firstChild !== parrentDiv){
+				// 	nextDiv += 1;
+				// 	console.log(nextDiv)
+				// }
+				// nextDiv += 1;
+				// nextDiv = originNode.childNodes[nextDiv].firstChild.firstChild
+
+				const nextDiv = allRedactorPageEdit[Array.from(allRedactorPageEdit).indexOf(divNode)+1]
 				
 				nextDiv.insertBefore(pToTranspose, nextDiv.firstChild)
 				console.log("remove")
@@ -347,7 +380,8 @@ export default function AdminCollectionCreate({id}) {
 		
 		if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page-edit"){
 			const newParagraph = document.createElement('p');
-			newParagraph.className = `${currentTextPosition}`;
+			let newParClass = Object.values(paragraphFormatDict).join(" ");
+			newParagraph.className = `${newParClass}`;
 
 			const newSpan = document.createElement('span')
 			newSpan.className = `size-${currentFontSize}`
@@ -389,8 +423,10 @@ export default function AdminCollectionCreate({id}) {
 		if(paragraphCursorPos === paragraphNode.childElementCount && currentSpanCursorePos === spanNode.textContent.length){
 			range.setStartAfter(paragraphNode)
 			range.setEndAfter(paragraphNode)
+			
 			const newParagraph = document.createElement('p');
-			newParagraph.className = `${currentTextPosition}`;
+			let newParClass = Object.values(paragraphFormatDict).join(" ");
+			newParagraph.className = `${newParClass}`;
 
 			let newSpanClass = "";
 
@@ -456,8 +492,10 @@ export default function AdminCollectionCreate({id}) {
 			
 			range.setStartAfter(paragraphNode)
 			range.setEndAfter(paragraphNode)
+			
 			const newParagraph = document.createElement('p');
-			newParagraph.className = `${currentTextPosition}`;
+			let newParClass = Object.values(paragraphFormatDict).join(" ");
+			newParagraph.className = `${newParClass}`;
 			
 			newParagraph.appendChild(spanAfter)
 			spanNodesAfter.forEach(node => newParagraph.appendChild(node));
@@ -575,7 +613,8 @@ export default function AdminCollectionCreate({id}) {
 	
 	if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page-edit"){
 		const newParagraph = document.createElement('p');
-		newParagraph.className = `${currentTextPosition}`;
+		let newParClass = Object.values(paragraphFormatDict).join(" ");
+		newParagraph.className = `${newParClass}`;
 
 		let newSpanClass = "";
 
@@ -865,12 +904,29 @@ export default function AdminCollectionCreate({id}) {
 			paragNode = paragNode.parentNode
 		}
 		
-		paragNode.className = className
-		setTextPosition(className)
+		let paragNodeClass = paragNode.className.split(" ")
+		let find = false
+		console.log(className)
+		paragNodeClass.forEach((style, index) => {
+			const key = style.split("_")[1]
+			console.log(key)
+			const currentStyle = style.split('_')[0]
+			if(key == className.split("_")[1]){
+				console.log(true)
+				find = true
+				if(style != className){
+					paragNodeClass[index] = className
+					paragNode.className = paragNodeClass.join(" ")
+				}
+			}
+		}) 
+
+		if(find === false){
+			paragNode.className += ` ${className}`
+		}
 
 	}
 
-	function changeParra
 
 	
 	const [showPanel, setShowPanel] = useState(null);
@@ -988,7 +1044,8 @@ export default function AdminCollectionCreate({id}) {
 		if(range.startContainer === "pdf-redactor-page-edit"){
 			console.log('pdf-redactor-page-edit')
 			const newParagraph = document.createElement('p');
-			newParagraph.className = `${currentTextPosition}`;
+			let newParClass = Object.values(paragraphFormatDict).join(" ");
+			newParagraph.className = `${newParClass}`;
 			range.insertNode(newParagraph)
 			range.setStartAfter(newParagraph)
 		}else{
@@ -1262,6 +1319,46 @@ export default function AdminCollectionCreate({id}) {
 		  }
 	}
 
+	const handleEditPage = (event) => {
+		const range = window.getSelection().getRangeAt(0);
+		console.log(123)
+		console.log(event.inputType)
+		const node = range.startContainer;
+
+		if(node.nodeName === "#text"){
+			const newParagraph = document.createElement("p");
+			let newParClass = Object.values(paragraphFormatDict).join(" ");
+			newParagraph.className = `${newParClass}`
+
+			let newSpanClass = "";
+			const text = e.data
+			
+			newSpanClass += `size-${currentFontSize}`
+			Object.keys(textFormatDict).forEach(key => {
+				if(textFormatDict[key]){
+					newSpanClass += ` ${key}`
+				}
+			})
+
+			const newSpan = document.createElement('span')
+			
+			newSpan.classList = `${newSpanClass}`;
+			newSpan.style.fontSize = `${currentFontSize}px`;
+			newSpan.style.height = `${currentFontSize}px`
+			newSpan.style.display = 'inline-block';
+			const textNode = document.createTextNode(text);
+			newSpan.appendChild(textNode)
+
+			newParagraph.appendChild(newSpan);
+
+			range.insertNode(newParagraph);
+			
+			range.setStart(textNode, 1)
+			range.setEnd(textNode, 1)
+
+		}
+	}
+
 	// useEffect(() => {
 	// 	console.log('use')
 	// 	updatePageNumbers()	
@@ -1350,25 +1447,25 @@ export default function AdminCollectionCreate({id}) {
 
                                 <div className="pdf-redactor-alignment-tools">
                                     <p
-										onClick={() => changeParagraphStyle("left-text-position")}
-										className={currentTextPosition === "left-text-position" ? 'pdf-redactor-tool-selected' : ''}
+										onClick={() => changeParagraphStyle("left_parPosition")}
+										className={paragraphFormatDict['parPosition'] === "left_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>L</p>
                                     <p
-										onClick={() => changeParagraphStyle("central-text-position")}
-										className={currentTextPosition === "central-text-position" ? 'pdf-redactor-tool-selected' : ''}
+										onClick={() => changeParagraphStyle("central_parPosition")}
+										className={paragraphFormatDict['parPosition'] === "central_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>C</p>
                                     <p
-										onClick={() => changeParagraphStyle("right-text-position")}
-										className={currentTextPosition === "right-text-position" ? 'pdf-redactor-tool-selected' : ''}
+										onClick={() => changeParagraphStyle("right_parPosition")}
+										className={paragraphFormatDict['parPosition'] === "right_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>R</p>
                                 </div>
 
 								<div className="pdf-redacotr-alignment-tools">
 									<div class="font-selector">
-								  <select class="font-select" value={currentPStyle} onChange={(e) => {setCurrentPStyle(e.target.value)}}>
-									<option value="Normal" selected>Обычный текст</option>
-									<option value="Heading">Заголовок</option>
-									<option value="SubHeading">Подзаголовок</option>
+								  <select class="font-select" value={paragraphFormatDict['type']} onChange={(e) => {changeParagraphStyle(e.target.value)}}>
+									<option value="normal_type" selected>Обычный текст</option>
+									<option value="heading_type">Заголовок</option>
+									<option value="subHeading_type">Подзаголовок</option>
 								  </select>
 								  
 								</div>
@@ -1384,6 +1481,10 @@ export default function AdminCollectionCreate({id}) {
                                     />
 									<p onClick={() => {setCurrentFontSize(currentFontSize+1)}}>+</p>
                                 </div>
+					
+								<div className="pdf-redactor-heading-num">
+									<p onClick={() => handleCreateHeadingNumerationBlock(window.getSelection().getRangeAt(0), handleMouseUp, checkOverFlow, handleEditPage, handleFileChange)} className="pdf-redactor-heading-num-button">H1...1</p>
+								</div>
                             </div>
 
                             <div className="pdf-redactor-page-section" id="pdf-redactor-page-section">
@@ -1396,6 +1497,9 @@ export default function AdminCollectionCreate({id}) {
 											contentEditable="true"
 											ref={inputRef}
 											onMouseUp={handleMouseUp}
+											onInput={(event) => {
+												console.log(2345)
+												handleEditPage(event)}}
 											onKeyUp={(event) => {
 												handleMouseUp(event);
 												checkOverFlow(null);

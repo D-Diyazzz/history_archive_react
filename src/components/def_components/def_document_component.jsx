@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import PDFViewer from "../pdfViewer";
 import NotFoundComponent from "../404_not_found_component";
 import api from "../../api";
+import { FILES_URL } from "../../config";
+
 
 export default function DefDocumentComponent({ documentId }) {
     const [error, setError] = useState(false);
@@ -38,7 +40,7 @@ export default function DefDocumentComponent({ documentId }) {
         if (fileExtension === 'pdf') {
             return <PDFViewer key={index} pdfUrl={fileUrl} />;
         } else if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
-            return <img key={index} src={"http://localhost:8000/archive/files/" + fileUrl} alt={`Document file ${index + 1}`} style={{ width: '900px', height: 'auto' }} />;
+            return <img key={index} src={FILES_URL + fileUrl} alt={`Document file ${index + 1}`} style={{ width: '900px', height: 'auto' }} />;
         }
         return null;
     };
