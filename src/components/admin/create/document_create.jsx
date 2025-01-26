@@ -184,16 +184,14 @@ export default function AdminDocumentCreate(){
                 }
         }
 
-        if (!file.length || fileError === true) {
-            alert('Файл не выбран или выбран файл неправильного формата');
-            return;
-        }
 
 	const formData = new FormData();
 	const requestaData = new FormData();
 
 	file.forEach(singleFile => {
-	    requestaData.append("files", singleFile);
+		if(singleFile !== null){
+	    	requestaData.append("files", singleFile);
+		}
 	});
 
 	Object.keys(formDataState).forEach(key => {
@@ -228,6 +226,7 @@ export default function AdminDocumentCreate(){
 
 	// Append the data object as a JSON string to requestaData under the key 'data'
 	requestaData.append("data", JSON.stringify(dataObject));
+		console.log(requestaData)
 
 	try{
             const response = await api.post("/document", requestaData);
