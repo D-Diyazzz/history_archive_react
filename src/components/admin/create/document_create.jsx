@@ -198,19 +198,18 @@ export default function AdminDocumentCreate(){
 			formData.append(key, formDataState[key]);
 		});
 
-		switch (currentComponent) {
-			case 'document':
-				Object.keys(DocumentFormData).forEach(key => {
-					formData.append(key, DocumentFormData[key]);
-				});
+		if(currentComponent == "document"){
+			Object.keys(DocumentFormData).forEach(key => {
+				formData.append(key, DocumentFormData[key]);
+			});
 				
-				Object.keys(SearchDataForm).forEach(key => {
-					formData.append(`search_data[${key}]`, SearchDataForm[key]);
-				});
-			case 'phono':
-				Object.keys(PhonoDocFormData).forEach(key => {
-					formData.append(key, PhonoDocFormData[key])
-				})
+			Object.keys(SearchDataForm).forEach(key => {
+				formData.append(`search_data[${key}]`, SearchDataForm[key]);
+			});
+		}else if(currentComponent == "phono"){
+			Object.keys(PhonoDocFormData).forEach(key => {
+				formData.append(key, PhonoDocFormData[key])
+			})
 		}
 
 		// Create an object to hold all formData entries
