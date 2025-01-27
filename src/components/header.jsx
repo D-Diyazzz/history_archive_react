@@ -50,7 +50,10 @@ export default function Header({active}) {
                     <div className="icons-list">
                         <img src={user_icon}/>
                         {name ? (
-                            <a href="#">{name}</a>
+							<>
+                            	<a href="#">{name}</a>
+								<a href="/logout">Log out</a>
+							</>
                         ) : (
                             <a href="/login">Log In</a>
                         )}

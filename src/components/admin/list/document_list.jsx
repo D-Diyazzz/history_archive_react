@@ -72,7 +72,14 @@ export default function AdminDocumentList(){
                         return (
                           <>
                             <div className="admin-list-a">
-                              <a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">{renderFirstFile(doc.file_urls[0], index)}</div></a>
+							{
+								doc.file_urls ? (
+                              		<a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">{renderFirstFile(doc.file_urls[0], index)}</div></a>
+								) :
+								(
+	                              <a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">Document</div></a>
+								)
+							}
                               <p style={{"width":"15%"}}>{doc.author}</p>
                               <p style={{"width":"10%"}}>{doc.dating}</p>
                               <p style={{"width":"20%"}}>{doc.variety}</p>

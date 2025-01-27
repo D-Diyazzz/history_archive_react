@@ -185,55 +185,69 @@ export default function AdminDocumentCreate(){
         }
 
 
-	const formData = new FormData();
-	const requestaData = new FormData();
+		const formData = new FormData();
+		const requestaData = new FormData();
 
-	file.forEach(singleFile => {
-		if(singleFile !== null){
-	    	requestaData.append("files", singleFile);
-		}
-	});
-
-	Object.keys(formDataState).forEach(key => {
-	    formData.append(key, formDataState[key]);
-	});
-
-	switch (currentComponent) {
-	    case 'document':
-		Object.keys(DocumentFormData).forEach(key => {
-		    formData.append(key, DocumentFormData[key]);
+		file.forEach(singleFile => {
+			if(singleFile !== null){
+				requestaData.append("files", singleFile);
+			}
 		});
-		
-		Object.keys(SearchDataForm).forEach(key => {
-		    formData.append(`search_data[${key}]`, SearchDataForm[key]);
+
+		Object.keys(formDataState).forEach(key => {
+			formData.append(key, formDataState[key]);
 		});
-	}
 
-	// Create an object to hold all formData entries
-	let dataObject = {};
-	formData.forEach((value, key) => {
-	    if (key.startsWith('search_data[')) {
-		// Extract the nested key from the bracket notation
-		let nestedKey = key.match(/search_data\[(.*)\]/)[1];
-		if (!dataObject['search_data']) {
-		    dataObject['search_data'] = {};
+		switch (currentComponent) {
+			case 'document':
+				Object.keys(DocumentFormData).forEach(key => {
+					formData.append(key, DocumentFormData[key]);
+				});
+				
+				Object.keys(SearchDataForm).forEach(key => {
+					formData.append(`search_data[${key}]`, SearchDataForm[key]);
+				});
+			case 'phono':
+				Object.keys(PhonoDocFormData).forEach(key => {
+					formData.append(key, PhonoDocFormData[key])
+				})
 		}
-		dataObject['search_data'][nestedKey] = value;
-	    } else {
-		dataObject[key] = value;
-	    }
-	});
 
-	// Append the data object as a JSON string to requestaData under the key 'data'
-	requestaData.append("data", JSON.stringify(dataObject));
-		console.log(requestaData)
+		// Create an object to hold all formData entries
+		let dataObject = {};
+		formData.forEach((value, key) => {
+			if (key.startsWith('search_data[')) {
+			// Extract the nested key from the bracket notation
+			let nestedKey = key.match(/search_data\[(.*)\]/)[1];
+			if (!dataObject['search_data']) {
+				dataObject['search_data'] = {};
+			}
+			dataObject['search_data'][nestedKey] = value;
+			} else {
+			dataObject[key] = value;
+			}
+		});
 
-	try{
-            const response = await api.post("/document", requestaData);
-            navigate(`/admin/document/${response.data.id}`) 
-        } catch (error){
-            console.log("error", error);
-        }
+		// Append the data object as a JSON string to requestaData under the key 'data'
+		requestaData.append("data", JSON.stringify(dataObject));
+			console.log(requestaData)
+
+		try{
+				let url;
+				if(currentComponent == "document"){
+					url="/document"
+				}else if(currentComponent == "photo"){
+					url="/photo-document"
+				}else if(currentComponent == "video"){
+					url="/video-document"
+				}else if(currentComponent == "phono"){
+					url="/phono-document"
+				}
+				const response = await api.post(url, requestaData);
+				navigate(`/admin/document/${response.data.id}`) 
+			} catch (error){
+				console.log("error", error);
+			}
     }
 
     const addFileInput = () => {
@@ -262,7 +276,7 @@ export default function AdminDocumentCreate(){
             case 'video':
                 return <VideoDocumentInputs errors={VideoDocFormErrors} formDataState={VideoDocFormData} handleChange={handleChange}/>;
             case 'phono':
-                return <PhonoDocumentInputs errors={PhonoDocFormErrors} formDataState={PhonoDocFormData} handleChange={handleChange}/>;
+                return <PhonoDocumentInputs errors={PhonoDocFormErrors} setErrors={setPhonoDocFormErrors} formDataState={PhonoDocFormData} handleChange={handleChange} setFormData={setPhonoDocFormData}/>;
             default:
                 return null;
         }
