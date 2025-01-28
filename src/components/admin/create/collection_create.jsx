@@ -45,7 +45,7 @@ export default function AdminCollectionCreate({id}) {
 				setSelectedRedactorUsers(response.data.redactor_group)
 				setIsApproved(response.data.is_approved)
 				
-				const file = await fetch(FILES_URL + response.data.html_url);
+				const file = await fetch(FILES_URL + "collections/" + response.data.html_url);
 				const file_text = await file.text()
 				const regex = /<\/head>([\s\S]*)<\/html>/;
 				const match = file_text.match(regex);

@@ -7,7 +7,7 @@ export default function AdminMiniDocumentList({ handleSelectDocument, selectedDo
     useEffect(() => {
         const fetchDocuments = async () => {
             try {
-                const response = await api.get("/document");
+                const response = await api.get("/all-documents");
                 setDocuments(response.data);
             } catch (error) {
                 console.error("Ошибка при получении списка документов:", error);
@@ -63,7 +63,13 @@ export default function AdminMiniDocumentList({ handleSelectDocument, selectedDo
                                 onClick={() => handleSelectDocument(doc)}
                             >
                                 <p href={`/admin/document/${doc.id}`} style={{ width: "15%" }}>
-                                    {getFirstFile(doc.file_urls[0])}
+								{
+									doc.file_urls ? (
+										getFirstFile(doc.file_urls[0])
+									) : (
+										<></>
+									)
+								}
                                 </p>
                                 <p style={{ width: "15%" }}>{doc.author}</p>
                                 <p style={{ width: "10%" }}>{doc.dating}</p>
