@@ -11,6 +11,7 @@ import api from "../../api";
 import DefCollectionComponent from "../../components/def_components/def_collection_component";
 import CreateCollectionButtons from "../../components/admin/create_collection_button";
 import AdminDefCollectionComponent from "../../components/admin/def_components/def_admin_collection_component";
+import DefPhonoDocumentComponent from "../../components/admin/def_components/def_phono_document";
 
 
 export default function AdminPanleDefInfo(){
@@ -34,6 +35,8 @@ export default function AdminPanleDefInfo(){
         switch(table) {
             case "document":
                 return <DefDocumentComponent documentId={id}/>
+			case "phono-document":
+				return <DefPhonoDocumentComponent documentId={id}/>
 			case "collection":
 				return <AdminDefCollectionComponent collectionId={id}/>
             default:

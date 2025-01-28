@@ -10,7 +10,7 @@ export default function AdminDocumentList(){
     useEffect(() => {
         const fetchDocuments = async () => {
             try {
-                const response = await api.get("/document");
+                const response = await api.get("/all-documents");
                 setDocuments(response.data); 
             } catch (error) {
                 console.error("Ошибка при получении списка документов:", error);
@@ -73,14 +73,30 @@ export default function AdminDocumentList(){
                           <>
                             <div className="admin-list-a">
 							{
-								doc.file_urls ? (
-                              		<a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">{renderFirstFile(doc.file_urls[0], index)}</div></a>
-								) :
-								(
-	                              <a href={`/admin/document/${doc.id}`} style={{"width":"15%"}}><div className="first-page-file-docs-admin">Document</div></a>
-								)
+							  doc.file_urls ? (
+								<a
+								  href={doc.type === "document" 
+									? `/admin/document/${doc.id}` 
+									: `/admin/phono-document/${doc.id}`}
+								  style={{ width: "15%" }}
+								>
+								  <div className="first-page-file-docs-admin">
+									{renderFirstFile(doc.file_urls[0], index)}
+								  </div>
+								</a>
+							  ) : (
+								<a
+								  href={doc.type === "document" 
+									? `/admin/document/${doc.id}` 
+									: `/admin/phono-document/${doc.id}`}
+								  style={{ width: "15%" }}
+								>
+								  <div className="first-page-file-docs-admin">Document</div>
+								</a>
+							  )
 							}
-                              <p style={{"width":"15%"}}>{doc.author}</p>
+
+							  <p style={{"width":"15%"}}>{doc.author}</p>
                               <p style={{"width":"10%"}}>{doc.dating}</p>
                               <p style={{"width":"20%"}}>{doc.variety}</p>
                               <p style={{"width":"20%"}}>{doc.case_prod_number}</p>
