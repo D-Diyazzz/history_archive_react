@@ -19,7 +19,7 @@ export default function CommentWindow({ onClose , coll_id, user_id, user_email})
 		};
 
 		fetchComment();
-	}, [coll_id]);
+	}, [coll_id, user_id]);
 
 	return (
 		<div className="comment-window">
