@@ -93,7 +93,7 @@ export default function AdminUserList() {
                             <option value="AdminUser">Админ</option>
                             <option value="BasicUser">Обычный пользователь</option>
                             <option value="ScientificCouncil">Научный совет</option>
-							<option value="RedactoUser">Редактор</option>
+							<option value="RedactorUser">Редактор</option>
                         </select>
                         <div className="modal-buttons">
                             <button onClick={handleRoleChange}>Сохранить</button>
