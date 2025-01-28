@@ -9,6 +9,7 @@ import comment_icon from "../../../style/images/icon-comment.png"
 import { useNavigate } from 'react-router-dom';
 import { documentForCollectionFormat } from '../../../utils/changeHTMLFormat';
 import { handleCreateHeadingNumerationBlock } from '../heading_num';
+import { FILES_URL } from '../../../config';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -44,7 +45,7 @@ export default function AdminCollectionCreate({id}) {
 				setSelectedRedactorUsers(response.data.redactor_group)
 				setIsApproved(response.data.is_approved)
 				
-				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
+				const file = await fetch(FILES_URL + response.data.html_url);
 				const file_text = await file.text()
 				const regex = /<\/head>([\s\S]*)<\/html>/;
 				const match = file_text.match(regex);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 
 import api from "../../../api";
 import FirstPage from "../../getFirstPageFile";
+import { FILES_URL } from "../../../config";
 
 export default function AdminDocumentList(){
 
@@ -39,7 +40,7 @@ export default function AdminDocumentList(){
         if (fileExtension === 'pdf') {
             return <FirstPage key={index} pdfUrl={fileUrl} />;
         } else if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
-            return <img key={index} src={"http://localhost:8000/archive/files/" + fileUrl} alt={`Document file ${index + 1}`} />;
+            return <img key={index} src={FILES_URL + fileUrl} alt={`Document file ${index + 1}`} />;
         }
         return null;
 

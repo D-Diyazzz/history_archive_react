@@ -8,6 +8,7 @@ import { validateForm, handleChange } from "../../../utils/formHadlers";
 import { addFileInput, removeFileInput, handleFileChange } from "../../../utils/documentHandlers";
 import FirstPage from "../../getFirstPageFile";
 import ConfirmDialog from "../dialogs";
+import { FILES_URL } from "../../../config";
 
 
 export default function AdminDocumentUpdateComponent({id}){
@@ -212,7 +213,7 @@ export default function AdminDocumentUpdateComponent({id}){
 	if (fileExtension === 'pdf') {
 	    return <FirstPage pdfUrl={fileUrl} height={130}/>
  	} else if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
-	    return <img key={index} src={"http://localhost:8000/archive/files/" + fileUrl}/>;
+	    return <img key={index} src={FILES_URL + fileUrl}/>;
 	}
 	return null;
     }

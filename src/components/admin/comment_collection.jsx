@@ -3,6 +3,7 @@ import NotFoundComponent from "../404_not_found_component";
 import api from "../../api";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { FILES_URL } from "../../config";
 
 
 export default function CommentCollectionComponent({collectionId}){
@@ -30,7 +31,7 @@ export default function CommentCollectionComponent({collectionId}){
 				const user = response.data.scientific_council_group.find(user => user.id === user_id);
 				setIsApproved(user.is_approved)
 
-				const file = await fetch(`http://localhost:8000/archive/files/collections/${response.data.html_url}`);
+				const file = await fetch(FILES_URL + response.data.html_url);
 				const file_text = await file.text()
 				const regex = /<\/head>([\s\S]*)<\/html>/;
 				const match = file_text.match(regex);
