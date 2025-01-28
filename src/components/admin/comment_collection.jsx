@@ -6,7 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { FILES_URL } from "../../config";
 
 
-export default function CommentCollectionComponent({collectionId}){
+export default function CommentCollectionComponent({collectionId, user_role}){
 	const [collectionElem, setCollectionElem] = useState([]);
 	const [error, setError] = useState(false)
 	const [isApproved, setIsApproved] = useState(false)
@@ -27,11 +27,13 @@ export default function CommentCollectionComponent({collectionId}){
 				console.log(comment_response_data)
 				setComment(comment_response_data.text)
 				setCommentId(comment_response_data.id)
+				
+				if(user_role == "ScientificCouncil"){
+					const user = response.data.scientific_council_group.find(user => user.id === user_id);
+					setIsApproved(user.is_approved)
+				}
 
-				const user = response.data.scientific_council_group.find(user => user.id === user_id);
-				setIsApproved(user.is_approved)
-
-				const file = await fetch(FILES_URL + response.data.html_url);
+				const file = await fetch(FILES_URL + "collections/" + response.data.html_url);
 				const file_text = await file.text()
 				const regex = /<\/head>([\s\S]*)<\/html>/;
 				const match = file_text.match(regex);
@@ -128,7 +130,8 @@ export default function CommentCollectionComponent({collectionId}){
 								<p>{collectionElem.theme}</p>
 							</div>
 						</div>
-
+						
+						{ user_role == "ScientificCouncil" ? (
 						<div className="admin-form-row">
 							<div className="admin-form-row-label">
 								<label htmlFor="approve">Одобренно</label>
@@ -142,6 +145,10 @@ export default function CommentCollectionComponent({collectionId}){
 								<p className="toggle-p" id="toggle-state">{isApproved ? 'Да' : 'Нет'}</p>
 							</div>
 						</div>
+						):(
+							<></>
+						)
+						}
 
 						<div className="pdf-redactor-section" style={{height: "700px"}}>
 							<div className="pdf-redactor-page-section" id="pdf-redactor-page-section" style={{height: "700px", borderRadius: "20px 20px 0px 0px"}}>
