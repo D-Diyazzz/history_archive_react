@@ -131,6 +131,7 @@ export default function CommentCollectionComponent({collectionId, user_role}){
 							</div>
 						</div>
 						
+						{ user_role == "ScientificCouncil" ? (
 						<div className="admin-form-row">
 							<div className="admin-form-row-label">
 								<label htmlFor="approve">Одобренно</label>
@@ -144,6 +145,10 @@ export default function CommentCollectionComponent({collectionId, user_role}){
 								<p className="toggle-p" id="toggle-state">{isApproved ? 'Да' : 'Нет'}</p>
 							</div>
 						</div>
+						):(
+							<></>
+						)
+						}
 
 						<div className="pdf-redactor-section" style={{height: "700px"}}>
 							<div className="pdf-redactor-page-section" id="pdf-redactor-page-section" style={{height: "700px", borderRadius: "20px 20px 0px 0px"}}>

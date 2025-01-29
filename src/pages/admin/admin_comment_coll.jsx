@@ -30,7 +30,7 @@ export default function AdminPanelCommentColl(){
 					</div>
 
 					<div className="admin-section">
-						<CommentCollectionComponent collectionId={id}/>
+						<CommentCollectionComponent collectionId={id} user_role={role}/>
 					</div>
 				</div>
 			</main>
