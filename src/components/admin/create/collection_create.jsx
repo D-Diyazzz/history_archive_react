@@ -1143,7 +1143,13 @@ export default function AdminCollectionCreate({id}) {
 					<div className="admin-selected-doc">
 						<div className="document-selected">
 							<div className="document-selected-file">
-								{getFirstFile(obj.file_urls[0])}	
+							{
+								obj.file_urls ? (
+									getFirstFile(obj.file_urls[0])
+								):(
+									<></>
+								)
+							}
 							</div>
 							<div className="document-selected-info">
 								<p className="doc-selected-info-p">Номер: {index+1}</p>
