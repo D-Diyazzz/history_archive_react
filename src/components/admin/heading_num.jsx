@@ -130,91 +130,106 @@ const adjustDots = (paragraph) => {
     }
 };
 
-export const renderHeadingPageNum = (pageNumDict) => {
-	const headingPageNumBlock = document.querySelectorAll('.pdf-redactor-page-heading-num-edit')
+function getLineWithDots(title, pageNum, containerWidth = 600, font = '16px Arial') {
+  // Создаём «виртуальный» canvas для измерения ширины
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = font;
 
-	const elementsQue = new FIFOQueue()
+  // Преобразуем номер в строку (на всякий случай)
+  const pageStr = String(pageNum);
+
+  // Измеряем ширину заголовка, номера и одной точки
+  const titleChanged = title.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "    ") 
+  const titleWidth = ctx.measureText(titleChanged).width;
+  const pageWidth  = ctx.measureText(pageStr).width;
+  const dotWidth   = ctx.measureText('.').width;
+
+  const textHeight = ctx.measureText(title).actualBoundingBoxAscent + ctx.measureText(title).actualBoundingBoxDescent;
+
+  console.log('Ширина:', titleWidth);
+  console.log('Высота:', textHeight);
+
+
+  // Сколько пикселей остаётся под точки
+  const freeSpace = containerWidth - (titleWidth % containerWidth) - pageWidth;
+
+  if (freeSpace <= 0) {
+    // Места совсем нет — возвращаем хоть что-то
+    return `${title} ${pageStr}`;
+  }
+
+  // Считаем, сколько точек поместится
+  const dotsCount = Math.floor(freeSpace / dotWidth);
+
+  // Генерируем строку из нужного количества точек
+  const dots = '.'.repeat(dotsCount);
+
+  // Склеиваем
+  return `${title}${dots}${pageStr}`;
+}
+
+/**
+ * Создаём <span> с уже готовым текстом вида "Заголовок...Страница".
+ * Можно доработать стили и классы по желанию.
+ */
+function createSingleSpanLine(title, pageNum) {
+  // Шрифт и ширину настраиваем здесь
+  const containerWidth = 600;
+  const font = '16px Arial';
+
+  const span = document.createElement('span');
+  // Получаем итоговую строку
+  const finalText = getLineWithDots(title, pageNum, containerWidth, font);
+  span.innerHTML = finalText;
+  
+  // Пример минимальных стилей (или переопределяйте классами):
+  span.style.font = font;
+  // Можно добавить класс:
+  // span.classList.add('size-16', 'bold');
+
+  return span;
+}
+
+
+export const renderHeadingPageNum = (pageNumDict) => {
+	const headingPageNumBlock = document.querySelectorAll('.pdf-redactor-page-heading-num-edit');
+	const elementsQue = new FIFOQueue();
 
 	Object.keys(pageNumDict).forEach(id => {
-		Object.keys(pageNumDict[id]).forEach(key => {
-			const h1elem = document.createElement('p')
-			h1elem.className = "left_parPosition parHeadingPageNum"
-			
-			const spanTitle = document.createElement('span');
-			const spanDots = document.createElement('span');
-			const spanPage = document.createElement('span');
-			
-			const spanClass = 'size-16 bold'
+	  Object.keys(pageNumDict[id]).forEach(key => {
+		// 1) Создаём параграф для заголовка (h1)
+		const h1elem = document.createElement('p');
+		h1elem.className = "left_parPosition parHeadingPageNum";
 
-			spanTitle.className = `${spanClass}`
-			spanDots.className = `${spanClass} spanDots`
-			spanPage.className = `${spanClass}`
-
-			spanTitle.style.fontSize = '16px'
-			spanTitle.style.height = '16px'
-			spanTitle.style.display = 'inline-block'
-
-			spanDots.style.fontSize = '16px'
-			spanDots.style.height = '16px'
-			spanDots.style.display = 'inline-block'
-
-			spanPage.style.fontSize = '16px'
-			spanPage.style.height = '16px'
-			spanPage.style.display = 'inline-block'
-			
-			spanTitle.textContent = key
-			spanPage.textContent = pageNumDict[id][key]['pageNum']
-			spanDots.textContent = ".........................................................................................................................................................."
-
-			h1elem.appendChild(spanTitle)
-			h1elem.appendChild(spanDots)
-			h1elem.appendChild(spanPage)
-
-			elementsQue.enqueue(h1elem)
-
-			pageNumDict[id][key]['subHeadings'].forEach(obj => {
-				const h2elem = document.createElement('p');
-				h2elem.className = "left_parPosition parHeadingPageNum";
-
-				const subSpanTitle = document.createElement('span');
-				const subSpanDots = document.createElement('span');
-				const subSpanPage = document.createElement('span');
-
-				subSpanTitle.className = `${spanClass}`;
-				subSpanDots.className = `${spanClass} spanDots`
-				subSpanPage.className = `${spanClass}`;
-
-				subSpanTitle.style.fontSize = '16px';
-				subSpanTitle.style.height = '16px';
-				subSpanTitle.style.display = 'inline-block';
-
-				subSpanDots.style.fontSize = '16px';
-				subSpanDots.style.height = '16px';
-				subSpanDots.style.display = 'inline-block';
-
-				subSpanPage.style.fontSize = '16px';
-				subSpanPage.style.height = '16px';
-				subSpanPage.style.display = 'inline-block';
-			
-				subSpanTitle.style.whiteSpace = 'pre';
-				subSpanTitle.textContent = `    ${obj['textContent']}`;
-				// subSpanTitle.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;${obj['textContent']}`;
-				subSpanPage.textContent = obj['pageNum'];
-				subSpanDots.textContent = ".........................................................................................................................................................."
-
-				h2elem.appendChild(subSpanTitle);
-				h2elem.appendChild(subSpanDots);
-				h2elem.appendChild(subSpanPage);
-
-				elementsQue.enqueue(h2elem);
-			})
-
-		})
+		// Вместо 3 спанов – один
+		const singleSpan = createSingleSpanLine(
+		  key,                                     // Заголовок
+		  pageNumDict[id][key]['pageNum']          // Номер страницы
+		);
+		h1elem.appendChild(singleSpan);
 		
-	})
+		elementsQue.enqueue(h1elem);
 
-	console.log(elementsQue)
+		// 2) Обрабатываем подзаголовки
+		pageNumDict[id][key]['subHeadings'].forEach(obj => {
+		  const h2elem = document.createElement('p');
+		  h2elem.className = "left_parPosition parHeadingPageNum";
 
+		  // Для подзаголовков можно добавить отступы в начале:
+		  const indentedTitle = `&nbsp;&nbsp;&nbsp;&nbsp;${obj['textContent']}`;
+		  const subSpan = createSingleSpanLine(
+			indentedTitle,
+			obj['pageNum']
+		  );
+		  h2elem.appendChild(subSpan);
+
+		  elementsQue.enqueue(h2elem);
+		});
+	  });
+	});
+
+	console.log(elementsQue);
 	// headingPageNumBlock.forEach(block => {
 	// 	while(block.firstChild){
 	// 		block.removeChild(block.firstChild)

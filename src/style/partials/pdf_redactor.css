@@ -340,28 +340,35 @@ p{
 	width: 60px;
 }
 
-.parHeadingPageNum{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	white-space: nowrap;
-	overflow: hidden;
+.parHeadingPageNum {
+  display: flex;
+  flex-wrap: wrap; /* Разрешаем перенос */
+  align-items: center; /* Или baseline, если хотите выровнять по нижней линии */
+  margin: 0; /* Можно обнулить отступы, если надо */
+  width: 100%;
 }
 
-/* .parHeadingPageNum span{ */
-/* 	flex-shrink: 0; */
-/* } */
-
-.spanDots{
-	overflow: hidden;
-	position: relative;
-	white-space: nowrap;
+/* Первый спан – заголовок */
+.parHeadingPageNum .spanTitle {
+  /* Разрешаем тексту переноситься на новую строку */
+  white-space: normal;
+  /* Можно убрать display: inline-block; 
+     если у вас он прописан инлайном, переопределите:
+       display: inline-block !important;
+       white-space: normal !important;
+     Но зачастую достаточно просто white-space: normal */
 }
 
-/* .parHeadingPageNum .spanDots::before{ */
-/* 	content: ".................................................................................................................................."; */
-/* 	display: block; */
-/* 	width: 100%; */
-/* 	white-space: nowrap; */
-/* 	overflow: hidden; */
-/* } */
+/* Второй спан – «лидер» с точками */
+.parHeadingPageNum .spanDots {
+  flex: 1;             /* Занимает всё доступное пространство */
+  white-space: nowrap; /* Не переносим точки */
+  overflow: hidden;    /* Обрезаем лишние точки, чтобы не уезжали за рамки */
+  margin: 0 5px;       /* Небольшие отступы слева/справа (опционально) */
+}
+
+/* Третий спан – номер страницы */
+.parHeadingPageNum .spanPage {
+  white-space: nowrap; /* Чтобы не рвался на другую строку от точек */
+}
+
