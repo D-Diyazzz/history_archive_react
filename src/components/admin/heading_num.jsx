@@ -37,7 +37,14 @@ export const handleCreateHeadingNumerationBlock = (range, handleMouseUp, checkOv
 
 	// Вставляем newParentDivBlock после currentPageBlockNode
 	if (currentPageBlockNode.nextSibling) {
-		originNode.insertBefore(newParentDivBlock, currentPageBlockNode.nextSibling);
+		console.log(currentPageBlockNode.nextSibling)
+		const nextPdfRedactorPage = currentPageBlockNode.nextSibling.firstChild
+		const nextPdfRedactorTypePage = nextPdfRedactorPage.firstChild
+		if(nextPdfRedactorTypePage.className == "pdf-redactor-page-heading-num-edit"){
+			checkOverFlowHedingPageNum(nextPdfRedactorTypePage)
+		}else{
+			originNode.insertBefore(newParentDivBlock, currentPageBlockNode.nextSibling);
+		}
 	} else {
 		originNode.appendChild(newParentDivBlock);
 	}
@@ -243,6 +250,8 @@ export const renderHeadingPageNum = (pageNumDict) => {
 	let parToTranspose = null;
 	const parentNode = Array.from(headingPageNumBlock[0].parentNode)
 
+	console.log(headingPageNumBlock.length)
+
 	for(let i=0; i<headingPageNumBlock.length; i++){
 		while(headingPageNumBlock[i].firstChild){
 			headingPageNumBlock[i].removeChild(headingPageNumBlock[i].firstChild)
@@ -258,14 +267,16 @@ export const renderHeadingPageNum = (pageNumDict) => {
 			const isOverFlow = checkOverFlowHedingPageNum(headingPageNumBlock[i])
 			if(
 				isOverFlow === true &&
-				parentNode.indexOf(headingPageNumBlock[i])+1 == parentNode.indexOf(headingPageNumBlock[i+1])){
-				
+				parentNode.indexOf(headingPageNumBlock[i])+1 == parentNode.indexOf(headingPageNumBlock[i+1]))
+			{
+				console.log("isOverflow")
 				parToTranspose = elementToAppend
 				break;
 			} else if (
 				isOverFlow === true &&
-				parentNode.indexOf(headingPageNumBlock[i])+1 != parentNode.indexOf(headingPageNumBlock[i+1])){
-					
+				parentNode.indexOf(headingPageNumBlock[i])+1 != parentNode.indexOf(headingPageNumBlock[i+1]))
+			{
+				console.log("isOverFlow2")
 				headingPageNumBlock = document.querySelectorAll(".pdf-redactor-page-heading-num-edit")
 				parToTranspose = elementToAppend
 				break;
