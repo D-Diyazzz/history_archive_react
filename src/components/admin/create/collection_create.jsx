@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { documentForCollectionFormat } from '../../../utils/changeHTMLFormat';
 import { handleCreateHeadingNumerationBlock } from '../heading_num';
 import { FILES_URL } from '../../../config';
+import { MouseUpTextSelectionHandler } from '../../../utils/text_selection';
 
 export default function AdminCollectionCreate({id}) {
     const [currentFontSize, setCurrentFontSize] = useState(12);
@@ -125,27 +126,29 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	const setTextAttributesToVariables = (range) => {
-		const currentNode = range.startContainer
-			const currentStartOffset = range.startOffset
-			const parentNode = range.startContainer.parentNode
-			
-			Object.keys(textFormatDict).forEach(key => {
-				if(textFormatDict[key] === true && !parentNode.className.includes(key)){
-					setTextFormatDict(prevState => ({
-					  ...prevState,
-					[key]: false
-					}));
+		const parentNode = range.startContainer.parentNode;
 
-				}else if(textFormatDict[key] === false && parentNode.className.includes(key)){
-					setTextFormatDict(prevState => ({
-					  ...prevState,
-					[key]: true
-					}));
-				}
-			})
+  // Скопируем текущее состояние, чтобы не мутировать напрямую
+		  const newFormatDict = { ...textFormatDict };
+
+		  Object.keys(newFormatDict).forEach(key => {
+			const hasClass = parentNode.className.includes(key);
+			const isActive = newFormatDict[key];
+
+			// Если в state было true, а класс не найден — выключаем
+			if (isActive === true && !hasClass) {
+			  newFormatDict[key] = false;
+			}
+			// Если в state было false, а класс есть — включаем
+			else if (isActive === false && hasClass) {
+			  newFormatDict[key] = true;
+			}
+		  });
+
+		  // Одним вызовом устанавливаем все нужные изменения
+		  setTextFormatDict(newFormatDict);
 
 			const ParrentFontSize = parentNode.style["font-size"].replace("px", "")
-			console.log(ParrentFontSize)
 			if(ParrentFontSize != currentFontSize && ParrentFontSize != "" && ParrentFontSize != null){
 				setCurrentFontSize(parseInt(ParrentFontSize))
 			}else if(ParrentFontSize == currentFontSize){
@@ -158,9 +161,7 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	const setParagraphAttributesToVariable = (range) => {
-		console.log(range)
 		let parNode = range.startContainer;
-		console.log(parNode)
 		while(parNode.nodeName !== "P"){
 			parNode = parNode.parentNode
 		}
@@ -180,35 +181,39 @@ export default function AdminCollectionCreate({id}) {
 	}
 
     const handleMouseUp = () => {
-		console.log(1)
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
 
-		let divNode = range.startContainer;
 
-		while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
-			divNode = divNode.parentNode
-		}
+		if(range.startOffset == range.endOffset){
+			
+			let divNode = range.startContainer;
 
-		if(divNode !== inputRef.current){
-			inputRef.current = divNode
-			setInputRefCurrent(divNode)
-			console.log('!==')
-		}
+			while(divNode.className !== "pdf-redactor-page-edit" && divNode.nodeName !== "DIV"){
+				divNode = divNode.parentNode
+			}
 
-		if(range.startContainer.nodeName === "#text"){
-        	setTextAttributesToVariables(range)
-			range.setStart(range.startContainer, range.startOffset)
-			range.setEnd(range.startContainer, range.endOffset)
-		}else if(range.startContainer.nodeName === "P"){
-			const spanNode = range.startContainer.firstChild;
-			const textNode = spanNode.firstChild
-			range.setStart(textNode, 0)
-			range.setEnd(textNode, 0)
+			if(divNode !== inputRef.current){
+				inputRef.current = divNode
+				setInputRefCurrent(divNode)
+				console.log('!==')
+			}
 
-			setTextAttributesToVariables(range)
-			range.setStart(spanNode, 0)
-			range.setEnd(spanNode, 0)
+			if(range.startContainer.nodeName === "#text"){
+				setTextAttributesToVariables(range)
+				range.setStart(range.startContainer, range.startOffset)
+				range.setEnd(range.startContainer, range.endOffset)
+			}else if(range.startContainer.nodeName === "P"){
+				const spanNode = range.startContainer.firstChild;
+				const textNode = spanNode.firstChild
+				range.setStart(textNode, 0)
+				range.setEnd(textNode, 0)
+
+				setTextAttributesToVariables(range)
+				range.setStart(spanNode, 0)
+				range.setEnd(spanNode, 0)
+			}
+
 		}
     };
 
@@ -254,7 +259,6 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	const checkOverFlow = (PurposeDiv) => {
-		console.log(2)
 		const selection = window.getSelection();
 		const range = selection.getRangeAt(0);
 
@@ -286,13 +290,10 @@ export default function AdminCollectionCreate({id}) {
 			while(lastP.nodeName !== "P"){
 				lastP = lastP.lastChild
 			}
-			console.log(lastP)
 
 			const pToTranspose = lastP.cloneNode(true)
-			console.log(pToTranspose)
 			
 			if(originNode.lastChild === parrentDivBlock || Array.from(allRedactorPageEdit).indexOf(divNode) == allRedactorPageEdit.length-1){
-				console.log(123)
 				const newDiv = document.createElement("div");
 				newDiv.contentEditable = "true"
 				newDiv.className = "pdf-redactor-page-edit"
@@ -305,19 +306,14 @@ export default function AdminCollectionCreate({id}) {
 				newDiv.addEventListener('oninput', handleEditPage);
 
 
-				console.log(newDiv)
-
 				const newParrentDiv = document.createElement("div")
 				newParrentDiv.className = "pdf-redactor-page"
 				newParrentDiv.appendChild(newDiv)
 
 				const newParrentDivBlock = document.createElement("div")
 				newParrentDivBlock.className = "pdf-redactor-page-block"
-				const tools = parrentDivBlock.lastChild.cloneNode(true)
-				tools.addEventListener("onChange", handleFileChange)
 
 				newParrentDivBlock.appendChild(newParrentDiv)
-				newParrentDivBlock.appendChild(tools)
 
 				originNode.appendChild(newParrentDivBlock)
 			
@@ -347,7 +343,6 @@ export default function AdminCollectionCreate({id}) {
 				const nextDiv = allRedactorPageEdit[Array.from(allRedactorPageEdit).indexOf(divNode)+1]
 				
 				nextDiv.insertBefore(pToTranspose, nextDiv.firstChild)
-				console.log("remove")
 
 				lastP.remove()
 
@@ -363,8 +358,9 @@ export default function AdminCollectionCreate({id}) {
 	
 	
  const handleInput = (e) => {
-	console.log(3)
     e.preventDefault();
+	 console.log("asdf")
+	 console.log(e.inputType)
 
     const contentEditableDiv = inputRef.current;
     const selection = window.getSelection();
@@ -375,9 +371,11 @@ export default function AdminCollectionCreate({id}) {
 	while(divOriginNode.className !== "pdf-redactor-page-edit" && divOriginNode.nodeName !== "DIV"){
 		divOriginNode = divOriginNode.parentNode
 	}
+	 console.log(23)
 
 	if(e.inputType === "insertParagraph"){
 		const currentSpanCursorePos = range.startOffset
+		console.log(range.startContainer.nodeName)
 		
 		if(range.startContainer.nodeName === "DIV" && range.startContainer.className === "pdf-redactor-page-edit"){
 			const newParagraph = document.createElement('p');
@@ -748,8 +746,15 @@ export default function AdminCollectionCreate({id}) {
 	}
 
 	else{
-		const currentNode = range.startContainer
+		console.log("else")
+		let currentNode = range.startContainer
 		const currentStartOffset = range.startOffset
+		
+		if(currentNode.className == "pdf-redactor-page"){
+			while(currentNode.className != "pdf-redactor-page-edit"){
+				 currentNode = currentNode.firstChild
+			}
+		}
 
 		let someChanges = false
 		
@@ -765,6 +770,7 @@ export default function AdminCollectionCreate({id}) {
 		if(NodeFontSize != currentFontSize){
 			someChanges = true
 		}
+		console.log(someChanges)
 
 		if(someChanges){
 			let newSpanClass = "";
@@ -777,13 +783,20 @@ export default function AdminCollectionCreate({id}) {
 				}
 			})
 
-			if(currentNode.textContent.length === 0){
+			if(currentNode.textContent.length === 0 && currentNode.className != "pdf-redactor-page-edit"){
 				currentNode.className = newSpanClass
 				currentNode.textContent = text
 				range.setStart(currentNode.childNodes[0], 1)
 				range.setEnd(currentNode.childNodes[0], 1)
 			}
 			else{
+				console.log(false)
+
+				const newParagraph = document.createElement('p');
+				let newParClass = Object.values(paragraphFormatDict).join(" ");
+				newParagraph.className = `${newParClass}`;
+
+
 				const newSpan = document.createElement('span')
 				newSpan.classList = `${newSpanClass}`;
 				newSpan.style.fontSize = `${currentFontSize}px`;
@@ -791,14 +804,14 @@ export default function AdminCollectionCreate({id}) {
 				newSpan.style.display = 'inline-block';
 				const textNode = document.createTextNode(text);
 				newSpan.appendChild(textNode)
-
+				newParagraph.appendChild(newSpan)
+				currentNode.appendChild(newParagraph)
 										
-				range.setStartAfter(parentNode)
-				range.setEndAfter(parentNode)
-				range.insertNode(newSpan)
+				range.setStartAfter(newSpan)
+				range.setEndAfter(newSpan)
 
-				range.setStart(newSpan, 1)
-				range.setEnd(newSpan, 1)
+				// range.setStart(newSpan, 1)
+				// range.setEnd(newSpan, 1)
 
 			}
 		}else{
@@ -820,12 +833,16 @@ export default function AdminCollectionCreate({id}) {
 	  // Обработка ввода с использованием актуальных значений currentFontSize и textFormatDict
 	  console.log('Current Font Size:', currentFontSize);
 	  console.log('Text Format Dict:', textFormatDict);
-	}, [currentFontSize, textFormatDict, currentTextPosition]);
+	}, [currentFontSize, textFormatDict, currentTextPosition, paragraphFormatDict]);
 
 	useEffect(() => {
-		const contentEditableDiv = inputRef.current;
+		console.log("xcvb")
+		// const contentEditableDiv = inputRef.current;
+		const contentEditableDiv = document.getElementsByClassName("pdf-redactor-page-section")[0];
+		console.log(contentEditableDiv)
 
 		if (!contentEditableDiv) return;
+		console.log(12345)
 		contentEditableDiv.addEventListener('beforeinput', handleInput);
 
 	// Clean up the event listener
@@ -1494,28 +1511,27 @@ export default function AdminCollectionCreate({id}) {
 								</div>
                             </div>
 
-                            <div className="pdf-redactor-page-section" id="pdf-redactor-page-section">
-								<div className="pdf-redactor-page-block">
-									<div
-										className="pdf-redactor-page" 
-									>
-										<div
-											className="pdf-redactor-page-edit"
-											contentEditable="true"
-											ref={inputRef}
-											onMouseUp={handleMouseUp}
+                            <div className="pdf-redactor-page-section" id="pdf-redactor-page-section" onMouseUp={MouseUpTextSelectionHandler} contentEditable="true"  suppressContentEditableWarning={true}
+		onMouseDown={handleMouseUp}
 											onInput={(event) => {
 												console.log(2345)
 												handleEditPage(event)}}
 											onKeyUp={(event) => {
 												handleMouseUp(event);
 												checkOverFlow(null);
-											}}
+											}}>
+								<div className="pdf-redactor-page-block">
+									<div
+										className="pdf-redactor-page" 
+									>
+										<div
+											className="pdf-redactor-page-edit"
+											ref={inputRef}
 											id="textField"
 										>
 										</div>
 									</div>
-									<div className="pdf-redactor-page-tools">
+									{/*<div className="pdf-redactor-page-tools">
 										<div className="pdf-page-tool">
 											<label htmlFor="back-img">I</label>
 											<input type="file" id="back-img" onChange={handleFileChange} className="pdf-page-tool-input" accept="image/"/>
@@ -1525,7 +1541,7 @@ export default function AdminCollectionCreate({id}) {
 											<label htmlFor="del-num"><span class="diagonal-strike">1</span></label>
 											<input type="button" id="del-num" className="pdf-page-tool-input" onClick={hidePageNumber}/>
 										</div>
-									</div>
+									</div> */}
 								</div>
 							</div>
                         </div>

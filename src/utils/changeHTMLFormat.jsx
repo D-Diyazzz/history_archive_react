@@ -102,25 +102,25 @@ const metadataToHtmlCollectionFormat = (doc) => {
 
     // Условие для doc.author
     if (doc.author != null && doc.author !== '-') {
-        const authorP = createParagraph(doc.author, 'right_parPosition');
+        const authorP = createParagraph(doc.author, 'right_parPosition normal_type');
         listP.push(authorP);
     }
 
     // Условие для doc.dating
     if (doc.dating != null && doc.dating !== '-') {
-        const datingP = createParagraph(doc.dating, 'right_parPosition');
+        const datingP = createParagraph(doc.dating, 'right_parPosition normal_type');
         listP.push(datingP);
     }
 
     // Условие для doc.place_of_creating
     if (doc.place_of_creating != null && doc.place_of_creating !== '-') {
-        const placeP = createParagraph(doc.place_of_creating, 'right_parPosition');
+        const placeP = createParagraph(doc.place_of_creating, 'right_parPosition normal_type');
         listP.push(placeP);
     }
 
     // Условие для doc.variety
     if (doc.variety != null && doc.variety !== '-') {
-        const varietyP = createParagraph(doc.variety, 'right_parPosition');
+        const varietyP = createParagraph(doc.variety, 'right_parPosition normal_type');
         listP.push(varietyP);
     }
 
@@ -146,7 +146,7 @@ export const documentForCollectionFormat = (doc) => {
 	const mainTextPList = briefContentToHtmlCollectionFormat(doc.main_text, 12)
 	
 	mainTextPList.forEach((p) => {
-		p.className = 'left_parPosition'
+		p.className = 'left_parPosition normal_type'
 		queue.enqueue(p)
 	})
 
