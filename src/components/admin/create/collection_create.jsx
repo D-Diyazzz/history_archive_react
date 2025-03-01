@@ -58,16 +58,6 @@ export default function AdminCollectionCreate({id}) {
 					contentDiv.innerHTML = match[1];
 				}
 
-				const pages = document.querySelectorAll('.pdf-redactor-page-edit')
-				pages.forEach((elem, index) => {
-					elem.contentEditable = "true";
-					elem.onmouseup = (event) => handleMouseUp(event)
-					elem.onkeyup = (event) => {
-						handleMouseUp(event)
-						checkOverFlow(null)
-					}
-				})
-
 			}catch(error){
 				console.log(error)
 			}
