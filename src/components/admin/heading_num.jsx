@@ -29,11 +29,8 @@ export const handleCreateHeadingNumerationBlock = (range, handleMouseUp, checkOv
 
 	const newParentDivBlock = document.createElement("div");
 	newParentDivBlock.className = "pdf-redactor-page-block";
-	const tools = currentPageBlockNode.lastChild.cloneNode(true);
-	tools.addEventListener("onChange", handleFileChange);
 
 	newParentDivBlock.appendChild(newParentDiv);
-	newParentDivBlock.appendChild(tools);
 
 	// Вставляем newParentDivBlock после currentPageBlockNode
 	if (currentPageBlockNode.nextSibling) {
