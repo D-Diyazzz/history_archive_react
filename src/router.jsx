@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Login from "./pages/login";
 import Home from "./pages/home";
+import Main from "./pages/Main";
 import Register from "./pages/register";
 import LogOut from "./pages/logout";
 import Collection from "./pages/collectoins";
@@ -18,7 +19,7 @@ import AdminPanelCommentColl from "./pages/admin/admin_comment_coll";
 export default function Router(){
     return(
         <Routes>
-            <Route path="/" element={<Home/>}/>
+            <Route path="/" element={<Main/>}/>
             
             <Route path="/login" element={<Login />}/>
             <Route path="/register" element={<Register />}/>

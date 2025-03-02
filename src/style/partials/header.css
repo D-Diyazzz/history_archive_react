@@ -6,6 +6,8 @@ header {
     align-items: center;
     padding: 10px 20px;
 	color: black;
+	position: relative;
+	z-index: 100;
 }
 
 /* .logo, .nav-bar-left, .nav-bar-right, .nav-bar-select-page .icons {

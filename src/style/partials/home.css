@@ -106,3 +106,225 @@
     margin-bottom: 10px;
 }
 
+.main-info-backgroud-elem{
+	width: 100%;
+	overflow-y: hidden;
+}
+
+.main-info-back-elem-1{
+	/* Vector 4 */
+/* Vector 4 */
+
+	position: absolute;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	position-bottom: 0;
+	overflow-y:hidden;
+
+}
+
+.main-info-back-elem-2-img img{
+	/* Ресурс 2@3x-8 1 */
+
+	position: absolute;
+	width: 1023px;
+	height: 646px;
+	left: -60px;
+	top: 250px;
+
+	transform: matrix(-1, 0, 0, 1, 0, 0);
+
+}
+
+.main-info-back-elem-3-1{
+	/* 1934 */
+
+	position: absolute;
+	width: 438px;
+	height: 140px;
+	left: -35px;
+	top: 750px;
+	margin: 0;
+
+	font-family: 'Afacad';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 210px;
+	line-height: 280px;
+	/* leading-trim and text-edge are draft CSS properties.
+
+	Read more: https://drafts.csswg.org/css-inline-3/#leading-trim
+	*/
+	color: #7d6ee6;
+	display: flex;
+	align-items: center;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+
+.main-info-back-elem-3-2{
+	/* 1921 */
+
+	position: absolute;
+	width: 438px;
+	height: 131px;
+	left: 741px;
+	top: 281px;
+
+	font-family: 'Afacad';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 210px;
+	line-height: 280px;
+	/* leading-trim and text-edge are draft CSS properties.
+
+	Read more: https://drafts.csswg.org/css-inline-3/#leading-trim
+	*/
+	leading-trim: both;
+	text-edge: cap;
+
+	color: rgba(0, 60, 255, 0.1);
+	display: flex;
+	align-items: center;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+.main-info-back-elem-3-3{
+	/* 1917 */
+
+	position: absolute;
+	width: 438px;
+	height: 131px;
+	left: 1464px;
+	top: 102px;
+
+	font-family: 'Afacad';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 210px;
+	line-height: 280px;
+	/* leading-trim and text-edge are draft CSS properties.
+
+	Read more: https://drafts.csswg.org/css-inline-3/#leading-trim
+	*/
+	leading-trim: both;
+	text-edge: cap;
+
+	color: rgba(0, 60, 255, 0.27);
+	display: flex;
+	align-items: center;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+.main-info-back-elem-4{
+	/* Group 17 */
+
+	position: absolute;
+	width: 452px;
+	height: 452px;
+	left: 1612px;
+	top: 710px;
+	overflow-y: hidden;
+
+}
+
+
+
+.main-info-main {
+  	display: flex;
+  	flex-direction: column;
+  	justify-content: flex-end;
+  	align-items: flex-end;  /* все дочерние элементы выравниваются по правому краю */
+  	width: 90%;             /* или укажите нужную ширину */
+	height: 600px;
+	margin: auto;
+}
+.main-info-main-title{
+	/* E-Doc Complex */
+
+	font-family: 'Afacad';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 64px;
+	line-height: 85px;
+	/* leading-trim and text-edge are draft CSS properties.
+
+	Read more: https://drafts.csswg.org/css-inline-3/#leading-trim
+	*/
+	leading-trim: both;
+	text-edge: cap;
+	text-align: right;
+
+	/* акцентный */
+	color: #00055F;
+}
+
+.main-info-main-text{
+	/* Веб-сайт "E-Doc Complex" дает возможность создавать типы электронных документальных публикаций архивных материалов исходя из целевого назначения: научный, научно - популярный и учебный, а также тематические виртуальные выставки. */
+
+	font-family: 'Comfortaa';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 30px;
+	/* or 200% */
+	/* leading-trim and text-edge are draft CSS properties.
+
+	Read more: https://drafts.csswg.org/css-inline-3/#leading-trim
+	*/
+	leading-trim: both;
+	text-edge: cap;
+	text-align: right;
+
+	/* основной | текст */
+	color: #000000;
+	margin-top: 20px;
+}
+
+.main-link-collection{
+	background: linear-gradient(90deg, rgba(40, 0, 216, 1) 0%, rgba(183, 188, 239, 1) 100%);
+	border-radius: 62px;
+	padding: 18px 59px;
+	  /* Изменяем выравнивание, чтобы элемент не переопределял контейнер */
+	  /* Если он ранее имел align-self: flex-start, убираем или меняем его */
+	align-self: flex-end;
+	font-family: 'Comfortaa';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 17px;
+	leading-trim: both;
+	text-edge: cap;
+	color: #FFFFFF;
+	flex: none;
+	order: 0;
+	flex-grow: 0;
+	margin-top: 20px;
+}
+
+.main-while-button{
+	margin-top: 35px;
+}
+
+.main-while-button button{
+	border: 0;
+	background-color: white;
+}
+
+.main-while-button button:hover svg circle {
+  fill: #B7C1EF !important; /* круг полностью заливается синим */
+}
+
+.main-while-button button:hover svg path {
+  fill: #FFFFFF !important; /* стрелка становится белой */
+}
+
+.main-while-button button svg circle, 
+.main-while-button button svg path{
+	transition: fill 0.3s ease;
+}
+
