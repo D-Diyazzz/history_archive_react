@@ -16,98 +16,57 @@ export default function Header({active}) {
             <header>
                 <div className="logo">
                     {/* <img src="img/logo.png"/> */}
-                    E-Doc Complex
+                    <p>E-DOC COMPLEX</p>
                 </div>
 
                 <div className="nav-bar">
                     <div className="nav-bar-left">
-                        <a href="/collection" className='nav-bar-menu'>Сборники</a>
-                        <a href="/document" className='nav-bar-menu'>Документы</a>
-                        <a href="#" className='nav-bar-menu'>Выставки</a>
-                    </div>
-
-                    <div class="nav-bar-select-page">
-                        <p className="active">{active}</p>
+						<a href="/main" 
+						  className={active === 'main' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
+						>
+						  Главная
+						</a>
+						<a 
+						  href="/collections" 
+						  className={active === 'collections' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
+						>
+						  Сборники
+						</a>
+						<a 
+						  href="#" 
+						  className={active === '#' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
+						>
+						  Выставки
+						</a>
+						{(user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' || user_role === 'SuperAdminUser') && (
+						  <a 
+							href="admin" 
+							className={active === '/admin' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
+						  >
+							Админ
+						  </a>
+						)}
                     </div>
 
                     <div className="nav-bar-right">
-                        <a href="/" className='nav-bar-menu'>Главная</a>
-                        <a href="#" className='nav-bar-menu'>Уведомления</a>
-                        {user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' || user_role === 'SuperAdminUser' ? (
-                            <a href="/admin" className='nav-bar-menu'>Админ</a>
-                        ) : (
-                            <>
-                            </>
-                        )}
+						<div className="nav-bar-lang">
+							<p>RU</p>
+							<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.7188C12.6394 17.7188 14.5609 16.7882 15.8826 15.3103C15.1853 15.1229 14.5693 14.7107 14.1301 14.1376C13.6909 13.5646 13.4529 12.8626 13.4531 12.1406V11.8125C13.4531 11.5514 13.3494 11.301 13.1648 11.1164C12.9802 10.9318 12.7298 10.8281 12.4688 10.8281C11.6855 10.8281 10.9344 10.517 10.3806 9.96317C9.82676 9.40936 9.51562 8.65822 9.51562 7.875C9.51562 7.09178 9.82676 6.34064 10.3806 5.78683C10.9344 5.23301 11.6855 4.92188 12.4688 4.92188C12.7298 4.92188 12.9802 4.81816 13.1648 4.63356C13.3494 4.44895 13.4531 4.19857 13.4531 3.9375V3.91125C12.532 3.49813 11.5344 3.28282 10.5248 3.27923C9.51524 3.27565 8.51615 3.48386 7.59207 3.89043C6.66798 4.297 5.83945 4.89287 5.15999 5.63958C4.48053 6.38628 3.96526 7.2672 3.64744 8.22544C4.36176 8.3147 5.01888 8.66182 5.49527 9.20153C5.97165 9.74124 6.23449 10.4364 6.23438 11.1562C6.23438 11.6996 6.67537 12.1406 7.21875 12.1406C7.85001 12.1409 8.46457 12.3435 8.97228 12.7186C9.47999 13.0938 9.85413 13.6217 10.0398 14.225C10.2255 14.8284 10.213 15.4753 10.0041 16.071C9.7952 16.6667 9.40091 17.1798 8.87906 17.535C9.40144 17.6566 9.94175 17.7179 10.5 17.7188ZM5.91806 16.0781H7.21875C7.47982 16.0781 7.7302 15.9744 7.91481 15.7898C8.09941 15.6052 8.20312 15.3548 8.20312 15.0938C8.20312 14.8327 8.09941 14.5823 7.91481 14.3977C7.7302 14.2131 7.47982 14.1094 7.21875 14.1094C6.43553 14.1094 5.68439 13.7982 5.13058 13.2444C4.57676 12.6906 4.26562 11.9395 4.26562 11.1562C4.26563 10.8965 4.163 10.6473 3.9801 10.463C3.79719 10.2786 3.54883 10.174 3.28913 10.1719C3.23704 11.2931 3.44761 12.411 3.90403 13.4364C4.36046 14.4618 5.05013 15.3664 5.91806 16.0781ZM16.7344 13.4531H17.0888C17.5046 12.5242 17.7193 11.5178 17.7188 10.5C17.7188 8.31469 16.7475 6.35512 15.2119 5.03213C14.9929 5.58071 14.6145 6.05104 14.1255 6.38234C13.6365 6.71364 13.0594 6.8907 12.4688 6.89062C12.2077 6.89062 11.9573 6.99434 11.7727 7.17894C11.5881 7.36355 11.4844 7.61393 11.4844 7.875C11.4844 8.13607 11.5881 8.38645 11.7727 8.57106C11.9573 8.75566 12.2077 8.85938 12.4688 8.85938C13.252 8.85938 14.0031 9.17051 14.5569 9.72433C15.1107 10.2781 15.4219 11.0293 15.4219 11.8125V12.1406C15.4219 12.4887 15.5602 12.8226 15.8063 13.0687C16.0524 13.3148 16.3863 13.4531 16.7344 13.4531ZM10.5 19.6875C12.9367 19.6875 15.2736 18.7195 16.9965 16.9965C18.7195 15.2736 19.6875 12.9367 19.6875 10.5C19.6875 8.06332 18.7195 5.72645 16.9965 4.00346C15.2736 2.28047 12.9367 1.3125 10.5 1.3125C8.06332 1.3125 5.72645 2.28047 4.00346 4.00346C2.28047 5.72645 1.3125 8.06332 1.3125 10.5C1.3125 12.9367 2.28047 15.2736 4.00346 16.9965C5.72645 18.7195 8.06332 19.6875 10.5 19.6875Z" fill="#00055F"/></svg>
+						</div>
+						{name ? (
+							<>
+								<a href="#">{name}</a>
+								<a href="/logout" className="nav-bar-enter">Log out</a>
+							</>
+						):(
+						<a href="/login" className="nav-bar-enter">Вход</a>
+						)}
                     </div>
                 </div>  
-
-                <div className="icons">
-                    <div className="icons-list">
-                        <img src={iconsImg}/>
-                        <p>RU</p>
-                    </div>
-                    <div className="icons-list">
-                        <img src={user_icon}/>
-                        {name ? (
-							<>
-                            	<a href="#">{name}</a>
-								<a href="/logout">Log out</a>
-							</>
-                        ) : (
-                            <a href="/login">Log In</a>
-                        )}
-                    </div>
-                </div>
             </header>
-
-            <hr class="hr-header"/>
-            <hr class="hr-header"/>
         </>
     )
-    // return(
-    //     <>
-    //         <header>
-    //             <div className="logo">
-    //                 {/* <img src="img/logo.png"/> */}
-    //                 E-Doc Complex
-    //             </div>
-
-    //             <div className="nav-bar">
-    //                 <div className="nav-bar-left">
-    //                     <a href="/collection" className='nav-bar-menu'>Collections</a>
-    //                     <a href="/document" className='nav-bar-menu'>Documents</a>
-    //                     <a href="#" className='nav-bar-menu'>Exhibitions</a>
-    //                 </div>
-
-    //                 <div class="nav-bar-select-page">
-    //                     <p className="active">{active}</p>
-    //                 </div>
-
-    //                 <div className="nav-bar-right">
-    //                     <a href="/" className='nav-bar-menu'>Main</a>
-    //                     <a href="#" className='nav-bar-menu'>Notifications</a>
-    //                 </div>
-    //             </div>  
-
-    //             <div className="icons">
-    //                 <div className="icons-list">
-    //                     <img src={iconsImg}/>
-    //                     <p>ENG</p>
-    //                 </div>
-    //                 <div className="icons-list">
-    //                     <img src={user_icon}/>
-    //                     {name ? (
-    //                         <a href="#">{name}</a>
-    //                     ) : (
-    //                         <a href="/login">Log In</a>
-    //                     )}
-    //                 </div>
-    //             </div>
-    //         </header>
-
-    //         <hr class="hr-header"/>
-    //         <hr class="hr-header"/>
-    //     </>
-    // )
 }
+
+

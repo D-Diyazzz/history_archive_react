@@ -1,11 +1,11 @@
 
 header {
-    background-color: rgb(236, 225, 207);
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     padding: 10px 20px;
+	color: black;
 }
 
 /* .logo, .nav-bar-left, .nav-bar-right, .nav-bar-select-page .icons {
@@ -15,12 +15,16 @@ header {
 } */
 
 .logo {
-    width: 230px;
-    align-items: center;
-    color: rgb(69,48,35);
-    font-size: 40px;
-    font-family: 'stengazeta';
-    margin-top: 10px;
+	font-family: "Afacad", sans-serif; /* название шрифта */
+	font-weight: 700;                  /* жирность 700 */
+	font-size: 24px;                   /* размер шрифта 24px */
+	line-height: 32px;                 /* высота строки 32px */
+	letter-spacing: 0; 
+	width: 50%;
+}
+
+.logo p{
+	margin-left: 96px;
 }
 
 .nav-bar {
@@ -28,27 +32,71 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+	width: 50%;
 }
 
 .nav-bar-left, .nav-bar-right {
-    width: 500px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+	align-items: center;
+}
+
+.nav-bar-left{
+	width: 457px;
 }
 
 .nav-bar-menu{
-    font-family: 'finlandica';
-    display: flex;
-    text-decoration: none;
-    color: rgb(80,92,90);
-    align-items: center;
-    font-size: 20px;
+    font-family: "Comfortaa", sans-serif; /* шрифт */
+  	font-weight: 400;                     /* нормальная жирность */
+  	font-size: 14px;                      /* размер шрифта */
+  	line-height: 15.61px;                 /* высота строки */
+  	letter-spacing: 0;                    /* межбуквенный интервал (0% = 0) */
+}
+.nav-bar-menu-active{
+	font-family: "Comfortaa", sans-serif; /* шрифт */
+  	font-weight: 700;                     /* нормальная жирность */
+  	font-size: 14px;                      /* размер шрифта */
+  	line-height: 15.61px;                 /* высота строки */
+  	letter-spacing: 0;  /* межбуквенный интервал (0% = 0) */
+	color: rgba(0, 5, 95, 1);
+}
+
+.nav-bar-lang{
+	display: flex;
+	flex-direction: row;
+	width: 64px;
+	justify-content: space-around;
 }
 
 .nav-bar-menu:hover{
-    color: rgb(49, 56, 55);
-    border-bottom: 2px solid rgb(49, 56, 55);
+    font-family: "Comfortaa", sans-serif; /* шрифт */
+  	font-weight: 700;                     /* нормальная жирность */
+  	font-size: 14px;                      /* размер шрифта */
+  	line-height: 15.61px;                 /* высота строки */
+  	letter-spacing: 0;  /* межбуквенный интервал (0% = 0) */
+	color: rgba(0, 5, 95, 1);
+
+}
+
+.nav-bar-lang{
+	font-family: "Comfortaa", sans-serif; /* шрифт */
+  	font-weight: 700;                     /* нормальная жирность */
+  	font-size: 14px;                      /* размер шрифта */
+  	line-height: 15.61px;                 /* высота строки */
+  	letter-spacing: 0;  /* межбуквенный интервал (0% = 0) */
+}
+
+.nav-bar-enter{
+	width: 102px;
+	height: 28px;
+	border-radius: 34px;
+	padding: 6px 33px;
+	background: linear-gradient(90deg, rgba(40, 0, 216, 1) 0%, rgba(183, 188, 239, 1) 100%);
+	color: white;
+	font-family: "Comfortaa";
+	box-sizing: border-box;
+	margin-left: 46px;
 }
 
 .nav-bar-select-page{

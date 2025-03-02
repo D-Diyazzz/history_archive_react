@@ -62,7 +62,7 @@ export default function Home(){
 
 return (
     <>
-        <Header active={"Main"}/>
+        <Header active={"main"}/>
         
         <main>
             <div className="explanation-project-content">
