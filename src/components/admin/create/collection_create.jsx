@@ -83,13 +83,6 @@ export default function AdminCollectionCreate({id}) {
         document.execCommand(command, false, null);
     };
 
-    const handleBoldClick = () => {
-        wrapSelectionWith('bold');
-    };
-
-    const handleItalicClick = () => {
-        wrapSelectionWith('italic');
-    };
 
 	const handleTextFormatClick = (formatType) => {
 		if(textFormatDict[formatType] === true){
@@ -154,6 +147,10 @@ export default function AdminCollectionCreate({id}) {
 		let parNode = range.startContainer;
 		while(parNode.nodeName !== "P"){
 			parNode = parNode.parentNode
+		}
+
+		if(parNode.parentNode.className != "pdf-redactor-page-edit"){
+			return true;
 		}
 
 		const classArray = parNode.className.split(" ") 
@@ -363,6 +360,13 @@ export default function AdminCollectionCreate({id}) {
 	}
 	 console.log(23)
 
+	if(range.startOffset != range.endOffset){
+		console.log("Nan")
+		console.log(range.startOffset.parentNode, range.endOffset.parentNode)
+		MouseUpTextSelectionHandler(range, e.inputType, range.startOffset, range.endOffset)
+		return NaN
+	}
+
 	if(e.inputType === "insertParagraph"){
 		const currentSpanCursorePos = range.startOffset
 		console.log(range.startContainer.nodeName)
@@ -456,7 +460,8 @@ export default function AdminCollectionCreate({id}) {
 
 				paragraphNode.insertBefore(spanBefore, spanNode)
 				spanNode.remove()
-			}else{
+			}
+			else{
 				const spanBefore = document.createElement('span')
 				spanBefore.className = spanNode.className;
 				spanBefore.style.fontSize = spanNode.style["font-size"];
@@ -483,6 +488,7 @@ export default function AdminCollectionCreate({id}) {
 			range.setEndAfter(paragraphNode)
 			
 			const newParagraph = document.createElement('p');
+			console.log(paragraphFormatDict)
 			let newParClass = Object.values(paragraphFormatDict).join(" ");
 			newParagraph.className = `${newParClass}`;
 			
@@ -490,9 +496,11 @@ export default function AdminCollectionCreate({id}) {
 			spanNodesAfter.forEach(node => newParagraph.appendChild(node));
 			
 			range.insertNode(newParagraph);
+			console.log(newParagraph.firstChild)
+			console.log(newParagraph.firstChild.firstChild)
 
-			range.setStart(newParagraph.firstChild.firstChild, 0);
-			range.setEnd(newParagraph.firstChild.firstChild, 0)
+			range.setStart(newParagraph.firstChild, 0);
+			range.setEnd(newParagraph.firstChild, 0)
 		}
 		return
 	} else if(e.inputType === "deleteContentBackward"){
@@ -729,10 +737,13 @@ export default function AdminCollectionCreate({id}) {
 		}
 	} else if(range.startContainer.nodeName === "P"){
 		const spanNode = range.startContainer.lastChild
-		spanNode.childNodes[0].insertData(0, text)
-
-		range.setStart(spanNode.childNodes[0], 1)
-		range.setEnd(spanNode.childNodes[0], 1)
+		if(spanNode.textContent.length == 0){
+			spanNode.textContent = text;
+		}else{
+			spanNode.childNodes[0].insertData(0, text)
+		}
+			range.setStart(spanNode.childNodes[0], 1)
+			range.setEnd(spanNode.childNodes[0], 1)
 	}
 
 	else{
@@ -844,13 +855,16 @@ export default function AdminCollectionCreate({id}) {
 	useEffect(() => {
         const contentEditableDiv = inputRef.current;
         if (!contentEditableDiv) return;
+		console.log("useEffect")
 
         let savedRange;
 
         const saveRangeMouseUp = () => {
             const selection = window.getSelection();
+			console.log("sav")
             if (selection.rangeCount > 0) {
                 savedRange = selection.getRangeAt(0);
+				console.log("save", savedRange)
             }
         };
 
@@ -861,13 +875,13 @@ export default function AdminCollectionCreate({id}) {
             }
         };
 
-        // const handleFocus = () => {
-        //     if (savedRange) {
-        //         const selection = window.getSelection();
-        //         selection.removeAllRanges();
-        //         selection.addRange(savedRange);
-        //     }
-        // };
+        const handleFocus = () => {
+            if (savedRange) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(savedRange);
+            }
+        };
 
         const handleBlur = (event) => {
             if (!contentEditableDiv.contains(event.target)) {
@@ -888,7 +902,7 @@ export default function AdminCollectionCreate({id}) {
 
         contentEditableDiv.addEventListener('mouseup', saveRangeMouseUp);
         contentEditableDiv.addEventListener('keyup', handleKeyUp);
-        // contentEditableDiv.addEventListener('focus', handleFocus);
+        contentEditableDiv.addEventListener('focus', handleFocus);
         document.addEventListener('mousedown', handleBlur);
         document.addEventListener('mouseup', handleDocumentMouseUp);
 
@@ -896,7 +910,7 @@ export default function AdminCollectionCreate({id}) {
         return () => {
             contentEditableDiv.removeEventListener('mouseup', saveRangeMouseUp);
             contentEditableDiv.removeEventListener('keyup', handleKeyUp);
-            // contentEditableDiv.removeEventListener('focus', handleFocus);
+            contentEditableDiv.removeEventListener('focus', handleFocus);
             document.removeEventListener('mousedown', handleBlur);
             document.removeEventListener('mouseup', handleDocumentMouseUp);
         };
@@ -1444,13 +1458,11 @@ export default function AdminCollectionCreate({id}) {
                             <div className="pdf-redactor-tools">
                                 <div className="pdf-redactor-text-style-tools">
                                     <p 
-										onMouseDown={handleBoldClick}
 										onClick={() => handleTextFormatClick("bold")}
 										className={textFormatDict["bold"] ? 'pdf-redactor-tool-selected' : ''}
 										><strong>B</strong></p>
                                     <p 
 										onClick={() => handleTextFormatClick("italic")}
-										onMouseDown={handleItalicClick}
 										className={textFormatDict["italic"] ? 'pdf-redactor-tool-selected' : ''}
 
 										><i>I</i></p>
@@ -1501,7 +1513,7 @@ export default function AdminCollectionCreate({id}) {
 								</div>
                             </div>
 
-                            <div className="pdf-redactor-page-section" id="pdf-redactor-page-section" onMouseUp={MouseUpTextSelectionHandler} contentEditable="true"  suppressContentEditableWarning={true}
+                            <div className="pdf-redactor-page-section" id="pdf-redactor-page-section" contentEditable="true"  suppressContentEditableWarning={true}
 		onMouseDown={handleMouseUp}
 											onInput={(event) => {
 												console.log(2345)
@@ -1509,7 +1521,9 @@ export default function AdminCollectionCreate({id}) {
 											onKeyUp={(event) => {
 												handleMouseUp(event);
 												checkOverFlow(null);
-											}}>
+											}}
+											
+											>
 								<div className="pdf-redactor-page-block">
 									<div
 										className="pdf-redactor-page" 

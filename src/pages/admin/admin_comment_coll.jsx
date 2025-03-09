@@ -22,7 +22,7 @@ export default function AdminPanelCommentColl(){
 
 	return(
 		<>
-			<Header active={"Админ панель"}/>
+			<Header active="admin"/>
 			<main>
 				<div className='admin-container'>
 					<div className='admin-navbar'>

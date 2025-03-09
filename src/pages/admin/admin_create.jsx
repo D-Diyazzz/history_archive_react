@@ -46,7 +46,7 @@ export default function AdminPanelCreate() {
     return(
         <>
         
-        <Header active={"Админ панель"}/>
+        <Header active="admin"/>
 
         <main>
 

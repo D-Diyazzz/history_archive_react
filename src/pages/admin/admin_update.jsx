@@ -45,7 +45,7 @@ export default function AdminPanelUpdate() {
 	
     return(
 	<>
-	    <Header active={"Админ панель"}/>
+	    <Header active="admin"/>
 	    
 	    <main>
         	<div className='admin-container'>

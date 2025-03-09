@@ -61,7 +61,7 @@ export default function AdminPanleDefInfo(){
     return (
         <>
         
-        <Header active={"Админ панель"}/>
+        <Header active="admin"/>
         
         <main>
             <div className='admin-container'>

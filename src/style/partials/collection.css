@@ -51,6 +51,11 @@
 	padding: 30px;
 }
 
+.collection-pdf-file div canvas{
+	border: solid 2px rgba(0, 5, 95, 1);
+	border-radius: 25px;
+}
+
 .collection-edit-button-block{
 	text-align: center;
 }

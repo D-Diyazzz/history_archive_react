@@ -41,7 +41,7 @@ export default function Header({active}) {
 						{(user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' || user_role === 'SuperAdminUser') && (
 						  <a 
 							href="admin" 
-							className={active === '/admin' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
+							className={active === 'admin' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
 						  >
 							Админ
 						  </a>
