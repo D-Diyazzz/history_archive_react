@@ -310,11 +310,13 @@
 
 .main-while-button{
 	margin-top: 35px;
+	background-color: rgba(224, 227, 255, 1);
 }
 
 .main-while-button button{
 	border: 0;
 	background-color: white;
+	background-color: rgba(224, 227, 255, 1);
 }
 
 .main-while-button button:hover svg circle {

@@ -63,3 +63,148 @@
 .collection-edit-button{
 	
 }
+
+
+.list-collections-content{
+	display:flex;
+	flex-direction: column;
+	padding: 0 96px;
+}
+
+.list-collections-search-filter{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.list-collections-search{
+	display: flex;
+	width: 600px;
+	height: 32px;
+	border-radius: 24px;
+	border: solid 1px rgba(0, 5, 95, 1);
+	align-items: center;
+}
+
+.list-collections-search-icon{
+	border: 0;
+	background: none;
+	margin-left: 30px;
+}
+
+.list-collections-search-icon svg{
+	width: 21px;
+	height: 21px;
+}
+
+.list-collections-search-input{
+	border: 0;
+	background: none;
+	margin-left: 30px;
+	outline: none;
+	width: 440px;
+	font-family: "Comfortaa";
+}
+
+.list-collections-filter-group{
+	display: flex;
+	flex-direction: row;
+	width: 123px;
+	justify-content: space-between;
+}
+
+.list-collection-column{
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+
+.list-collection-column-content{
+	display: flex;
+	flex-direction: row;
+	margin-top: 50px;
+}
+
+.list-collection-column-page canvas{
+	width: 206px;
+	border-radius: 20px;
+}
+
+.list-collection-info{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin-left: 20px;
+}
+
+.list-collection-title{
+	font-size: 24px;
+	font-family: "Comfortaa";
+	color: rgba(0, 5, 95, 1);
+}
+
+.list-collection-description{
+	max-height: 118px;
+	font-size: 15px;
+	font-family: "Comfortaa";
+	color: rgba(0, 0, 0, 1);
+	margin-top: 10px;
+}
+
+.list-collection-metadata{
+	display: flex;
+	flex-direction: row;
+	font-size: 15px;
+	color: rgba(0, 5, 95, 1);
+	font-family: "Comfortaa";
+	margin-bottom: 10px;
+}
+
+.list-collection-metadata p:not(:last-child){
+	border-right: 1px solid rgba(0, 5, 95, 1);
+}
+
+.list-collection-metadata p{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 10px
+}
+
+.list-collection-metadata p:not(:first-child){
+	padding-left: 10px;
+}
+
+.list-collection-link {
+  position: relative; /* создаём контекст для псевдоэлемента */
+  display: inline-block;
+  border: 1px solid rgba(7, 0, 216, 1);
+  border-radius: 49px;
+  font-size: 15px;
+  font-family: "Comfortaa";
+  padding: 18px 59px;
+  background: transparent;
+  overflow: hidden; /* чтобы псевдоэлемент не выступал за пределы */
+  transition: color 0.5s ease; /* плавное изменение цвета текста */
+}
+
+.list-collection-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0; /* начальная ширина – 0 */
+  height: 100%;
+  background: linear-gradient(86.62deg, #2800D8 -2.54%, #B7BCEF 97.21%);
+  z-index: -1; /* псевдоэлемент под текстом */
+  transition: width 0.5s ease; /* плавное расширение заливки */
+}
+
+.list-collection-link:hover::before {
+  width: 100%; /* при наведении заливка занимает всю ширину */
+}
+
+.list-collection-link:hover {
+  color: white;
+  border: 1px solid rgba(7, 0, 216, 0);
+}

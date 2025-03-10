@@ -90,8 +90,6 @@ header {
 }
 
 .nav-bar-enter{
-	width: 102px;
-	height: 28px;
 	border-radius: 34px;
 	padding: 6px 33px;
 	background: linear-gradient(90deg, rgba(40, 0, 216, 1) 0%, rgba(183, 188, 239, 1) 100%);

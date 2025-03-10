@@ -21,7 +21,7 @@ export default function Header({active}) {
 
                 <div className="nav-bar">
                     <div className="nav-bar-left">
-						<a href="/main" 
+						<a href="/" 
 						  className={active === 'main' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
 						>
 						  Главная
