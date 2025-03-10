@@ -60,7 +60,7 @@ export default function MainFirstColl({ collections, handleNext, handlePrev }){
 						<div className="main-info-main-title" style={{"fontFamily": "Comfortaa"}}>
 							Последние
 						</div>
-						<a href="#" className="main-link-collection">Увидеть больше</a>
+						<a href="/collection" className="main-link-collection">Увидеть больше</a>
 						
 						<div className="main-while-button">
 							<button onClick={handlePrev}>

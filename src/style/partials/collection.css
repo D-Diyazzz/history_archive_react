@@ -208,3 +208,63 @@
   color: white;
   border: 1px solid rgba(7, 0, 216, 0);
 }
+
+.list-collection-tile{
+	margin-top: 20px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr); /* 2 колонки равной ширины */
+    gap: 30px; /* расстояние между элементами */
+}
+
+.list-collection-tile-content{
+	display: flex;
+	flex-direction: row;
+	margin-top: 50px;
+}
+
+.list-collections-column-icon svg path {
+  transition: fill 0.3s ease;
+}
+
+/* При наведении на SVG изменяем цвет заливки всех path */
+.list-collections-column-icon svg:hover path {
+  fill: rgba(0, 5, 95, 1);
+}
+
+/* Если нужно менять размеры SVG с плавным переходом */
+.list-collections-column-icon svg {
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.list-collections-column-icon svg:hover {
+  width: 26px;
+  height: 26px;
+}
+
+.list-collections-tile-column-active svg path{
+	fill: rgba(0, 5, 95, 1);
+}
+
+
+.list-collections-tile-icon svg path {
+  transition: fill 0.3s ease;
+}
+
+/* При наведении на SVG изменяем цвет заливки всех path */
+.list-collections-tile-icon svg:hover path {
+  fill: rgba(0, 5, 95, 1);
+}
+
+/* Если нужно менять размеры SVG с плавным переходом */
+.list-collections-tile-icon svg {
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.list-collections-tile-icon svg:hover {
+  width: 26px;
+  height: 26px;
+}
+
+.list-collections-tile-icon-active svg path{
+	fill: rgba(0, 5, 95, 1);
+}

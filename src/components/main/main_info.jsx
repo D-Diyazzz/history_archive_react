@@ -35,7 +35,7 @@ export default function MainInfo({ collections, handleNext, handlePrev }){
 						<div className="main-info-main-text">
 							Веб-сайт "E-Doc Complex" дает возможность  создавать  типы<br/>электронных документальных публикаций  архивных  материалов<br/>исходя из целевого назначения: научный, научно - популярный и учебный,<br/>а также тематические виртуальные выставки
 						</div>
-						<a href="#" className="main-link-collection">Все коллекции</a>
+						<a href="/collection" className="main-link-collection">Все коллекции</a>
 						
 						<div className="main-while-button">
 

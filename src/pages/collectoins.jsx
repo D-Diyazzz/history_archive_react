@@ -3,11 +3,13 @@ import Footer from "../components/footer"
 import { useEffect, useState } from "react"
 import api from "../api";
 import ColumnCollections from "../components/list_collections/column_collections";
+import TileCollections from "../components/list_collections/tile_collections";
 
 export default function Collection(){
 
 	const [collections, setCollections] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [selectedComponent, setSelectedComponent] = useState('column')
 
 	useEffect(() => {
 		const getCollections = async () =>{
@@ -37,7 +39,7 @@ export default function Collection(){
 
     return(
         <>
-            <Header active={"Сборники"}/>
+            <Header active={"collections"}/>
             
             <div className="list-collections-content">
 				<div className="list-collections-search-filter">
@@ -64,14 +66,17 @@ export default function Collection(){
 
 						</div>
 
-						<div className="list-collections-column">
-							<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M0 2C0 0.895432 0.895431 0 2 0H18.9802C20.0848 0 20.9802 0.895431 20.9802 2V7.15384C20.9802 8.25841 20.0848 9.15385 18.9802 9.15385H2C0.895432 9.15385 0 8.25842 0 7.15385V2Z" fill="#00055F"/> <path d="M0 13.8457C0 12.7411 0.89543 11.8457 2 11.8457H7.14524C8.2498 11.8457 9.14524 12.7411 9.14524 13.8457V18.9995C9.14524 20.1041 8.2498 20.9995 7.14524 20.9995H2C0.895431 20.9995 0 20.1041 0 18.9995V13.8457Z" fill="#00055F"/>
+						<div className={selectedComponent === 'column' ? 'list-collections-tile-column-active' : 'list-collections-column-icon'}
+							onClick={() => setSelectedComponent("column")}>
+
+							<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M0 2C0 0.895432 0.895431 0 2 0H18.9802C20.0848 0 20.9802 0.895431 20.9802 2V7.15384C20.9802 8.25841 20.0848 9.15385 18.9802 9.15385H2C0.895432 9.15385 0 8.25842 0 7.15385V2Z" fill="#B7C1EF"/>
+							<path d="M0 13.8457C0 12.7411 0.89543 11.8457 2 11.8457H7.14524C8.2498 11.8457 9.14524 12.7411 9.14524 13.8457V18.9995C9.14524 20.1041 8.2498 20.9995 7.14524 20.9995H2C0.895431 20.9995 0 20.1041 0 18.9995V13.8457Z" fill="#B7C1EF"/>
 							</svg>
 
 						</div>
 
-						<div className="list-collections-column-tile">
+						<div className={selectedComponent === 'tile' ? 'list-collections-tile-icon-active' : 'list-collections-tile-icon'}
+							onClick={() => setSelectedComponent("tile")}>
 							<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M0.0200195 2C0.0200195 0.895432 0.91545 0 2.02002 0H7.16525C8.26982 0 9.16525 0.895431 9.16525 2V7.15384C9.16525 8.25841 8.26982 9.15385 7.16525 9.15385H2.02002C0.91545 9.15385 0.0200195 8.25842 0.0200195 7.15385V2Z" fill="#B7C1EF"/> <path d="M11.8549 2C11.8549 0.895432 12.7503 0 13.8549 0H19.0001C20.1047 0 21.0001 0.895431 21.0001 2V7.15384C21.0001 8.25841 20.1047 9.15385 19.0001 9.15385H13.8549C12.7503 9.15385 11.8549 8.25842 11.8549 7.15385V2Z" fill="#B7C1EF"/>
 						<path d="M11.855 13.8457C11.855 12.7411 12.7504 11.8457 13.855 11.8457H19.0002C20.1048 11.8457 21.0002 12.7411 21.0002 13.8457V18.9995C21.0002 20.1041 20.1048 20.9995 19.0002 20.9995H13.855C12.7504 20.9995 11.855 20.1041 11.855 18.9995V13.8457Z" fill="#B7C1EF"/>
@@ -81,8 +86,13 @@ export default function Collection(){
 						</div>
 					</div>
 				</div>
-
-				<ColumnCollections collections={filteredCollections} />	
+				
+				
+				{selectedComponent === "column" ? (
+					<ColumnCollections collections={filteredCollections}/>	
+				):(
+					<TileCollections collections={filteredCollections}/>
+				)}
 			</div>
                 
         </>

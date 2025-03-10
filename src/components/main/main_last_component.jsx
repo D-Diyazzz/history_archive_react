@@ -217,7 +217,7 @@ export default function MainLastComponent({ collections, handleNext, handlePrev 
 						<div className="main-info-main-text">
 							Ознакомьтесь с уже существующими сборнками на сайте, либо создайте свой!
 						</div>
-						<a href="#" className="main-link-collection">Увидеть больше</a>
+						<a href="/collection" className="main-link-collection">Увидеть больше</a>
 						
 						<div className="main-while-button">
 							<button onClick={handlePrev}>
