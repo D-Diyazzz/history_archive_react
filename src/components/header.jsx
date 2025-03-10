@@ -27,7 +27,7 @@ export default function Header({active}) {
 						  Главная
 						</a>
 						<a 
-						  href="/collections" 
+						  href="/collection" 
 						  className={active === 'collections' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
 						>
 						  Сборники

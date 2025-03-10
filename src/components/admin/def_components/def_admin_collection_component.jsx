@@ -173,10 +173,20 @@ export default function AdminDefCollectionComponent({collectionId}){
 								<p>{isApproved ? "Да" : "Нет"}</p>
 							</div>
 						</div>
+					
+						<div className="collection-row">
+							<div className="collection-row-key">
+								<p>ISBN:</p>
+							</div>
+							<div className="collection-row-value">
+								<p>{collectionElem.isbn_link}</p>
+							</div>
+						</div>
 						
 						<div className="collection-pdf-file">
 							<PDFViewer pdfUrl={`collections/${collectionElem.file_url}`}/>	
 						</div>
+
 
 						<div className="collection-edit-button-block">
 							{user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'SuperAdminUser' ? (

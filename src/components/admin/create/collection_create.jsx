@@ -26,7 +26,8 @@ export default function AdminCollectionCreate({id}) {
 		id: "",
 		title: "",
 		theme: "",
-		is_approved: false
+		is_approved: false,
+		isbn_link: ""
 	})
 
 
@@ -38,7 +39,8 @@ export default function AdminCollectionCreate({id}) {
 					id: response.data.id,
 					title: response.data.title,
 					theme: response.data.theme,
-					is_approved: response.data.is_approved
+					is_approved: response.data.is_approved,
+					isbn_link: response.data.isbn_link
 				})
 				setColectionType(response.data.theme)
 				setSelectedDocuments(response.data.documents)
@@ -1387,6 +1389,32 @@ export default function AdminCollectionCreate({id}) {
 		}
 	}
 
+	const [isEditing, setIsEditing] = useState(false);
+	
+	const handleISBNChange = (e) => {
+    	const { name, value } = e.target;
+		console.log(value)
+    	setFormData((prev) => ({
+      		...prev,
+      		[name]: value,
+    	}));
+    // Если требуется, обновляем ошибки
+    setErrors((prev) => ({ ...prev, [name]: !value }));
+  };
+
+  // Функция сохранения (отправка запроса на бекенд)
+  const handleSaveIsbn = async () => {
+    try {
+      // Пример запроса. Измените URL и метод в зависимости от вашего API.
+      const response = await api.post(`/collection/${id}/isbn`, {"isbn_link": formDataState.isbn_link});
+      // Можно добавить уведомление об успешном сохранении
+      setIsEditing(false); // переключаем режим редактирования off
+    } catch (error) {
+      console.error("Ошибка при сохранении ISBN", error);
+      // Обработка ошибки, например, вывод сообщения
+    }
+  };
+
 	// useEffect(() => {
 	// 	console.log('use')
 	// 	updatePageNumbers()	
@@ -1410,6 +1438,31 @@ export default function AdminCollectionCreate({id}) {
 									type="text" name="title" id="theme" 
 									onChange={(e) => handleChange(e, setFormData, setErrors)} value={formDataState.title}
 								/>
+							</div>
+
+							<div className="admin-form-row-label">
+								<div className="admin-form-row-label">
+									<p>ISBN:</p>
+								</div>
+								<input
+        className={errors.isbn_link ? "admin-form-input input-error" : "admin-form-input"}
+        type="text"
+        name="isbn_link"
+        value={formDataState.isbn_link}
+        onChange={handleISBNChange}
+        readOnly={!isEditing} // input доступен только в режиме редактирования
+      />
+      {isEditing ? (
+        <button type="button" onClick={handleSaveIsbn} className="isbn-save-button">
+          {/* Здесь можно вставить иконку галочки */}
+          ✓
+        </button>
+      ) : (
+        <button type="button" onClick={() => setIsEditing(true)} className="isbn-edit-button">
+          Редактировать
+        </button>
+      )}
+
 							</div>
 
 							<div className="admin-form-row">
