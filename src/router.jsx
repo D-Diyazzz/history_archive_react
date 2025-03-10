@@ -15,6 +15,7 @@ import AdminPanelCreate from "./pages/admin/admin_create";
 import AdminPanleDefInfo from "./pages/admin/admin_def_info";
 import AdminPanelUpdate from "./pages/admin/admin_update";
 import AdminPanelCommentColl from "./pages/admin/admin_comment_coll";
+import DefCollection from "./pages/def_collection";
 
 export default function Router(){
     return(
@@ -26,6 +27,7 @@ export default function Router(){
             <Route path="/logout" element={<LogOut />}/>
             
             <Route path="/collection" element={<Collection />}/>
+			<Route path="/collection/:collId" element={<DefCollection/>}/>
             
             <Route path="/document" element={<Documents />}/>
             <Route path="/document/:documentId" element={<DefDocument />}/>

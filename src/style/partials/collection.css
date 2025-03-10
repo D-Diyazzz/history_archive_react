@@ -268,3 +268,36 @@
 .list-collections-tile-icon-active svg path{
 	fill: rgba(0, 5, 95, 1);
 }
+
+
+.def-collection-content{
+	display: flex;
+	flex-direction: row;
+	padding: 0 240px;
+	font-size: 15px;
+	font-family: "Comfortaa";
+	margin-top: 40px;
+}
+
+.def-collection-pages{
+	margin-left: 150px;
+}
+
+.def-collection-pages div canvas{
+	border: 1px solid rgba(7, 0, 216, 1);
+	border-radius: 13px;
+	height: 834px;
+}
+
+.pdfViewerButton{
+	padding: 18px 59px;
+	border-radius: 62px;
+	border: 1px solid rgba(0, 5, 95, 1);
+}
+
+.def-collection-pages div div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}

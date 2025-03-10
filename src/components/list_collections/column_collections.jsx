@@ -37,7 +37,7 @@ export default function ColumnCollections({collections}){
 											<p>Тема: {coll.theme}</p>
 										
 										</div>
-										<a href="#" className="list-collection-link">Читать</a>
+										<a href={`/collection/${coll.id}`} className="list-collection-link">Читать</a>
 									</div>
 								</div>
 							</div>
