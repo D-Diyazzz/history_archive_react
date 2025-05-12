@@ -13,13 +13,18 @@
     "@ckeditor/ckeditor5-alignment": "^43.1.1",
     "@ckeditor/ckeditor5-build-classic": "^43.1.1",
     "@ckeditor/ckeditor5-react": "^6.2.0",
+    "@videojs-player/react": "^1.0.0",
     "axios": "^1.6.8",
     "jwt-decode": "^4.0.0",
     "pdfjs-dist": "^3.9.179",
+    "plyr": "^3.7.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-pdf": "^9.1.0",
-    "react-router-dom": "^6.22.3"
+    "react-player": "^2.16.0",
+    "react-plyr": "^2.2.0",
+    "react-router-dom": "^6.22.3",
+    "video.js": "^8.22.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

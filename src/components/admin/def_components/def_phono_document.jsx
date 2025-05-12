@@ -4,6 +4,8 @@ import { FILES_URL } from "../../../config";
 import NotFoundComponent from "../../404_not_found_component";
 import api from "../../../api";
 
+import ReactPlayer from "react-player";
+
 export default function DefPhonoDocumentComponent({ documentId }) {
     const [error, setError] = useState(false);
     const [documentelem, setDocument] = useState({});
@@ -34,13 +36,16 @@ export default function DefPhonoDocumentComponent({ documentId }) {
     }
 
     const renderFile = (fileUrl, index) => {
-        const fileExtension = fileUrl.split('.').pop().toLowerCase();
-        if (fileExtension === 'pdf') {
-            return <PDFViewer key={index} pdfUrl={fileUrl} />;
-        } else if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
-            return <img key={index} src={FILES_URL + fileUrl} alt={`Document file ${index + 1}`} style={{ width: '900px', height: 'auto' }} />;
-        }
-        return null;
+       return (
+            <div key={index} style={{ width: '900px' }}>
+			<ReactPlayer
+			  url={FILES_URL + fileUrl}
+			  controls
+			  width="100%"
+			  height="auto"
+			/>
+            </div>
+        );
     };
 
     return (
@@ -51,7 +56,7 @@ export default function DefPhonoDocumentComponent({ documentId }) {
                 renderFile(fileUrl, index)
             ))}
 
-            <div className="document-info">
+            <div className="document-info" style={{"marginTop": "40px"}}>
                 <p className="document-author">Автор: {documentelem.author}</p>
                 <p className="document-addressee">Адресат: {documentelem.addressee}</p>
                 <p className="document-dating">Дата: {documentelem.dating}</p>

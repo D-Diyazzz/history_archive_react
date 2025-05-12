@@ -187,6 +187,7 @@
     padding-left: 10px;
 	align-items: center;
     min-height: 80px;
+	user-select: text;
     max-height: 120px; /* Фиксированная высота */
     overflow: hidden; /* Скрытие содержимого, выходящего за пределы */
 }

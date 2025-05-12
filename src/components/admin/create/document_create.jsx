@@ -130,13 +130,13 @@ export default function AdminDocumentCreate(){
         }
     }
 
-    const allowed_formats = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/png", "image/jpeg", "image/webp", "image/jpg"]
+    const allowed_formats = []
 
     useEffect(() => {
         const fileLabels = document.querySelectorAll('.file-upload-label');
         const fileWrappers = document.querySelectorAll('.file-upload-wrapper');
         const newFileErrors = file.map((singleFile, index) => {
-            if (singleFile && !allowed_formats.includes(singleFile.type)) {
+            if (singleFile && allowed_formats.includes(singleFile.type)) {
                 const fileLabel = fileLabels[index]
                 const fileWrapper = fileWrappers[index]
                 fileLabel.textContent = "PDF, PNG, DOCS, JPEG, JPG WEBP";
@@ -210,6 +210,13 @@ export default function AdminDocumentCreate(){
 			Object.keys(PhonoDocFormData).forEach(key => {
 				formData.append(key, PhonoDocFormData[key])
 			})
+		}else if(currentComponent == "photo"){
+			Object.keys(PhotoDocFormData).forEach(key => {
+				formData.append(key, PhotoDocFormData[key])
+			});
+			Object.keys(SearchDataForm).forEach(key => {
+				formData.append(`search_data[${key}]`, SearchDataForm[key])
+			})
 		}
 
 		// Create an object to hold all formData entries
@@ -243,7 +250,7 @@ export default function AdminDocumentCreate(){
 					url="/phono-document"
 				}
 				const response = await api.post(url, requestaData);
-				navigate(`/admin/document/${response.data.id}`) 
+				navigate(`/admin${url}/${response.data.id}`) 
 			} catch (error){
 				console.log("error", error);
 			}
@@ -271,7 +278,7 @@ export default function AdminDocumentCreate(){
             case 'document':
                 return <DocumentInputs errors={DocumentFormErrors} setErrors={setDocumentFormErrors} formDataState={DocumentFormData} setFormData={setDocumentFormData} handleChange={handleChange}/>;
             case 'photo':
-                return <PhotoDocumentInputs errors={PhotoDocFormErrors} formDataState={PhotoDocFormData} handleChange={handleChange}/>;
+                return <PhotoDocumentInputs errors={PhotoDocFormErrors} formDataState={PhotoDocFormData} handleChange={handleChange} setFormData={setPhotoDocFormData} setErrors={setPhotoDocFormErrors}/>;
             case 'video':
                 return <VideoDocumentInputs errors={VideoDocFormErrors} formDataState={VideoDocFormData} handleChange={handleChange}/>;
             case 'phono':

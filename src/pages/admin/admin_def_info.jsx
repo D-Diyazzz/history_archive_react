@@ -12,6 +12,8 @@ import DefCollectionComponent from "../../components/def_components/def_collecti
 import CreateCollectionButtons from "../../components/admin/create_collection_button";
 import AdminDefCollectionComponent from "../../components/admin/def_components/def_admin_collection_component";
 import DefPhonoDocumentComponent from "../../components/admin/def_components/def_phono_document";
+import DefPhotoDocumentComponent from "../../components/admin/def_components/def_photo_document";
+import DefVideoDocumentComponent from "../../components/admin/def_components/def_video_document";
 
 
 export default function AdminPanleDefInfo(){
@@ -39,6 +41,10 @@ export default function AdminPanleDefInfo(){
 				return <DefPhonoDocumentComponent documentId={id}/>
 			case "collection":
 				return <AdminDefCollectionComponent collectionId={id}/>
+			case "photo-document":
+				return <DefPhotoDocumentComponent documentId={id}/>
+			case "video-document":
+				return <DefVideoDocumentComponent documentId={id}/>
             default:
                 return null;
         }

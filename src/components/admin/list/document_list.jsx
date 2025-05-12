@@ -45,6 +45,20 @@ export default function AdminDocumentList(){
         return null;
 
 	}
+
+	const getDocumentLink = (doc) => {
+	  switch (doc.type) {
+		case "document":
+		case "phono_document":
+		  return `/admin/document/${doc.id}`;
+		case "photo_document":
+		  return `/admin/photo-document/${doc.id}`;
+		case "video_document":
+		  return `/admin/video-document/${doc.id}`;
+		default:
+		  return "#";
+	  }
+	};
       
     return (
         <>
@@ -52,8 +66,8 @@ export default function AdminDocumentList(){
                 <p style={{"width":"15%"}}>Заголовок</p>
                 <p style={{"width":"15%"}}>Автор</p>
                 <p style={{"width":"10%"}}>Дотировка</p>
-                <p style={{"width":"20%"}}>Разновидность</p>
-                <p style={{"width":"20%"}}>Произ. номер</p>
+                <p style={{"width":"20%"}}>Место создания</p>
+                <p style={{"width":"20%"}}>Тип</p>
                 <p style={{"width":"20%"}}>Загружен</p>
             </div>
 
@@ -72,35 +86,23 @@ export default function AdminDocumentList(){
                       
                         return (
                           <>
-                            <div className="admin-list-a">
-							{
-							  doc.file_urls ? (
-								<a
-								  href={doc.type === "document" 
-									? `/admin/document/${doc.id}` 
-									: `/admin/phono-document/${doc.id}`}
-								  style={{ width: "15%" }}
-								>
-								  <div className="first-page-file-docs-admin">
-									{renderFirstFile(doc.file_urls[0], index)}
-								  </div>
-								</a>
-							  ) : (
-								<a
-								  href={doc.type === "document" 
-									? `/admin/document/${doc.id}` 
-									: `/admin/phono-document/${doc.id}`}
-								  style={{ width: "15%" }}
-								>
-								  <div className="first-page-file-docs-admin">Document</div>
-								</a>
-							  )
-							}
+							<div
+							  className="admin-list-a"
+							  onClick={() => window.location.href = getDocumentLink(doc)}
+							  style={{ cursor: "pointer", display: "flex", gap: "10px" }}
+							>
+							  <a href={getDocumentLink(doc)} style={{ width: "15%" }}>
+								<div className="first-page-file-docs-admin">
+								{doc.file_urls
+									? renderFirstFile(doc.file_urls[0], index)
+									: "Document"}
+								</div>
+							  </a>
 
 							  <p style={{"width":"15%"}}>{doc.author}</p>
                               <p style={{"width":"10%"}}>{doc.dating}</p>
-                              <p style={{"width":"20%"}}>{doc.variety}</p>
-                              <p style={{"width":"20%"}}>{doc.case_prod_number}</p>
+                              <p style={{"width":"20%"}}>{doc.place_of_creating}</p>
+                              <p style={{"width":"20%"}}>{doc.type}</p>
                               <p style={{"width":"20%"}}>{formattedDate}</p>
                               <button onClick={() => deleteDocument(doc.id)} className="admin-list-delete-button">Del</button>
                             </div>
