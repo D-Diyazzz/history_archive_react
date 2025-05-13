@@ -16,6 +16,9 @@ import AdminPanleDefInfo from "./pages/admin/admin_def_info";
 import AdminPanelUpdate from "./pages/admin/admin_update";
 import AdminPanelCommentColl from "./pages/admin/admin_comment_coll";
 import DefCollection from "./pages/def_collection";
+import DefPhonoDocumentPage from "./pages/def_phono_document";
+import DefPhotoDocumentPage from "./pages/def_photo_document";
+import DefVideoDocumentPage from "./pages/def_video_document";
 
 export default function Router(){
     return(
@@ -31,6 +34,9 @@ export default function Router(){
             
             <Route path="/document" element={<Documents />}/>
             <Route path="/document/:documentId" element={<DefDocument />}/>
+			<Route path="/phono-document/:documentId" element={<DefPhonoDocumentPage />}/>
+			<Route path="/photo-document/:documentId" element={<DefPhotoDocumentPage />}/>
+			<Route path="/video-document/:documentId" element={<DefVideoDocumentPage />}/>
             
             <Route path="/admin" element={<AdminPanel/>}/>
             <Route path="/admin/:table" element={<AdminPanelListInfo/>}/>

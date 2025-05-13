@@ -71,33 +71,86 @@ export default function AdminDefCollectionComponent({collectionId}){
 
 
 	const renderDocument = (obj, index) => {
-		switch(obj.type){
+		switch (obj.type){
 			case "document":
 				return (
 					<div className="admin-selected-doc">
 						<div className="document-selected">
 							<div className="document-selected-file">
-								{
-									obj.file_urls ? (
-										getFirstFile(obj.file_urls[0])
-									) : (
-										<></>
-									)
-								}
+							{
+								obj.file_urls ? (
+									getFirstFile(obj.file_urls[0])
+								):(
+									<></>
+								)
+							}
 							</div>
 							<div className="document-selected-info">
 								<p className="doc-selected-info-p">Номер: {index+1}</p>
-								<p className="doc-selected-info-p">Автора: {obj.author}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Адресат: {obj.addressee}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>
+
+	
 								
 							</div>
 							
 						</div>
 
 					</div>
-
 				)
+
+			case "video_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					</div>
+				)	
+			case "photo_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					</div>
+				)	
+
+			case "phono_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					</div>
+				)	
+
 		}
 	}
+
 
 	const renderSciUser = (obj) => {
 		return (

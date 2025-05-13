@@ -4,6 +4,7 @@ import "../style/partials/collection.css"
 import { useEffect, useState } from "react"
 import PDFViewer from "../components/pdfViewer"
 import api from "../api"
+import LinkedDocuments from "../components/linked_documents_comp"
 
 
 export default function DefCollection(){
@@ -17,14 +18,14 @@ export default function DefCollection(){
 			try{
 				console.log(collId)
 				const response = await api.get(`collection/${collId}/admin`)
-				console.log()
+				console.log(response)
 				setCollectionElem(response.data)
 			}catch (error){
 				console.log(error)	
 			}
 		}
 		getInfo()
-	}, [collId])
+	}, [])
 
 	return(
 		<>
@@ -39,6 +40,17 @@ export default function DefCollection(){
 				
 				<div className="def-collection-pages">
 					<PDFViewer pdfUrl={`collections/${collectionElem.file_url}`}/>
+				</div>
+
+				<div className="def-collection-documents">
+					<p><strong>Документы</strong></p>
+					{
+						collectionElem.documents ? (
+							<LinkedDocuments documents={collectionElem.documents} />
+						):(
+							<></>
+						)
+					}
 				</div>
 			</div>
 		</>
