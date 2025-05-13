@@ -4,10 +4,6 @@ import api from "../../../api";
 import PDFViewer from "../../pdfViewer";
 import { FILES_URL } from "../../../config";
 
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
-import Plyr from 'react-plyr';
-import 'plyr/dist/plyr.css';
 import ReactPlayer from "react-player";
 
 export default function DefVideoDocumentComponent({ documentId }) {
@@ -73,16 +69,7 @@ export default function DefVideoDocumentComponent({ documentId }) {
 
     const renderFile = (fileUrl, index) => {
 		const fileExtension = fileUrl.split('.').pop().toLowerCase();
-        const videoJsOptions = {
-            autoplay: false,
-            controls: true,
-            responsive: true,
-            fluid: true,
-            sources: [{
-                src: FILES_URL + fileUrl,
-                type: `video/${fileExtension}`
-            }]
-        };
+        
 
         return (
             <div key={index} style={{ width: '900px' }}>
