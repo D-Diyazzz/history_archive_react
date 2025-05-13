@@ -854,69 +854,39 @@ export default function AdminCollectionCreate({id}) {
 		};
 	}, [handleChangeTextSettings]);
 
-	useEffect(() => {
-        const contentEditableDiv = inputRef.current;
-        if (!contentEditableDiv) return;
-		console.log("useEffect")
+const toolbarRef = useRef(null);
+const savedRangeRef = useRef(null);
 
-        let savedRange;
+const saveSelection = () => {
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0) {
+    savedRangeRef.current = selection.getRangeAt(0);
+  }
+};
 
-        const saveRangeMouseUp = () => {
-            const selection = window.getSelection();
-			console.log("sav")
-            if (selection.rangeCount > 0) {
-                savedRange = selection.getRangeAt(0);
-				console.log("save", savedRange)
-            }
-        };
+const restoreSelection = () => {
+  const selection = window.getSelection();
+  if (savedRangeRef.current) {
+    selection.removeAllRanges();
+    selection.addRange(savedRangeRef.current);
+  }
+};
 
-        const handleKeyUp = () => {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                savedRange = selection.getRangeAt(0);
-            }
-        };
+useEffect(() => {
+  const handleGlobalMouseDown = (e) => {
+    const toolbarEl = toolbarRef.current;
+    if (toolbarEl && toolbarEl.contains(e.target)) {
+      // Сохраняем позицию курсора, если клик по toolbar
+      saveSelection();
+    }
+  };
 
-        const handleFocus = () => {
-            if (savedRange) {
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(savedRange);
-            }
-        };
+  document.addEventListener("mousedown", handleGlobalMouseDown);
 
-        const handleBlur = (event) => {
-            if (!contentEditableDiv.contains(event.target)) {
-                contentEditableDiv.blur();
-            }
-        };
-
-        const handleDocumentMouseUp = (event) => {
-            if (!contentEditableDiv.contains(event.target) && event.target !== document.activeElement) {
-                contentEditableDiv.focus();
-                if (savedRange) {
-                    const selection = window.getSelection();
-                    selection.removeAllRanges();
-                    selection.addRange(savedRange);
-                }
-            }
-        };
-
-        contentEditableDiv.addEventListener('mouseup', saveRangeMouseUp);
-        contentEditableDiv.addEventListener('keyup', handleKeyUp);
-        contentEditableDiv.addEventListener('focus', handleFocus);
-        document.addEventListener('mousedown', handleBlur);
-        document.addEventListener('mouseup', handleDocumentMouseUp);
-
-        // Clean up the event listeners
-        return () => {
-            contentEditableDiv.removeEventListener('mouseup', saveRangeMouseUp);
-            contentEditableDiv.removeEventListener('keyup', handleKeyUp);
-            contentEditableDiv.removeEventListener('focus', handleFocus);
-            document.removeEventListener('mousedown', handleBlur);
-            document.removeEventListener('mouseup', handleDocumentMouseUp);
-        };
-    }, [inputRef.current]);
+  return () => {
+    document.removeEventListener("mousedown", handleGlobalMouseDown);
+  };
+}, []);
 
 	function changeParagraphStyle(className){
 		const selection = window.getSelection();
@@ -1060,11 +1030,14 @@ export default function AdminCollectionCreate({id}) {
 
 	const addDocument = (doc) => {
 		const selection = window.getSelection();
+		selection.removeAllRanges();
+  		selection.addRange(savedRangeRef.current);
 		const range = selection.getRangeAt(0);
 		setSelectedDocuments(prevDocuments => [...prevDocuments, doc])
 		
 		const paragraphsQueue = documentForCollectionFormat(doc)
-
+		console.log(paragraphsQueue)
+		console.log(range.startContainer)
 		if(range.startContainer === "pdf-redactor-page-edit"){
 			console.log('pdf-redactor-page-edit')
 			const newParagraph = document.createElement('p');
@@ -1084,6 +1057,7 @@ export default function AdminCollectionCreate({id}) {
 	
 		while(!paragraphsQueue.isEmpty()){
 			const newp = paragraphsQueue.dequeue()
+			console.log(newp)
 			range.insertNode(newp)
 			checkOverFlow()
 			range.setStartAfter(newp)
@@ -1176,7 +1150,12 @@ export default function AdminCollectionCreate({id}) {
 							</div>
 							<div className="document-selected-info">
 								<p className="doc-selected-info-p">Номер: {index+1}</p>
-								<p className="doc-selected-info-p">Автора: {obj.author}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Адресат: {obj.addressee}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>
+
+	
 								
 							</div>
 							
@@ -1185,6 +1164,57 @@ export default function AdminCollectionCreate({id}) {
 					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj)}>Удалить</button>
 					</div>
 				)
+
+			case "video_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj)}>Удалить</button>
+					</div>
+				)	
+			case "photo_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj)}>Удалить</button>
+					</div>
+				)	
+
+			case "phono_document":
+				return (
+					<div className="admin-selected-doc">
+						<div className="document-selected">
+							<div className="document-selected-info" style={{"width": "90%"}}>
+								<p className="doc-selected-info-p">Номер: {index+1}</p>
+								<p className="doc-selected-info-p">Автор: {obj.author}</p>
+								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
+								<p className="doc-selected-info-p">Дата: {obj.dating}</p>
+								<p className="doc-selected-info-p">Тип: {obj.type}</p>			
+							</div>
+							
+						</div>
+					<button className="doc-selected-del-btn" onClick={() => handleRemoveDocument(obj)}>Удалить</button>
+					</div>
+				)	
+
 		}
 	}
 
@@ -1508,14 +1538,16 @@ export default function AdminCollectionCreate({id}) {
                         </div>
 
                         <div className="pdf-redactor-section">
-                            <div className="pdf-redactor-tools">
+                            <div className="pdf-redactor-tools" ref={toolbarRef}>
                                 <div className="pdf-redactor-text-style-tools">
                                     <p 
-										onClick={() => handleTextFormatClick("bold")}
+										onMouseDown={saveSelection}
+										onClick={() => {restoreSelection(); handleTextFormatClick("bold")}}
 										className={textFormatDict["bold"] ? 'pdf-redactor-tool-selected' : ''}
 										><strong>B</strong></p>
                                     <p 
-										onClick={() => handleTextFormatClick("italic")}
+										onMouseDown={saveSelection}
+										onClick={() => { saveSelection(); handleTextFormatClick("italic")}}
 										className={textFormatDict["italic"] ? 'pdf-redactor-tool-selected' : ''}
 
 										><i>I</i></p>
@@ -1526,22 +1558,25 @@ export default function AdminCollectionCreate({id}) {
 
                                 <div className="pdf-redactor-alignment-tools">
                                     <p
-										onClick={() => changeParagraphStyle("left_parPosition")}
+										onMouseDown={saveSelection}
+										onClick={() => {restoreSelection(); changeParagraphStyle("left_parPosition")}}
 										className={paragraphFormatDict['parPosition'] === "left_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>L</p>
                                     <p
-										onClick={() => changeParagraphStyle("central_parPosition")}
+										onMouseDown={saveSelection}
+										onClick={() => {restoreSelection(); changeParagraphStyle("central_parPosition")}}
 										className={paragraphFormatDict['parPosition'] === "central_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>C</p>
                                     <p
-										onClick={() => changeParagraphStyle("right_parPosition")}
+										onMouseDown={saveSelection}
+										onClick={() => {restoreSelection(); changeParagraphStyle("right_parPosition")}}
 										className={paragraphFormatDict['parPosition'] === "right_parPosition" ? 'pdf-redactor-tool-selected' : ''}
 									>R</p>
                                 </div>
 
 								<div className="pdf-redacotr-alignment-tools">
 									<div class="font-selector">
-								  <select class="font-select" value={paragraphFormatDict['type']} onChange={(e) => {changeParagraphStyle(e.target.value)}}>
+								  <select class="font-select" value={paragraphFormatDict['type']}onMouseDown={saveSelection} onChange={(e) => {restoreSelection(); changeParagraphStyle(e.target.value)}}>
 									<option value="normal_type" selected>Обычный текст</option>
 									<option value="heading_type">Заголовок</option>
 									<option value="subHeading_type">Подзаголовок</option>
@@ -1551,18 +1586,19 @@ export default function AdminCollectionCreate({id}) {
 								</div>
 
                                 <div className="pdf-redactor-font-size">
-									<p onClick={() => {setCurrentFontSize(currentFontSize-1)}}>-</p>
+									<p onMouseDown={saveSelection} onClick={() => {restoreSelection(); setCurrentFontSize(currentFontSize-1)}}>-</p>
                                     <input 
                                         type="number"
 										id="fontSizeInput"
                                         value={currentFontSize} 
-                                        onChange={(e) => setCurrentFontSize(e.target.value)} 
+										onMouseDown={saveSelection}
+                                        onChange={(e) => {restoreSelection(); setCurrentFontSize(e.target.value)}}
                                     />
-									<p onClick={() => {setCurrentFontSize(currentFontSize+1)}}>+</p>
+									<p onMouseDown={saveSelection} onClick={() => {restoreSelection(); setCurrentFontSize(currentFontSize+1)}}>+</p>
                                 </div>
 					
 								<div className="pdf-redactor-heading-num">
-									<p onClick={() => handleCreateHeadingNumerationBlock(window.getSelection().getRangeAt(0), handleMouseUp, checkOverFlow, handleEditPage, handleFileChange)} className="pdf-redactor-heading-num-button">H1...1</p>
+									<p onMouseDown={saveSelection} onClick={() => {restoreSelection(); handleCreateHeadingNumerationBlock(window.getSelection().getRangeAt(0), handleMouseUp, checkOverFlow, handleEditPage, handleFileChange)}} className="pdf-redactor-heading-num-button">H1...1</p>
 								</div>
                             </div>
 
@@ -1575,6 +1611,7 @@ export default function AdminCollectionCreate({id}) {
 												handleMouseUp(event);
 												checkOverFlow(null);
 											}}
+											res={inputRef}
 											
 											>
 								<div className="pdf-redactor-page-block">
@@ -1583,7 +1620,6 @@ export default function AdminCollectionCreate({id}) {
 									>
 										<div
 											className="pdf-redactor-page-edit"
-											ref={inputRef}
 											id="textField"
 										>
 										</div>
@@ -1617,7 +1653,7 @@ export default function AdminCollectionCreate({id}) {
 								return renderDocument(doc, index)
 							})
 						}	
-						<div className="add-docs-button" onClick={() => openPanel("document")}>
+						<div className="add-docs-button" onMouseDown={saveSelection} onClick={() => openPanel("document")}>
 							+ Добавить документ
 						</div>
 					</div>

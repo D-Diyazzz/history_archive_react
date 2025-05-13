@@ -131,17 +131,20 @@ export const documentForCollectionFormat = (doc) => {
 	const queue = new FIFOQueue()
 	
 	const briefContentP = briefContentToHtmlCollectionFormat(doc.brief_content, 16)
-	console.log('briefContentP')
 	briefContentP.forEach((p) => {
 		p.className = "central_parPosition heading_type"
 		queue.enqueue(p)
 	})
+	console.log(briefContentP)
+	console.log(queue)
 	
 	const metadataPList = metadataToHtmlCollectionFormat(doc);
 
 	metadataPList.forEach((p) => {
 		queue.enqueue(p)
 	})
+	console.log(metadataPList)
+	console.log(queue)
 
 	const mainTextPList = briefContentToHtmlCollectionFormat(doc.main_text, 12)
 	
@@ -149,6 +152,6 @@ export const documentForCollectionFormat = (doc) => {
 		p.className = 'left_parPosition normal_type'
 		queue.enqueue(p)
 	})
-
+	console.log(queue)
 	return queue;
 }

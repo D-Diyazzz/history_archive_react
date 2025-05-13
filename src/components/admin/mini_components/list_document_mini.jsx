@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import api from "../../../api";
 import FirstPage from "../../getFirstPageFile";
 
-export default function AdminMiniAllDocumentList({ handleSelectDocument, selectedDocuments }) {
+export default function AdminMiniDocumentList({ handleSelectDocument, selectedDocuments, url}) {
     const [documents, setDocuments] = useState([]);
     useEffect(() => {
         const fetchDocuments = async () => {
             try {
-                const response = await api.get("/all-documents");
+                const response = await api.get(url);
                 setDocuments(response.data);
             } catch (error) {
                 console.error("Ошибка при получении списка документов:", error);
@@ -83,4 +83,5 @@ export default function AdminMiniAllDocumentList({ handleSelectDocument, selecte
         </>
     );
 }
+
 

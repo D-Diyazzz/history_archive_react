@@ -1,7 +1,8 @@
 import { useState } from "react"
 import AdminDocumentList from "../list/document_list";
-import AdminMiniDocumentList from "../mini_components/list_all_documents";
 import api from "../../../api";
+import AdminMiniAllDocumentList from "../mini_components/list_all_documents";
+import AdminMiniDocumentList from "../mini_components/list_document_mini";
 
 
 export default function DocumentMiniPanelCreate({handleCloseOverlay, setSelectedDocuments, selectedDocuments, collectionId}) {
@@ -12,11 +13,26 @@ export default function DocumentMiniPanelCreate({handleCloseOverlay, setSelected
 		setCurrentDocType(type);
 	}
 
+	const getUrlForType = (type) => {
+	  switch (type) {
+		case "all": return "/all-documents";
+		case "document": return "/document";
+		case "photo-doc": return "/photo-document";
+		case "video-doc": return "/video-document";
+		case "phono-doc": return "/phono-document";
+		default: return "/document";
+	  }
+	}
+
 	const renderComponent = () => {
-		switch (currentDocType){
-			case 'all':
-				return <AdminMiniDocumentList handleSelectDocument={handleSelectDocument} selectedDocuments={selectedDocuments}/>;
-		}
+		return (
+		  <AdminMiniDocumentList
+			key={currentDocType} // ключ сбросит компонент при смене типа
+			handleSelectDocument={handleSelectDocument}
+			selectedDocuments={selectedDocuments}
+			url={getUrlForType(currentDocType)}
+		  />
+		);
 	}
 
 	const handleSelectDocument = async (file) => {
@@ -28,6 +44,7 @@ export default function DocumentMiniPanelCreate({handleCloseOverlay, setSelected
 			const response = await api.post(`/collection/${collectionId}/document`, dataToSend)
 			console.log(response)
 			if(response.status == 200){
+				console.log("2000")
 				setSelectedDocuments(file);
 				handleCloseOverlay();
 			}
