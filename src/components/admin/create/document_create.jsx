@@ -217,6 +217,13 @@ export default function AdminDocumentCreate(){
 			Object.keys(SearchDataForm).forEach(key => {
 				formData.append(`search_data[${key}]`, SearchDataForm[key])
 			})
+		}else if(currentComponent == "video"){
+			Object.keys(VideoDocFormData).forEach(key => {
+				formData.append(key, VideoDocFormData[key])
+			});
+			Object.keys(SearchDataForm).forEach(key => {
+				formData.append(`search_data[${key}]`, SearchDataForm[key])
+			})
 		}
 
 		// Create an object to hold all formData entries
@@ -252,6 +259,7 @@ export default function AdminDocumentCreate(){
 				const response = await api.post(url, requestaData);
 				navigate(`/admin${url}/${response.data.id}`) 
 			} catch (error){
+				formData = new FormData();
 				console.log("error", error);
 			}
     }
@@ -280,7 +288,7 @@ export default function AdminDocumentCreate(){
             case 'photo':
                 return <PhotoDocumentInputs errors={PhotoDocFormErrors} formDataState={PhotoDocFormData} handleChange={handleChange} setFormData={setPhotoDocFormData} setErrors={setPhotoDocFormErrors}/>;
             case 'video':
-                return <VideoDocumentInputs errors={VideoDocFormErrors} formDataState={VideoDocFormData} handleChange={handleChange}/>;
+                return <VideoDocumentInputs errors={VideoDocFormErrors} formDataState={VideoDocFormData} handleChange={handleChange} setFormData={setVideoDocFormData} setErrors={setVideoDocFormErrors}/>;
             case 'phono':
                 return <PhonoDocumentInputs errors={PhonoDocFormErrors} setErrors={setPhonoDocFormErrors} formDataState={PhonoDocFormData} handleChange={handleChange} setFormData={setPhonoDocFormData}/>;
             default:

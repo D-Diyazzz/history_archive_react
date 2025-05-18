@@ -5,6 +5,7 @@ import { FILES_URL } from "../config";
 import PDFViewer from "../components/pdfViewer";
 import Header from "../components/header";
 import { useParams } from "react-router-dom";
+import Footer from "../components/footer";
 
 export default function DefPhotoDocumentPage() {
 	const {documentId} = useParams()

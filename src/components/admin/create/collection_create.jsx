@@ -42,6 +42,7 @@ export default function AdminCollectionCreate({id}) {
 					is_approved: response.data.is_approved,
 					isbn_link: response.data.isbn_link
 				})
+				console.log(response.data)
 				setColectionType(response.data.theme)
 				setSelectedDocuments(response.data.documents)
 				setSelectedSciUsers(response.data.scientific_council_group)
@@ -1120,6 +1121,8 @@ useEffect(() => {
 				title: formDataState.title,
 				html_data: contentDiv.innerHTML
 			}
+			console.log(dataToSend)
+			console.log(formDataState.title)
 
 			try{
 				const response = await api.patch(`/collection/${id}`,dataToSend)
@@ -1129,9 +1132,9 @@ useEffect(() => {
 			}
 		}
 
-		const intervalId = setInterval(updateCollectionData, 30000);
+		const intervalId = setInterval(updateCollectionData, 5000);
 		return () => clearInterval(intervalId)
-	}, []);
+	}, [formDataState]);
 	
 	const renderDocument = (obj, index) => {
 		switch (obj.type){
@@ -1455,7 +1458,7 @@ useEffect(() => {
 
             <div className="admin-section">
 				<div className="admin-section-row">
-                <form className="admin-section-create-form" onSubmin={(e) => {e.preventDefault()}}>
+                <form className="admin-section-create-form" onSubmit={(e) => {e.preventDefault()}}>
                     <div className="admin-form-column">
 			
 						<div className="admin-section-form-inputs">	

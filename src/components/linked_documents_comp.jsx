@@ -1,3 +1,4 @@
+import { FILES_URL } from "../config";
 import FirstPage from "./getFirstPageFile"
 
 export default function LinkedDocuments({documents}){
@@ -7,6 +8,16 @@ export default function LinkedDocuments({documents}){
 		switch (type){
 			case 'pdf':
 				return <FirstPage pdfUrl={file} /> 
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+			case 'webp':
+			case 'gif':
+			case 'bmp':
+			case 'svg':
+				return <img src={FILES_URL + file} alt="uploaded" style={{ maxWidth: '100%', maxHeight: '300px' }} />;
+			default:
+				return <p>Формат файла не поддерживается</p>;
 		}
 	}
 
@@ -65,7 +76,16 @@ export default function LinkedDocuments({documents}){
 					<a href={`/photo-document/${obj.id}`}>
 					<div className="admin-selected-doc">
 						<div className="document-selected">
-							<div className="document-selected-info" style={{"width": "90%"}}>
+					<div className="document-selected-file" style={{"width": "40%"}}>
+							{
+								obj.file_urls ? (
+									getFirstFile(obj.file_urls[0])
+								):(
+									<></>
+								)
+							}
+							</div>
+							<div className="document-selected-info" style={{"width": "60%"}}>
 								<p className="doc-selected-info-p">Номер: {index+1}</p>
 								<p className="doc-selected-info-p">Автор: {obj.author}</p>
 								<p className="doc-selected-info-p">Место создания: {obj.place_of_creating}</p>
