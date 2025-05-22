@@ -22,11 +22,6 @@ export default function MainInfo({ collections, handleNext, handlePrev }){
 					<img src={main_2_png}/>
 				</div>
 
-				<div className="main-info-back-elem-3-years">
-					<p className="main-info-back-elem-3-1">1934</p>
-					<p className="main-info-back-elem-3-2">1921</p>
-					<p className="main-info-back-elem-3-3">1917</p>
-				</div>
 
 					<div className="main-info-main">
 						<div className="main-info-main-title">

@@ -32,12 +32,6 @@ export default function Header({active}) {
 						>
 						  Сборники
 						</a>
-						<a 
-						  href="#" 
-						  className={active === '#' ? 'nav-bar-menu-active' : 'nav-bar-menu'}
-						>
-						  Выставки
-						</a>
 						{(user_role === 'AdminUser' || user_role === 'RedactorUser' || user_role === 'ScientificCouncil' || user_role === 'SuperAdminUser') && (
 						  <a 
 							href="admin" 
