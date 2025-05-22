@@ -65,7 +65,7 @@ export default function AdminDocumentList(){
             <div className="admin-fields-list">
                 <p style={{"width":"15%"}}>Заголовок</p>
                 <p style={{"width":"15%"}}>Автор</p>
-                <p style={{"width":"10%"}}>Дотировка</p>
+                <p style={{"width":"10%"}}>Датировка</p>
                 <p style={{"width":"20%"}}>Место создания</p>
                 <p style={{"width":"20%"}}>Тип</p>
                 <p style={{"width":"20%"}}>Загружен</p>

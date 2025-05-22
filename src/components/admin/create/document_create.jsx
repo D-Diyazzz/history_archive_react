@@ -259,8 +259,8 @@ export default function AdminDocumentCreate(){
 				const response = await api.post(url, requestaData);
 				navigate(`/admin${url}/${response.data.id}`) 
 			} catch (error){
-				formData = new FormData();
 				console.log("error", error);
+				alert("Wrong format file")
 			}
     }
 
